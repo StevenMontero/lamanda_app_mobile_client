@@ -6,10 +6,12 @@ class Pet{
   String? breed;
   int? age;
   String? fur;
+  double? weight;
   bool? isVaccinationUpDate;
   bool? castrated;
   bool? sociable;
   String? photoUrl;
+  String? kindPet;
 
   Pet({
     this.petId,
@@ -18,10 +20,12 @@ class Pet{
     this.breed,
     this.age,
     this.fur,
+    this.weight,
     this.isVaccinationUpDate,
     this.castrated,
     this.sociable,
-    this.photoUrl
+    this.photoUrl,
+    this.kindPet
   });
 
    Pet.fromJson(Map<String, dynamic> json){
@@ -31,10 +35,12 @@ class Pet{
     this.breed = json['breed'];
     this.age = json['age'];
     this.fur = json['fur'];
+    this.weight = json['weight'];
     this.isVaccinationUpDate = json['isVaccinationUpDate'];
     this.castrated = json['castrated'];
     this.sociable = json['sociable'];
     this.photoUrl = json['photoUrl'];
+    this.kindPet = json['kindPet'];
   }
 
   Map<String, dynamic> toJson(){
@@ -45,10 +51,12 @@ class Pet{
       'breed': this.breed,
       'age': this.age,
       'fur': this.fur,
+      'weight': this.weight,
       'isVaccinationUpDate': this.isVaccinationUpDate,
       'castrated': this.castrated,
       'sociable': this.sociable,
-      'photoUrl': this.photoUrl
+      'photoUrl': this.photoUrl,
+      'kindPet': this.kindPet
     };
   }
 }
