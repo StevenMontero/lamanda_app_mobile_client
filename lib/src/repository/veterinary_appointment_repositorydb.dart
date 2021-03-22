@@ -14,12 +14,12 @@ class VeterinaryAppointmentRepository {
         .catchError((error) => print('Failed to add Appointment: $error'));
   }
 
-  Future<VeterinaryAppointment?> getUserAppointment(String appointmentId) async {
-    VeterinaryAppointment appointment;
+  Future<VeterinaryAppointment?> getUserAppointment(
+      String appointmentId) async {
     DocumentSnapshot snapshot;
     snapshot = await _ref.doc(appointmentId).get();
     if (snapshot.exists) {
-      return appointment = VeterinaryAppointment.fromJson(snapshot.data()!);
+      return VeterinaryAppointment.fromJson(snapshot.data()!);
     } else {
       return null;
     }

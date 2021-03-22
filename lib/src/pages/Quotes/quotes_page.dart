@@ -8,17 +8,37 @@ class QuotesPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+   MediaQueryData mediaQueryData = MediaQuery.of(context);
     return Stack(
-      children: [backgraund(), optionsQuotes(context)],
+      alignment: AlignmentDirectional.topCenter,
+      children: [
+        backgraund(),
+        optionsQuotes(context),
+        Padding(
+          padding: const EdgeInsets.only(top:30.0),
+          child: Container(
+            height: mediaQueryData.size.height * 0.2,
+            width: mediaQueryData.size.width * 0.55,
+            child: SvgPicture.asset(
+              'assets/images/Logo_COLOR.svg',
+              fit: BoxFit.cover,
+            ),
+          ),
+        ),
+      ],
     );
   }
 
   Widget optionsQuotes(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.end,
       children: [
+        Expanded(child: Container()),
         Padding(
-          padding: const EdgeInsets.only(right: 10, left: 10, top: 20),
+          padding: const EdgeInsets.only(
+            right: 10,
+            left: 10,
+          ),
           child: Row(
             children: [
               QuotesCard(
@@ -73,6 +93,7 @@ class QuotesPage extends StatelessWidget {
             ],
           ),
         ),
+        Expanded(child: Container()),
       ],
     );
   }
@@ -97,12 +118,13 @@ class QuotesPage extends StatelessWidget {
               child: SvgPicture.asset('assets/icons/circularLightOrange.svg')),
         ),
         Positioned(
-          bottom: -115,
+          bottom: -110,
+          right: -90,
           child: Container(
-              height: 350,
-              width: 470,
+              height: 300,
+              width: 370,
               child: SvgPicture.asset('assets/images/dogvector.svg')),
-        )
+        ),
       ],
     );
   }

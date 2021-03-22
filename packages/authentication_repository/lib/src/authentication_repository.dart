@@ -140,10 +140,10 @@ class AuthenticationRepository {
 extension on User {
   model.User get toUser {
     return model.User(
-      id: uid,
-      email: email!,
-      name: displayName!,
-      photo: photoURL,
+      id: uid ,
+      email: email ?? '',
+      name: displayName ?? '',
+      photo: photoURL ?? '',
     );
   }
 }

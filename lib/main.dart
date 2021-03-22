@@ -83,6 +83,7 @@ class _AppViewState extends State<AppView> {
           child: child,
         );
       },
+      localizationsDelegates: [GlobalMaterialLocalizations.delegate],
       onGenerateRoute: (settings) =>
           MaterialPageRoute(builder: (context) => MainScreen()),
       supportedLocales: [

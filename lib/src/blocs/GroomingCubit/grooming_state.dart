@@ -2,53 +2,39 @@ part of 'grooming_cubit.dart';
 
 class GroomingFormState extends Equatable {
   const GroomingFormState(
-      {this.transfer,
-      this.date,
-      this.address,
-      this.hourRerservation,
-      this.typeFur = 'Liso',
+      {this.transfer = false,
+      required this.currentStep,
+      this.address = const AddrresForm.pure(),
       this.description = '',
-      this.schedule,
       this.status});
-  final DateTime? hourRerservation;
-  final DateTime? date;
-  final List<DateTime>? schedule;
-  final String typeFur;
+
+  final bool transfer;
   final String description;
   final FormzStatus? status;
-  final bool? transfer;
-  final String? address;
+  final AddrresForm address;
+  final int currentStep;
 
   GroomingFormState copyWith({
-    DateTime? hourRerservation,
-    String? typeFur,
-    DateTime? date,
     String? description,
-    List<DateTime>? schedule,
     bool? transfer,
-    String? address,
+    AddrresForm? address,
     FormzStatus? status,
+    int? currentStep,
   }) {
     return GroomingFormState(
-        hourRerservation: hourRerservation ?? this.hourRerservation,
-        typeFur: typeFur ?? this.typeFur,
         description: description ?? this.description,
-        schedule: schedule ?? this.schedule,
         address: address ?? this.address,
         transfer: transfer ?? this.transfer,
-        date: date ?? this.date,
+        currentStep: currentStep ?? this.currentStep,
         status: status ?? this.status);
   }
 
   @override
   List<Object?> get props => [
-        hourRerservation,
-        typeFur,
         description,
         address,
-        schedule,
         status,
         transfer,
-        date
+        currentStep,
       ];
 }

@@ -3,7 +3,10 @@ import 'package:lamanda_petshopcr/src/theme/colors.dart';
 
 class CustomButton extends StatelessWidget {
   const CustomButton(
-      {Key? key, this.text, this.press, this.color = ColorsApp.primaryColorBlue})
+      {Key? key,
+      this.text,
+      this.press,
+      this.color = ColorsApp.primaryColorBlue})
       : super(key: key);
   final String? text;
   final Function? press;
@@ -14,7 +17,7 @@ class CustomButton extends StatelessWidget {
     return SizedBox(
       width: double.infinity,
       height: 56,
-      child: FlatButton(
+      child: MaterialButton(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         color: color,
         disabledColor: Colors.grey,
@@ -22,7 +25,9 @@ class CustomButton extends StatelessWidget {
         child: Text(
           text!,
           style: TextStyle(
-            fontSize: 18,
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
+            letterSpacing: 1.25,
             color: Colors.white,
           ),
         ),

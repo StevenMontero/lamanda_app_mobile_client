@@ -8,8 +8,6 @@ import 'package:lamanda_petshopcr/src/blocs/VeterinaryCubit/veterinary_cubit.dar
 import 'package:lamanda_petshopcr/src/models/userProfile.dart';
 import 'package:lamanda_petshopcr/src/repository/veterinary_appointment_repositorydb.dart';
 import 'package:lamanda_petshopcr/src/theme/colors.dart';
-import 'package:lamanda_petshopcr/src/widgets/custom_button.dart';
-import 'package:table_calendar/table_calendar.dart';
 
 class NurseyScreen extends StatefulWidget {
   @override
