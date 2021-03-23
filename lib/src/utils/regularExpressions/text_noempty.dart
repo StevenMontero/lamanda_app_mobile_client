@@ -1,13 +1,15 @@
 import 'package:formz/formz.dart';
 
-enum TextNumbersValidationError { invalid }
+enum TextNoEmptyValidationError { invalid }
 
-class TextNoEmpty extends FormzInput<String?, TextNumbersValidationError> {
-  const TextNoEmpty.pure() : super.pure(null);
+class TextNoEmpty extends FormzInput<String, TextNoEmptyValidationError> {
+  const TextNoEmpty.pure() : super.pure('');
   const TextNoEmpty.dirty([String value = '']) : super.dirty(value);
 
   @override
-  TextNumbersValidationError? validator(String? value) {
-    return value!.isEmpty ? null : TextNumbersValidationError.invalid;
+  TextNoEmptyValidationError? validator(String? value) {
+    return value != null && value.isNotEmpty
+        ? null
+        : TextNoEmptyValidationError.invalid;
   }
 }

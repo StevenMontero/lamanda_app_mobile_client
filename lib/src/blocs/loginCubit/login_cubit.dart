@@ -12,8 +12,7 @@ part 'login_state.dart';
 class LoginCubit extends Cubit<LoginState> {
   final AuthenticationRepository _authenticationRepository;
   LoginCubit(this._authenticationRepository)
-      : assert(_authenticationRepository != null),
-        super(const LoginState());
+      : super(const LoginState());
 
   final UserRepository _userRepository = new UserRepository();
   FirebaseAuth auth = FirebaseAuth.instance;

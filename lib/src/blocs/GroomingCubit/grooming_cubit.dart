@@ -23,7 +23,22 @@ class GroomingCubit extends Cubit<GroomingFormState> {
             state.currentStep > 0 ? state.currentStep - 1 : state.currentStep));
   }
 
-  
+  bool caseValidateForm(
+      {required bool isServiceFormValid,
+      required bool isDateFormValid,
+      required bool isInfoFormValid,
+      required int currentSetep}) {
+    switch (currentSetep) {
+      case 0:
+        return isServiceFormValid;
+      case 1:
+        return isDateFormValid;
+      case 2:
+        return isInfoFormValid;
+      default:
+        return false;
+    }
+  }
 
   Future<void> addAppointmentGroomingForm(UserProfile user) async {
     // final idDate = '${state.date.day}-${state.date.month}-${state.date.year}';

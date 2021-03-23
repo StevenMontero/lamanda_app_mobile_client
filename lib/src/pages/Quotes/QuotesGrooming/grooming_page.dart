@@ -83,6 +83,7 @@ class _BodyState extends State<Body> {
       builder: (context) {
         final gromingCubitState = context.watch<GroomingCubit>().state;
         final serviceFormCubitState = context.watch<ServiceformCubit>().state;
+        final infoFormCubitState = context.watch<InfoformCubit>().state;
 
         return Stepper(
           physics: ScrollPhysics(),
@@ -90,6 +91,41 @@ class _BodyState extends State<Body> {
           currentStep: gromingCubitState.currentStep,
           onStepContinue: () => context.read<GroomingCubit>().nextStep(),
           onStepCancel: () => context.read<GroomingCubit>().backStep(),
+          controlsBuilder: (context, {onStepCancel, onStepContinue}) {
+            return Row(
+              children: [
+                MaterialButton(
+                  elevation: 0.5,
+                  onPressed: context.read<GroomingCubit>().caseValidateForm(
+                              isServiceFormValid:
+                                  serviceFormCubitState.status ==
+                                      StatusFormService.validForm,
+                              isDateFormValid: true,
+                              isInfoFormValid:
+                                  infoFormCubitState.status.isValidated,
+                              currentSetep: gromingCubitState.currentStep) &&
+                          gromingCubitState.currentStep != 3
+                      ? onStepContinue
+                      : gromingCubitState.currentStep == 3
+                          ? () {
+                              //TODO: llamar a la clase de pagar
+                              print('final');
+                            }
+                          : null,
+                  color: ColorsApp.primaryColorBlue,
+                  textColor: Colors.white,
+                  child: gromingCubitState.currentStep == 3
+                      ? Text('Pagar')
+                      : Text('Continuar'),
+                ),
+                MaterialButton(
+                  onPressed: onStepCancel,
+                  child: Text('Atras'),
+                  textColor: ColorsApp.primaryColorBlue,
+                )
+              ],
+            );
+          },
           steps: [
             Step(
               title:
@@ -99,7 +135,9 @@ class _BodyState extends State<Body> {
                           StatusFormService.invalidForm &&
                       serviceFormCubitState.status != StatusFormService.pureForm
                   ? StepState.error
-                  : StepState.indexed,
+                  : serviceFormCubitState.status == StatusFormService.validForm
+                      ? StepState.complete
+                      : StepState.indexed,
               content: BlocBuilder<ServiceformCubit, ServiceformState>(
                 builder: (context, state) {
                   return Column(
@@ -131,13 +169,19 @@ class _BodyState extends State<Body> {
             Step(
               title: Text(gromingCubitState.currentStep == 1 ? 'Horario' : ''),
               isActive: gromingCubitState.currentStep == 1,
-              state: StepState.indexed,
+              state: serviceFormCubitState.status == StatusFormService.validForm
+                  ? StepState.complete
+                  : StepState.indexed,
               content: buildChooseDateHour(context),
             ),
             Step(
               title: Text(gromingCubitState.currentStep == 2 ? 'Datos' : ''),
               isActive: gromingCubitState.currentStep == 2,
-              state: StepState.indexed,
+              state: infoFormCubitState.status.isInvalid
+                  ? StepState.error
+                  : infoFormCubitState.status.isValidated
+                      ? StepState.complete
+                      : StepState.indexed,
               content: Card(
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
@@ -173,12 +217,21 @@ class _BodyState extends State<Body> {
         SizedBox(
           height: 12.0,
         ),
-        buildTextField(
-            label: '¿Que necesita su mascota?',
-            hintText: 'Tipo de corte, tipo de baño … Etc.',
-            maxLines: 4,
-            onChanged: (value) =>
-                context.read<InfoformCubit>().descriptionChanged(value)),
+        BlocBuilder<InfoformCubit, InfoformState>(
+            buildWhen: (previous, current) =>
+                previous.description != current.description,
+            builder: (context, state) {
+              TextEditingController(text: state.description.value);
+              return buildTextField(
+                  label: '¿Que necesita su mascota?',
+                  hintText: 'Tipo de corte, tipo de baño … Etc.',
+                  maxLines: 4,
+                  initialValue: state.description.value,
+                  errorMessage: 'No pude ser vacio',
+                  isErrorOccurred: state.description.invalid,
+                  onChanged: (value) =>
+                      context.read<InfoformCubit>().descriptionChanged(value));
+            }),
       ],
     );
   }
@@ -243,7 +296,7 @@ class _BodyState extends State<Body> {
       builder: (context) {
         final serviceCubitState = context.watch<ServiceformCubit>().state;
         final scheduleCubitState = context.watch<SelectscheduleCubit>().state;
-        final groomingCubitState = context.watch<GroomingCubit>().state;
+        //final groomingCubitState = context.watch<GroomingCubit>().state;
         return Card(
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(6.0)),
@@ -482,6 +535,7 @@ class _BodyState extends State<Body> {
                     label: 'Dirección',
                     hintText: 'Escriba aquí su dirección',
                     maxLines: 1,
+                    initialValue: state.address.value,
                     errorMessage: 'Caracteres especiales no permitidos',
                     onChanged: (value) =>
                         context.read<InfoformCubit>().addresChanged(value),
@@ -522,12 +576,15 @@ class _BodyState extends State<Body> {
       required int maxLines,
       required ValueChanged<String> onChanged,
       String errorMessage = '',
-      bool isErrorOccurred = false}) {
+      bool isErrorOccurred = false,
+      String initialValue = ''}) {
     return TextFormField(
       onChanged: onChanged,
       maxLines: maxLines,
+      initialValue: initialValue,
       decoration: InputDecoration(
         labelStyle: TextStyle(color: ColorsApp.primaryColorBlue),
+        helperStyle: TextStyle(color: Colors.red),
         labelText: label,
         hintText: hintText,
         filled: true,
