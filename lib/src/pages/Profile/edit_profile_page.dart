@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lamanda_petshopcr/src/blocs/AuthenticationBloc/authentication_bloc.dart';
@@ -17,51 +16,23 @@ class EditProfilePage extends StatefulWidget {
 class _EditProfilePage extends State<EditProfilePage> {
   @override
   Widget build(BuildContext context) {
-    final _userID = context.read<AuthenticationBloc>().state.user.id;
+    UserProfile _userProfile =
+        context.read<AuthenticationBloc>().state.userProfile!;
     return BlocProvider(
-        create: (context) =>
-            ProfileCubit(UserRepository())..fillInitialDataUser(_userID),
-        child: Body());
+        create: (context) => ProfileCubit(UserRepository())
+          ..fillInitialDataUser(_userProfile.id!),
+        child: Body(_userProfile));
   }
 }
 
 class Body extends StatefulWidget {
-  Body() : super();
-
+  Body(this.userProfile) : super();
+  final UserProfile userProfile;
   @override
   _BodyState createState() => _BodyState();
 }
 
 class _BodyState extends State<Body> {
-  UserProfile? userData;
-  TextEditingController _controllerUserName = new TextEditingController();
-  TextEditingController _controllerLastName = new TextEditingController();
-  TextEditingController _controllerEmail = new TextEditingController();
-  TextEditingController _controllerPhone = new TextEditingController();
-  TextEditingController _controllerAddres = new TextEditingController();
-  @override
-  void initState() {
-    getInitUserData(BlocProvider.of<AuthenticationBloc>(context).state.user.id);
-    super.initState();
-    print('Hola');
-  }
-
-  void getInitUserData(String id) async {
-    final UserProfile? user = await context.read<ProfileCubit>().getUser(id);
-    setState(() {
-      if (user != null) {
-        _controllerUserName.text = user.userName ?? '';
-        _controllerLastName.text = user.lastName ?? '';
-        _controllerEmail.text = user.email ?? '';
-        _controllerPhone.text = user.phone ?? '';
-        _controllerAddres.text = user.address ?? '';
-
-      }
-
-      userData = user;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -77,11 +48,11 @@ class _BodyState extends State<Body> {
                 child: Center(
                   child: CircleAvatar(
                     radius: 55,
-                    backgroundImage: userData?.photoUri != null
-                        ? NetworkImage(userData!.photoUri!)
+                    backgroundImage: widget.userProfile.photoUri != null
+                        ? NetworkImage(widget.userProfile.photoUri!)
                         : null,
-                    child: userData?.photoUri == null
-                        ? const Icon(Icons.person_outline, size: 20)
+                    child: widget.userProfile.photoUri == null
+                        ? const Icon(Icons.person, size: 20)
                         : null,
                   ),
                 ),
@@ -113,7 +84,7 @@ class _BodyState extends State<Body> {
                                   previous.userName != current.userName,
                               builder: (context, state) {
                                 return TextFormField(
-                                  controller: _controllerUserName,
+                                  initialValue: widget.userProfile.userName,
                                   decoration: InputDecoration(
                                       border: InputBorder.none,
                                       hintText: 'Nombre'),
@@ -143,7 +114,7 @@ class _BodyState extends State<Body> {
                                   previous.lastName != current.lastName,
                               builder: (context, state) {
                                 return TextFormField(
-                                 controller: _controllerLastName,
+                                  initialValue: widget.userProfile.lastName,
                                   decoration: InputDecoration(
                                       border: InputBorder.none,
                                       hintText: 'Apellidos'),
@@ -173,7 +144,7 @@ class _BodyState extends State<Body> {
                                   previous.email != current.email,
                               builder: (context, state) {
                                 return TextFormField(
-                                  controller: _controllerEmail,
+                                  initialValue: widget.userProfile.email,
                                   decoration: InputDecoration(
                                       border: InputBorder.none,
                                       hintText: 'Correo Electrónico'),
@@ -203,7 +174,7 @@ class _BodyState extends State<Body> {
                                   previous.phone != current.phone,
                               builder: (context, state) {
                                 return TextFormField(
-                                  controller: _controllerPhone,
+                                  initialValue: widget.userProfile.phone,
                                   decoration: InputDecoration(
                                       border: InputBorder.none,
                                       hintText: 'Teléfono'),
@@ -233,7 +204,7 @@ class _BodyState extends State<Body> {
                                   previous.addres != current.addres,
                               builder: (context, state) {
                                 return TextFormField(
-                                 controller: _controllerAddres,
+                                  initialValue: widget.userProfile.address,
                                   decoration: InputDecoration(
                                       border: InputBorder.none,
                                       hintText: 'Dirección de domicilio'),
