@@ -15,8 +15,9 @@ class PetListPage extends StatefulWidget {
 class _PetListState extends State<PetListPage> {
   @override
   Widget build(BuildContext context) {
+    final user = BlocProvider.of<AuthenticationBloc>(context).state.user;
     return BlocProvider(
-      create: (context) => PetCubit(PetRepository()),
+      create: (context) => PetCubit(PetRepository())..getPets(user.id),
       child: Scaffold(
           appBar: _titlePage(context) as PreferredSizeWidget?,
           body: BlocBuilder<PetCubit, PetState>(builder: (_, state) {
@@ -44,54 +45,30 @@ class _PetListState extends State<PetListPage> {
   }
 
   Widget _showProducts(BuildContext context) {
-    final user = BlocProvider.of<AuthenticationBloc>(context).state.user;
-    
     return BlocBuilder<PetCubit, PetState>(
+      buildWhen: (previous, current) => previous.petList != current.petList,
       builder: (context, state) {
-            context.read<PetCubit>().getPets(user.id);
-        return StreamBuilder(
-          stream: context.read<PetCubit>().getPetsStream,
-          builder: (BuildContext context, AsyncSnapshot<List<Pet>> snapshot) {
-            if (snapshot.hasData) {
-              final _pets = snapshot.data ?? [];
-              if (_pets == []) {
-                return Center(
-                  child: Text(
-                    'Presione el boton \'+\' para agregar una mascota',
-                    style: TextStyle(color: ColorsApp.textPrimaryColor),
-                  ),
-                );
-              } else {
-                return ListView.builder(
-                  itemCount: _pets.length,
-                  itemBuilder: (context, i) => _cardPet(context, _pets[i]),
-                );
-              }
-            } else {
-              return Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-          },
-        );
+        if (state.petList != null) {
+          if (state.petList == []) {
+            return Center(
+              child: Text(
+                'Presione el boton \'+\' para agregar una mascota',
+                style: TextStyle(color: ColorsApp.textPrimaryColor),
+              ),
+            );
+          } else {
+            return ListView.builder(
+              itemCount: state.petList!.length,
+              itemBuilder: (context, i) => _cardPet(context, state.petList![i]),
+            );
+          }
+        } else {
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        }
       },
     );
-
-    // return BlocBuilder<PetCubit, PetState>(
-    //   buildWhen: (previous, current) => previous.petList != current.petList,
-    //   builder: (context, state) {
-    //     if (state.petList == null) {
-    //       return Center(
-    //         child: CircularProgressIndicator(),
-    //       );
-    //     } else {
-    //       return ListView.builder(
-    //         itemCount: state.petList.length,
-    //         itemBuilder: (context, i) => _cardPet(context, state.petList[i]),
-    //       );
-    //     }
-    //   },
-    // );
   }
 
   Widget _cardPet(BuildContext context, Pet pet) {
@@ -158,12 +135,6 @@ class _PetListState extends State<PetListPage> {
         ],
       ),
     );
-
-    //return GestureDetector(
-    //  child: productCard,
-    //  onTap: () =>
-    //      Navigator.pushNamed(context, 'showProduct', arguments: product),
-    //);
   }
 
   Widget _titlePage(context) {

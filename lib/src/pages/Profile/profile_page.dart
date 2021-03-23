@@ -40,66 +40,66 @@ class _ProfilePage extends State<ProfilePage> {
                           Divider(
                             height: 0.5,
                           ),
-                          MaterialButton(
-                              onPressed: () {},
-                              color: Colors.white,
-                              minWidth: 100,
-                              height: 60,
-                              child: Row(
-                                children: [
-                                  Image.asset(
-                                    "assets/icons/creditAcount.png",
-                                    width: 40,
-                                    height: 40,
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(left: 20.0),
-                                    child: Text("Métodos de pago"),
-                                  ),
-                                ],
-                              )),
-                          Divider(
-                            height: 0.5,
-                          ),
-                          MaterialButton(
-                              onPressed: () {},
-                              color: Colors.white,
-                              minWidth: 100,
-                              height: 60,
-                              child: Row(
-                                children: [
-                                  Image.asset(
-                                    "assets/icons/truck.png",
-                                    width: 40,
-                                    height: 40,
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(left: 20.0),
-                                    child: Text("Órdenes"),
-                                  ),
-                                ],
-                              )),
-                          Divider(
-                            height: 0.5,
-                          ),
-                          MaterialButton(
-                              onPressed: () {},
-                              color: Colors.white,
-                              minWidth: 100,
-                              height: 60,
-                              child: Row(
-                                children: [
-                                  Image.asset(
-                                    "assets/icons/setting.png",
-                                    width: 40,
-                                    height: 40,
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(left: 20.0),
-                                    child: Text("Configuraciones"),
-                                  ),
-                                ],
-                              )),
+                          //MaterialButton(
+                          //    onPressed: () {},
+                          //    color: Colors.white,
+                          //    minWidth: 100,
+                          //    height: 60,
+                          //    child: Row(
+                          //      children: [
+                          //        Image.asset(
+                          //          "assets/icons/creditAcount.png",
+                          //          width: 40,
+                          //          height: 40,
+                          //        ),
+                          //        Padding(
+                          //          padding: const EdgeInsets.only(left: 20.0),
+                          //          child: Text("Métodos de pago"),
+                          //        ),
+                          //      ],
+                          //    )),
+                          //Divider(
+                          //  height: 0.5,
+                          //),
+                          //MaterialButton(
+                          //    onPressed: () {},
+                          //    color: Colors.white,
+                          //    minWidth: 100,
+                          //    height: 60,
+                          //    child: Row(
+                          //      children: [
+                          //        Image.asset(
+                          //          "assets/icons/truck.png",
+                          //          width: 40,
+                          //          height: 40,
+                          //        ),
+                          //        Padding(
+                          //          padding: const EdgeInsets.only(left: 20.0),
+                          //          child: Text("Órdenes"),
+                          //        ),
+                          //      ],
+                          //    )),
+                          //Divider(
+                          //  height: 0.5,
+                          //),
+                          //MaterialButton(
+                          //    onPressed: () {},
+                          //    color: Colors.white,
+                          //    minWidth: 100,
+                          //    height: 60,
+                          //    child: Row(
+                          //      children: [
+                          //        Image.asset(
+                          //          "assets/icons/setting.png",
+                          //          width: 40,
+                          //          height: 40,
+                          //        ),
+                          //        Padding(
+                          //          padding: const EdgeInsets.only(left: 20.0),
+                          //          child: Text("Configuraciones"),
+                          //        ),
+                          //      ],
+                          //    )),
                           Divider(
                             height: 0.5,
                           ),

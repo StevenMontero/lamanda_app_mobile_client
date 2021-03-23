@@ -12,25 +12,25 @@ ProfileState({
     this.status
   });
 
-   ProfileState.fromObject(UserProfile user){
-    this.userID = user.id;
-    this.userName = user.userName;
-    this.email= user.email;
-    this.photoUrl= user.photoUri;
-    this.lastName= user.lastName;
-    this.addres= user.address;
-    this.phone= user.phone;
-    this.status = null;
-  }
+  // ProfileState.fromObject(UserProfile user){
+  //  this.userID = user.id;
+  //  this.userName = user.userName;
+  //  this.email= user.email;
+  //  this.photoUrl= user.photoUri;
+  //  this.lastName= user.lastName;
+  //  this.addres= user.address;
+  //  this.phone= user.phone;
+  //  this.status = null;
+  //}
 
-   String? userID;
-   String? userName;
-   String? email;
-   String? photoUrl;
-   String? lastName;
-   String? addres; 
-   String? phone;
-   FormzStatus? status;
+   final String? userID;
+   final String? userName;
+   final String? email;
+   final String? photoUrl;
+   final String? lastName;
+   final String? addres; 
+   final String? phone;
+   final FormzStatus? status;
   
   ProfileState copyWith({
    String? userID,

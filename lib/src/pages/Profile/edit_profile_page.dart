@@ -1,4 +1,4 @@
-import 'package:authentication_repository/authentication_repository.dart';
+//import 'package:authentication_repository/authentication_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lamanda_petshopcr/src/blocs/AuthenticationBloc/authentication_bloc.dart';
@@ -43,7 +43,6 @@ class _BodyState extends State<Body> {
   void initState() {
     getInitUserData(BlocProvider.of<AuthenticationBloc>(context).state.user.id);
     super.initState();
-    print('Hola');
   }
 
   void getInitUserData(String id) async {

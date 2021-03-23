@@ -1,9 +1,12 @@
+import 'dart:io';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 import 'package:formz/formz.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:lamanda_petshopcr/src/models/pet.dart';
 import 'package:lamanda_petshopcr/src/repository/pet_repositorydb.dart';
-import 'package:rxdart/rxdart.dart';
+import 'package:lamanda_petshopcr/src/utils/regularExpressions/regular_expressions_models.dart';
 
 part 'pet_state.dart';
 
@@ -11,24 +14,64 @@ class PetCubit extends Cubit<PetState> {
   PetCubit(this.petRepository) : super(PetState());
   final PetRepository petRepository;
   Pet? pet;
-  final _petsController = new BehaviorSubject<List<Pet>>();
-  final _petController = new BehaviorSubject<Pet?>();
-  get getPetsStream => _petsController.stream;
+  final picker = ImagePicker();
+  File? _photo;
+  List<String> _kindPetList = ['Perro', 'Gato'];
+  List<String> _furList = ['Largo', 'Corto'];
 
-  void nameChanged(String name) {
-    emit(state.copyWith(name: name));
+  void nameChanged(String value) {
+    final name = TextNoEmpty.dirty(value);
+    emit(state.copyWith(
+      name: name,
+      status: Formz.validate(
+          [name, state.breed, state.age, state.fur, state.weigth, state.kindPet]),
+    ));
   }
 
-  void breedChanged(String breed) {
-    emit(state.copyWith(breed: breed));
+  void breedChanged(String value) {
+    final breed = TextNoEmpty.dirty(value);
+    emit(state.copyWith(
+      breed: breed,
+      status: Formz.validate(
+          [state.name, breed, state.age, state.fur, state.weigth, state.kindPet]),
+    ));
   }
 
-  void ageChanged(int age) {
-    emit(state.copyWith(age: age));
+  void ageChanged(String value) {
+    final age = NumberNoEmpty.dirty(value);
+    emit(state.copyWith(
+      age: age,
+      status: Formz.validate(
+          [state.name, state.breed, age, state.fur, state.weigth, state.kindPet]),
+    ));
   }
 
-  void furChanged(String fur) {
+  void furChanged(String value) {
+    final fur = TextNoEmpty.dirty(value);
+    emit(state.copyWith(
+      fur: fur,
+      status: Formz.validate(
+          [state.name, state.breed, state.age, fur, state.weigth, state.kindPet]),
+    ));
     emit(state.copyWith(fur: fur));
+  }
+
+  void weigthChanged(String value) {
+    final weigth = NumberNoEmpty.dirty(value);
+    emit(state.copyWith(
+      weigth: weigth,
+      status: Formz.validate(
+          [state.name, state.breed, state.age, state.fur, weigth, state.kindPet]),
+    ));
+  }
+
+  void kindPetChanged(String value){
+    final kindPet = TextNoEmpty.dirty(value);
+    emit(state.copyWith(
+      kindPet: kindPet,
+      status: Formz.validate(
+          [state.name, state.breed, state.age, state.fur, state.weigth, kindPet]),
+    ));
   }
 
   void isVaccinationUpDateChanged(bool value) {
@@ -43,24 +86,36 @@ class PetCubit extends Cubit<PetState> {
     emit(state.copyWith(isSociable: value));
   }
 
-  void photoUrlChanged(String photpUrl) {
-    emit(state.copyWith(photoUrl: photpUrl));
+  void filePhotoChange(ImageSource source) async {
+    final pickedFile = await picker.getImage(source: source, imageQuality: 70);
+    if (pickedFile != null) {
+      _photo = File(pickedFile.path);
+    } else {
+      print('No image selected.');
+    }
+    emit(state.copyWith(photoUrl: _photo!.path, photo: _photo));
   }
 
   Future<void> addPetForm(String userID) async {
-    emit(state.copyWith(status: FormzStatus.submissionSuccess));
+    if (!state.status.isValidated) return;
+    emit(state.copyWith(status: FormzStatus.submissionInProgress));
+    
     try {
       pet = new Pet(
         userId: userID,
-        name: state.name,
-        breed: state.breed,
-        age: state.age,
-        fur: state.fur,
+        name: state.name.value,
+        breed: state.breed.value,
+        age: int.parse(state.age.value),
+        fur: state.fur.value,
+        kindPet: state.kindPet.value,
+        weight: double.parse(state.weigth.value),
         isVaccinationUpDate: state.isVaccinationUpDate,
         castrated: state.isCastrated,
         sociable: state.isSociable,
+        photoUrl: state.photoUrl,
       );
-      petRepository.addNewPet(pet!);
+      petRepository.addNewPet(_photo!, pet!);
+      emit(state.copyWith(status: FormzStatus.submissionSuccess));
     } catch (error) {
       emit(state.copyWith(status: FormzStatus.submissionFailure));
     }
@@ -71,7 +126,6 @@ class PetCubit extends Cubit<PetState> {
     if (pet != null) {
       emit(state.copyWith(petID: pet!.petId));
     }
-    _petController.sink.add(pet);
     return pet;
   }
 
@@ -80,12 +134,28 @@ class PetCubit extends Cubit<PetState> {
     if (list.isEmpty != true) {
       emit(state.copyWith(petList: list));
     }
-    _petsController.sink.add(list);
     return list;
   }
 
-  dispose() {
-    _petsController.close();
-    _petController.close();
+  List<DropdownMenuItem<String>> getKindPetList() {
+    List<DropdownMenuItem<String>> lista = [];
+    _kindPetList.forEach((element) {
+      lista.add(DropdownMenuItem(
+        child: Text(element),
+        value: element,
+      ));
+    });
+    return lista;
+  }
+
+  List<DropdownMenuItem<String>> getfurList() {
+    List<DropdownMenuItem<String>> lista = [];
+    _furList.forEach((element) {
+      lista.add(DropdownMenuItem(
+        child: Text(element),
+        value: element,
+      ));
+    });
+    return lista;
   }
 }

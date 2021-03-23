@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class TextFromField extends StatelessWidget {
-  final bool password;
+class TextFieldForm extends StatelessWidget {
+  final String? initialValue;
   final String? lavel;
   final IconData? icon;
   final TextInputType? inputType;
@@ -9,11 +9,11 @@ class TextFromField extends StatelessWidget {
   final String errorMessage;
   final ValueChanged<String>? onChanged;
 
-  TextFromField({
+  TextFieldForm({
+      this.initialValue,
       this.lavel,
       this.icon,
       this.inputType,
-      this.password = false,
       this.onChanged,
       this.errorOccurred = false,
       this.errorMessage = ''});
@@ -21,7 +21,7 @@ class TextFromField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 30.0),
+      padding: EdgeInsets.symmetric(horizontal: 3.0),
       child: Container(
         height: 75.0,
         alignment: AlignmentDirectional.center,
@@ -33,11 +33,11 @@ class TextFromField extends StatelessWidget {
             EdgeInsets.only(left: 20.0, right: 30.0, top: 0.0, bottom: 0.0),
         child: Theme(
           data: ThemeData(
-            hintColor: Colors.transparent,
+            hintColor: Colors.blue,
           ),
-          child: TextField(
+          child: TextFormField(
+            initialValue: initialValue,
             onChanged: onChanged,
-            obscureText: password,
             decoration: InputDecoration(
                 errorText: errorOccurred ? errorMessage: null,
                 labelText: lavel,
