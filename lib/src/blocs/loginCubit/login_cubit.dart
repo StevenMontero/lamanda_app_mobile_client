@@ -12,8 +12,7 @@ part 'login_state.dart';
 class LoginCubit extends Cubit<LoginState> {
   final AuthenticationRepository _authenticationRepository;
   LoginCubit(this._authenticationRepository)
-      : assert(_authenticationRepository != null),
-        super(const LoginState());
+      : super(const LoginState());
 
   final UserRepository _userRepository = new UserRepository();
   FirebaseAuth auth = FirebaseAuth.instance;
@@ -41,7 +40,7 @@ class LoginCubit extends Cubit<LoginState> {
         email: state.email.value,
         password: state.password.value,
       );
-      emit(state.copyWith(status: FormzStatus.submissionSuccess));
+     
     } on Exception {
       emit(state.copyWith(status: FormzStatus.submissionFailure));
     }

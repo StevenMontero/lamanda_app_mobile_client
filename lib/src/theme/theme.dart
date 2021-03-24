@@ -8,6 +8,7 @@ ThemeData theme() {
     fontFamily: "Muli",
     appBarTheme: appBarTheme(),
     textTheme: textTheme(),
+    primaryColor: ColorsApp.primaryColorBlue,
     visualDensity: VisualDensity.adaptivePlatformDensity,
   );
 }

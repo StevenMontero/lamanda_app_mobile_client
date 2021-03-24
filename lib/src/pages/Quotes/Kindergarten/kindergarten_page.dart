@@ -1,6 +1,7 @@
 //KindergartenScreen
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:formz/formz.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lamanda_petshopcr/src/blocs/AuthenticationBloc/authentication_bloc.dart';
 import 'package:lamanda_petshopcr/src/blocs/KinderCubit/kinder_cubit.dart';
@@ -24,21 +25,23 @@ class _KindergartenScreenState extends State<KindergartenScreen> {
           ..userDeliverChanged(
               UserProfile(id: user.id, userName: user.name, email: user.email)),
         child: Scaffold(
-          backgroundColor: ColorsApp.primaryColorPink,
+          backgroundColor: ColorsApp.primaryColorBlue, //Colors.pink[200],
           appBar: AppBar(
             leading: IconButton(
                 icon: Icon(
-                  Icons.arrow_back_ios,
-                  color: Colors.white,
+                  Icons.arrow_back,
+                  color: Colors.white60,
                   size: 25.0,
                 ),
                 onPressed: () => Navigator.of(context).pop()),
             centerTitle: true,
             elevation: 0,
-            backgroundColor: Colors.transparent,
+            backgroundColor: ColorsApp.primaryColorDark,
             title: Text(
-              "Guarderia",
-              style: TextStyle(color: Colors.white),
+              "Reservaciones para Guardería",
+              style: TextStyle(
+                color: Colors.white70,
+              ),
             ),
           ),
           body: Body(),
@@ -56,16 +59,6 @@ class Body extends StatefulWidget {
 }
 
 class _BodyState extends State<Body> {
-  String? _valueTypeRace = "Labrador";
-  int? edad = 0;
-  DateTime _focusedDay = DateTime.now();
-  DateTime? _selectedDay;
-  CalendarFormat _calendarFormat = CalendarFormat.month;
-  bool _isCastrated = false;
-  bool _isSociable = false;
-  bool _isVacunas = false;
-  bool _traslado = false;
-
   @override
   void initState() {
     super.initState();
@@ -73,102 +66,62 @@ class _BodyState extends State<Body> {
   }
 
   @override
-  void dispose() {
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Column(
-      children: [
-        // TableCalendar(
-        //   onDaySelected: (selectedDay, focusedDay) {
-        //     BlocProvider.of<KinderCubit>(context)
-        //         .dateInCalendarChanged(selectedDay);
-        //     setState(() {
-        //       _focus = focusedDay;
-        //     });
-        //   },
-        //   selectedDayPredicate: (day) {
-        //     // Use `selectedDayPredicate` to determine which day is currently selected.
-        //     // If this returns true, then `day` will be marked as selected.
+      children: [buildTableCalendar(context), buildForm()],
+    );
+  }
 
-        //     // Using `isSameDay` is recommended to disregard
-        //     // the time-part of compared DateTime objects.
-        //     return isSameDay(_selectedDay, day);
-        //   },
-        //   onPageChanged: (focusedDay) {
-        //     // No need to call `setState()` here
-        //     _focus = focusedDay;
-        //   },
-        //   firstDay: DateTime.now(),
-        //   calendarFormat: CalendarFormat.week,
-        //   startingDayOfWeek: StartingDayOfWeek.monday,
-        //   focusedDay: _focus,
-        //   headerStyle: HeaderStyle(
-        //     titleCentered: true,
-        //     formatButtonVisible: false,
-        //     titleTextStyle: TextStyle(color: Colors.white, fontSize: 16),
-        //     leftChevronIcon: Icon(
-        //       Icons.arrow_back_ios,
-        //       color: Colors.white,
-        //       size: 15,
-        //     ),
-        //     rightChevronIcon: Icon(
-        //       Icons.arrow_forward_ios,
-        //       color: Colors.white,
-        //       size: 15,
-        //     ),
-        //     leftChevronMargin: EdgeInsets.only(left: 70),
-        //     rightChevronMargin: EdgeInsets.only(right: 70),
-        //   ),
-        //   // calendarStyle: CalendarStyle(
-        //   //     selectedDecoration:
-        //   //         BoxDecoration(color: ColorsApp.primaryColorOrange),
-        //   //     weekendTextStyle: TextStyle(color: Colors.white),
-        //   //     todayTextStyle: TextStyle(color: Colors.white)),
-        //   // daysOfWeekStyle: DaysOfWeekStyle(
-        //   //     weekendStyle: TextStyle(color: Colors.white),
-        //   //     weekdayStyle: TextStyle(color: Colors.white)),
-        //   lastDay: DateTime(2050, 9, 7, 17, 30),
-        // ),
-        TableCalendar(
+  Widget buildTableCalendar(BuildContext context) {
+    return BlocBuilder<KinderCubit, KinderState>(
+      buildWhen: (previous, current) => previous.date != current.date,
+      builder: (context, state) {
+        return TableCalendar(
+          locale: 'es_Es',
+          headerStyle: HeaderStyle(
+              titleCentered: true,
+              formatButtonVisible: false,
+              titleTextStyle: TextStyle(color: Colors.white),
+              leftChevronIcon: const Icon(
+                Icons.chevron_left,
+                color: Colors.white,
+              ),
+              rightChevronIcon: const Icon(
+                Icons.chevron_right,
+                color: Colors.white,
+              )),
+          calendarStyle: CalendarStyle(
+              selectedDecoration: BoxDecoration(
+                  color: ColorsApp.primaryColorOrange, shape: BoxShape.circle),
+              defaultTextStyle: TextStyle(color: Colors.white),
+              weekendTextStyle: TextStyle(color: Colors.white),
+              disabledTextStyle: TextStyle(color: Colors.white70),
+              isTodayHighlighted: false),
+          daysOfWeekStyle: DaysOfWeekStyle(
+            weekdayStyle: TextStyle(color: Colors.white),
+            weekendStyle: TextStyle(color: Colors.orangeAccent),
+          ),
+          availableCalendarFormats: {CalendarFormat.week: 'Week'},
           firstDay: DateTime.now(),
-          lastDay: DateTime(2050, 9, 7, 17, 30),
-          focusedDay: _focusedDay,
-          calendarFormat: _calendarFormat,
+          lastDay: DateTime(3000, 12),
+          focusedDay: state.date,
+          calendarFormat: CalendarFormat.week,
           selectedDayPredicate: (day) {
-            // Use `selectedDayPredicate` to determine which day is currently selected.
-            // If this returns true, then `day` will be marked as selected.
-
-            // Using `isSameDay` is recommended to disregard
-            // the time-part of compared DateTime objects.
-            return isSameDay(_selectedDay, day);
+            return isSameDay(state.date, day);
           },
           onDaySelected: (selectedDay, focusedDay) {
-            if (!isSameDay(_selectedDay, selectedDay)) {
+            if (!isSameDay(state.date, selectedDay)) {
               // Call `setState()` when updating the selected day
-              setState(() {
-                _selectedDay = selectedDay;
-                _focusedDay = focusedDay;
-              });
-            }
-          },
-          onFormatChanged: (format) {
-            if (_calendarFormat != format) {
-              // Call `setState()` when updating calendar format
-              setState(() {
-                _calendarFormat = format;
-              });
+
+              context.read<KinderCubit>().dateInCalendarChanged(selectedDay);
             }
           },
           onPageChanged: (focusedDay) {
             // No need to call `setState()` here
-            _focusedDay = focusedDay;
+            context.read<KinderCubit>().dateInCalendarChanged(focusedDay);
           },
-        ),
-        buildForm()
-      ],
+        );
+      },
     );
   }
 
@@ -176,122 +129,38 @@ class _BodyState extends State<Body> {
     return Expanded(
       child: Container(
         width: double.infinity,
-        padding: EdgeInsets.all(20),
+        padding: EdgeInsets.all(13),
         decoration: BoxDecoration(
             borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(40), topRight: Radius.circular(40)),
-            color: Colors.white),
+                topLeft: Radius.circular(17), topRight: Radius.circular(17)),
+            color: ColorsApp.backgroundColor),
         child: Container(
           child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Column(
-                      children: [
-                        BlocBuilder<KinderCubit, KinderState>(
-                          buildWhen: (previous, current) =>
-                              previous.entryHour != current.entryHour,
-                          builder: (context, state) {
-                            return buildLastHourOf(
-                                'Hora de entrada',
-                                DateFormat.jm()
-                                    .format(state.entryHour ?? DateTime.now()),
-                                'entry');
-                          },
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        BlocBuilder<KinderCubit, KinderState>(
-                          buildWhen: (previous, current) =>
-                              previous.departureHour != current.departureHour,
-                          builder: (context, state) {
-                            return buildLastHourOf(
-                                'Fecha de salida',
-                                DateFormat.jm().format(
-                                    state.departureHour ?? DateTime.now()),
-                                'out');
-                          },
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                      ],
-                    ),
-                    Expanded(
-                      child: Container(),
-                    ),
-                    buildCupos(10)
-                  ],
+                buildHourPiker(),
+                SizedBox(
+                  height: 5,
+                ),
+                Container(
+                  child: Center(
+                    child: Text('*Horario de atención 10:00 a.m - 5:30 p.m'),
+                  ),
                 ),
                 SizedBox(
-                  height: 10,
+                  height: 5,
                 ),
-                buildTypeDog(),
-                SizedBox(
-                  height: 10,
-                ),
-                buildAgeDog(),
-                SizedBox(
-                  height: 10,
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Text(
-                  'Encargado de retiro',
-                  style: TextStyle(fontSize: 15.0, color: Colors.blueGrey[700]),
-                ),
-                buildTextField(),
-                SizedBox(
-                  height: 10,
-                ),
-                BlocBuilder<KinderCubit, KinderState>(
-                  buildWhen: (previous, current) =>
-                      previous.lastDeworming != current.lastDeworming,
-                  builder: (context, state) {
-                    return buildLastDateOf(
-                        'Última fecha de desparasitación',
-                        DateFormat.yMMMd()
-                            .format(state.lastDeworming ?? DateTime.now()),
-                        'deworming');
-                  },
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                BlocBuilder<KinderCubit, KinderState>(
-                  buildWhen: (previous, current) =>
-                      previous.lastProtectionFleas !=
-                      current.lastProtectionFleas,
-                  builder: (context, state) {
-                    return buildLastDateOf(
-                        'Ultima protección contra pulgas y garrapatas',
-                        DateFormat.yMMMd().format(
-                            state.lastProtectionFleas ?? DateTime.now()),
-                        'fleas');
-                  },
-                ),
-                SizedBox(
-                  height: 10,
-                ),
+                _petDropList(),
                 buildOptionsLsit(),
-                _traslado
-                    ? buildTextFieldDirection()
-                    : SizedBox(
-                        height: 5.0,
-                      ),
                 SizedBox(
                   height: 10,
                 ),
                 BlocBuilder<KinderCubit, KinderState>(
                   builder: (context, state) {
                     return CustomButton(
-                      color: ColorsApp.primaryColorPink,
-                      press: state.userPickup != '' && state.userDeliver != null
+                      color: ColorsApp.primaryColorBlue,
+                      press: state.status == FormzStatus.valid
                           ? () {
                               final user =
                                   BlocProvider.of<AuthenticationBloc>(context)
@@ -304,7 +173,7 @@ class _BodyState extends State<Body> {
                                       email: user.email,
                                       id: user.id,
                                       photoUri: user.photo));
-                              Navigator.of(context).pop();
+                              // Navigator.of(context).pop();
                             }
                           : null,
                       text: 'Reservar',
@@ -319,28 +188,95 @@ class _BodyState extends State<Body> {
     );
   }
 
-  Widget buildTextFieldDirection() {
+  Widget _petDropList() {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 5.0),
-      child: Container(
-        padding: EdgeInsets.only(top: 8.0),
-        child: TextField(
-            maxLines: 3,
-            onChanged: (value) =>
-                context.read<KinderCubit>().direccionChanged(value),
-            decoration: InputDecoration(
-              hintText: 'Escriba aqui la dirección',
-              filled: true,
-              fillColor: Color(0xFFDBEDFF),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                borderSide: BorderSide(color: Colors.grey),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                borderSide: BorderSide(color: Colors.grey),
-              ),
-            )),
+      padding: const EdgeInsets.symmetric(horizontal: 15.5, vertical: 5.0),
+      child: DropdownButtonFormField<String>(
+          decoration: InputDecoration(labelText: 'Seleccione su mascota'),
+          iconSize: 24,
+          elevation: 16,
+          value: 'Nana',
+          style: const TextStyle(color: ColorsApp.primaryColorBlue),
+          onChanged: (String? newValue) {},
+          items: [
+            DropdownMenuItem<String>(
+              value: 'Nana',
+              child: Text('Nana'),
+            ),
+            DropdownMenuItem<String>(
+              value: 'Hola',
+              child: Text('Hola2'),
+            )
+          ]),
+    );
+  }
+
+  Row buildHourPiker() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: <Widget>[
+        BlocBuilder<KinderCubit, KinderState>(
+          builder: (context, state) {
+            return buildLastHourOf(
+                mensaje: 'Hora de entrada',
+                hour: state.entryHour.value != null &&
+                        state.entryHour.value![1] != null
+                    ? DateFormat.jm().format(state.entryHour.value![1]!)
+                    : 'Seleccionar',
+                type: 'entry',
+                error: state.entryHour.invalid,
+                errorMessage: 'Hora invalida',
+                disable: false);
+            // DateFormat.jm().format(state.entryHour)
+          },
+        ),
+        Padding(
+          padding: const EdgeInsets.only(right: 8, left: 8),
+          child: Container(
+            width: 1,
+            height: 42,
+            color: Colors.grey.withOpacity(0.8),
+          ),
+        ),
+        BlocBuilder<KinderCubit, KinderState>(
+          builder: (context, state) {
+            return buildLastHourOf(
+                mensaje: 'Hora de salida',
+                hour: state.departureHour.value != null &&
+                        state.entryHour.value![1] != null
+                    ? DateFormat.jm().format(state.departureHour.value![1]!)
+                    : 'Seleccionar',
+                type: 'out',
+                error: state.departureHour.invalid,
+                errorMessage: 'Hora invalida',
+                disable: state.entryHour.value == null ? true : false);
+          },
+        ),
+      ],
+    );
+  }
+
+  Widget buildTextField(
+      {required String label,
+      required String hintText,
+      required int maxLines,
+      required ValueChanged<String> onChanged,
+      String errorMessage = '',
+      bool isErrorOccurred = false}) {
+    return TextFormField(
+      onChanged: onChanged,
+      decoration: InputDecoration(
+        labelStyle: TextStyle(color: ColorsApp.primaryColorBlue),
+        labelText: label,
+        hintText: hintText,
+        filled: true,
+        errorText: isErrorOccurred ? errorMessage : null,
+        enabledBorder: OutlineInputBorder(),
+        helperText: '*Obligatorio',
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.all(Radius.circular(10.0)),
+          borderSide: BorderSide(color: ColorsApp.primaryColorOrange),
+        ),
       ),
     );
   }
@@ -348,15 +284,17 @@ class _BodyState extends State<Body> {
   Widget buildDatePiker(String date, String type) {
     return Container(
       width: 170,
-      child: OutlineButton(
-        borderSide: BorderSide(color: ColorsApp.primaryColorPink),
-        highlightedBorderColor: ColorsApp.primaryColorPink,
-        highlightColor: ColorsApp.primaryColorPink,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+      child: OutlinedButton(
+        style: OutlinedButton.styleFrom(
+            primary: ColorsApp.primaryColorBlue,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(5.0),
+              side: BorderSide(color: ColorsApp.primaryColorPink),
+            )),
         onPressed: () => _presentDatePicker(type),
         child: Row(
           children: [
-            Icon(Icons.calendar_today),
+            Icon(Icons.calendar_today_rounded),
             SizedBox(
               width: 10,
             ),
@@ -364,170 +302,18 @@ class _BodyState extends State<Body> {
           ],
         ),
       ),
-    );
-  }
-
-  Widget builHourPiker(String date, String type) {
-    return Container(
-      width: 170,
-      child: OutlineButton(
-        borderSide: BorderSide(color: ColorsApp.primaryColorPink),
-        highlightedBorderColor: ColorsApp.primaryColorPink,
-        highlightColor: ColorsApp.primaryColorPink,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
-        onPressed: () => _timePiker(type),
-        child: Row(
-          children: [
-            Icon(Icons.calendar_today),
-            SizedBox(
-              width: 10,
-            ),
-            Text(date),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget buildTypeDog() {
-    return Row(
-      children: [
-        Container(
-          alignment: Alignment.topLeft,
-          child: Text(
-            'Raza',
-            style: TextStyle(fontSize: 15.0, color: Colors.blueGrey[700]),
-          ),
-        ),
-        Expanded(
-          child: Container(
-            alignment: Alignment.center,
-            child: DropdownButtonHideUnderline(
-              child: ButtonTheme(
-                alignedDropdown: true,
-                child: DropdownButton(
-                  items: [
-                    DropdownMenuItem(
-                      child: Text('Labrador'),
-                      value: 'Labrador',
-                    ),
-                    DropdownMenuItem(
-                      child: Text('Pastator Aleman'),
-                      value: 'Pastator Aleman',
-                    )
-                  ],
-                  value: _valueTypeRace,
-                  onChanged: (dynamic value) {
-                    setState(() {
-                      _valueTypeRace = value;
-                      context.read<KinderCubit>().raceChanged(value);
-                    });
-                  },
-                ),
-              ),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget buildAgeDog() {
-    return Row(
-      children: [
-        Container(
-          alignment: Alignment.topLeft,
-          child: Text(
-            'Edad',
-            style: TextStyle(fontSize: 15.0, color: Colors.blueGrey[700]),
-          ),
-        ),
-        Expanded(
-          child: Container(
-            alignment: Alignment.center,
-            child: DropdownButtonHideUnderline(
-              child: ButtonTheme(
-                alignedDropdown: true,
-                child: DropdownButton(
-                  items: List.generate(
-                      20,
-                      (index) => DropdownMenuItem(
-                            child: Text('$index'),
-                            value: index,
-                          )),
-                  value: edad,
-                  onChanged: (dynamic value) {
-                    setState(() {
-                      edad = value;
-                      context.read<KinderCubit>().ageChanged(value);
-                    });
-                  },
-                ),
-              ),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget buildTextField() {
-    return Container(
-      padding: EdgeInsets.only(top: 8.0),
-      child: TextField(
-          onChanged: (value) =>
-              context.read<KinderCubit>().userPickupChanged(value),
-          maxLines: 1,
-          decoration: InputDecoration(
-            hintText: 'Escriba aqui',
-            filled: true,
-            fillColor: Color(0xFFDBEDFF),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.all(Radius.circular(10.0)),
-              borderSide: BorderSide(color: Colors.grey),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.all(Radius.circular(10.0)),
-              borderSide: BorderSide(color: Colors.grey),
-            ),
-          )),
-    );
-  }
-
-  Widget buildLastDateOf(String mensaje, String date, String type) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          mensaje,
-          style: TextStyle(fontSize: 15.0, color: Colors.blueGrey[700]),
-        ),
-        buildDatePiker(date, type)
-      ],
-    );
-  }
-
-  Widget buildLastHourOf(String mensaje, String date, String type) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          mensaje,
-          style: TextStyle(fontSize: 15.0, color: Colors.blueGrey[700]),
-        ),
-        builHourPiker(date, type)
-      ],
     );
   }
 
   void _timePiker(String type) async {
-     TimeOfDay? selectedTime = await (showTimePicker(
-      context: context,
-      initialTime: TimeOfDay.now(),
-    ));
+    TimeOfDay selectedTime = await (showTimePicker(
+          context: context,
+          initialTime: TimeOfDay.now(),
+        )) ??
+        TimeOfDay.now();
     final date = DateTime.now();
     final dateWithTime = DateTime(date.year, date.month, date.day,
-        selectedTime!.hour, selectedTime.minute);
+        selectedTime.hour, selectedTime.minute);
     switch (type) {
       case 'entry':
         context.read<KinderCubit>().entryHourChanged(dateWithTime);
@@ -539,13 +325,15 @@ class _BodyState extends State<Body> {
     }
   }
 
-  _presentDatePicker(String type) async {
+  void _presentDatePicker(String type) async {
     final refDate = DateTime.now();
-    final picked = await showDatePicker(
+    var showDatePicker2 = showDatePicker(
+        locale: const Locale("es", "ES"),
         context: context,
         initialDate: refDate,
-        firstDate: refDate,
-        lastDate: DateTime(refDate.year + 1, refDate.month, refDate.day));
+        firstDate: DateTime(1900),
+        lastDate: DateTime(refDate.year + 10, refDate.month, refDate.day));
+    final picked = await showDatePicker2;
 
     switch (type) {
       case 'deworming':
@@ -559,99 +347,170 @@ class _BodyState extends State<Body> {
   }
 
   Widget buildOptionsLsit() {
-    return Column(
-      children: [
-        SwitchListTile(
-          title: Text('Vacunas al dia'),
-          activeColor: ColorsApp.primaryColorPink,
-          value: _isVacunas,
-          onChanged: (value) {
-            setState(() {
-              _isVacunas = value;
-              context.read<KinderCubit>().isVaccinationUpDateChanged(value);
-            });
-          },
-        ),
-        SwitchListTile(
-          title: Text('Castrado'),
-          activeColor: ColorsApp.primaryColorPink,
-          value: _isCastrated,
-          onChanged: (value) {
-            setState(() {
-              _isCastrated = value;
-              context.read<KinderCubit>().isCastratedDateChanged(value);
-            });
-          },
-        ),
-        SwitchListTile(
-          title: Text('Sociable'),
-          activeColor: ColorsApp.primaryColorPink,
-          value: _isSociable,
-          onChanged: (value) {
-            setState(() {
-              _isSociable = value;
-              context.read<KinderCubit>().isSociableChanged(value);
-            });
-          },
-        ),
-        SwitchListTile(
-          title: Text('Traslado'),
-          activeColor: ColorsApp.primaryColorPink,
-          value: _traslado,
-          onChanged: (value) {
-            setState(() {
-              _traslado = value;
-              context.read<KinderCubit>().transporteChanged(value);
-            });
-          },
-        ),
-      ],
+    return BlocBuilder<KinderCubit, KinderState>(
+      builder: (context, state) {
+        return Column(
+          children: [
+            CheckboxListTile(
+              subtitle: Text('Si es así, ingrese la fecha de aplicación'),
+              title: Text('¿Está desparasitada la mascota?'),
+              activeColor: ColorsApp.primaryColorOrange,
+              value: state.isDeworming,
+              onChanged: (value) {
+                context.read<KinderCubit>().isDewormingChanged(value!);
+                context
+                    .read<KinderCubit>()
+                    .lastDewormingChanged(DateTime.now());
+              },
+            ),
+            state.isDeworming
+                ? buildDatePiker(
+                    DateFormat.yMMMd()
+                        .format(state.lastDeworming.value ?? DateTime.now()),
+                    'deworming')
+                : Container(),
+            CheckboxListTile(
+              subtitle: Text('Si es así, ingrese la fecha de aplicación'),
+              title: Text('¿Control de pulgas y garrapatas?'),
+              activeColor: ColorsApp.primaryColorOrange,
+              value: state.isProtectionFleas,
+              onChanged: (value) {
+                context.read<KinderCubit>().isProtectionFleasChanged(value!);
+              },
+            ),
+            state.isProtectionFleas
+                ? buildDatePiker(
+                    DateFormat.yMMMd().format(
+                        state.lastProtectionFleas.value ?? DateTime.now()),
+                    'fleas')
+                : Container(),
+            CheckboxListTile(
+              subtitle: Text('Persona que no sea yo'),
+              title: Text('¿Otra persona retira la mascota?'),
+              activeColor: ColorsApp.primaryColorOrange,
+              value: state.ispickUpSomeoneElse,
+              onChanged: (value) {
+                context.read<KinderCubit>().ispickUpSomeoneElseChanged(value!);
+              },
+            ),
+            state.ispickUpSomeoneElse
+                ? buildTextField(
+                    label: 'Nombre',
+                    hintText: 'Escriba aquí el nombre',
+                    maxLines: 1,
+                    errorMessage:
+                        'Números y caracteres especiales no permitidos',
+                    onChanged: (value) =>
+                        context.read<KinderCubit>().userPickupChanged(value),
+                    isErrorOccurred: state.userPickup.invalid)
+                : Container(),
+            CheckboxListTile(
+              subtitle: Text('Vamos por su mascota'),
+              title: Text('¿Necesita traslado?'),
+              activeColor: ColorsApp.primaryColorOrange,
+              value: state.transporte,
+              onChanged: (value) {
+                context.read<KinderCubit>().istransporteChanged(value!);
+              },
+            ),
+            state.transporte
+                ? buildTextField(
+                    label: 'Dirección',
+                    hintText: 'Escriba aquí su dirección',
+                    maxLines: 1,
+                    errorMessage: 'Caracteres especiales no permitidos',
+                    onChanged: (value) =>
+                        context.read<KinderCubit>().direccionChanged(value),
+                    isErrorOccurred: state.direccion.invalid)
+                : Container()
+          ],
+        );
+      },
     );
   }
 
-  Widget buildCupos(int cupos) {
-    return Container(
-      width: 150,
-      height: 150,
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          color: Colors.white,
-          border: Border.all(width: 1, color: ColorsApp.primaryColorPink)),
-      child: Stack(
+  Widget buildLastHourOf(
+      {required String mensaje,
+      required String hour,
+      required String type,
+      required bool error,
+      required bool disable,
+      required String errorMessage}) {
+    return Expanded(
+      child: Column(
         children: [
-          Container(
-            height: 80,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(10), topRight: Radius.circular(10)),
-              color: ColorsApp.primaryColorPink,
-            ),
-            child: Center(
-              child: Text(
-                'Cupos',
-                style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 20.0,
-                    fontWeight: FontWeight.w700),
+          Material(
+            color: Colors.transparent,
+            child: InkWell(
+              focusColor: Colors.transparent,
+              highlightColor: Colors.transparent,
+              hoverColor: Colors.transparent,
+              splashColor: Colors.grey.withOpacity(0.2),
+              borderRadius: const BorderRadius.all(
+                Radius.circular(4.0),
               ),
-            ),
-          ),
-          Positioned(
-            top: 85,
-            left: 45,
-            child: Container(
-              height: 50,
-              width: 60,
-              child: Center(
-                child: Text(
-                  '$cupos',
-                  style: TextStyle(
-                      fontSize: 20,
-                      color: ColorsApp.primaryColorPink,
-                      fontWeight: FontWeight.w800),
+              onTap: disable
+                  ? null
+                  : () {
+                      _timePiker(type);
+                    },
+              child: Padding(
+                padding:
+                    const EdgeInsets.only(left: 8, right: 8, top: 4, bottom: 4),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Text(
+                      mensaje,
+                      style: TextStyle(
+                          fontWeight: FontWeight.w100,
+                          fontSize: 16,
+                          color: Colors.black),
+                    ),
+                    const SizedBox(
+                      height: 8,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(right: 5),
+                          child: Icon(
+                            Icons.watch_later_outlined,
+                            size: 17,
+                            color: ColorsApp.primaryColorBlue,
+                          ),
+                        ),
+                        Text(
+                          hour,
+                          style: TextStyle(
+                              decoration: TextDecoration.none,
+                              fontWeight: FontWeight.w100,
+                              fontSize: 15,
+                              color: disable
+                                  ? Colors.grey
+                                  : error
+                                      ? Colors.red
+                                      : ColorsApp.primaryColorBlue),
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
               ),
             ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 4.0),
+            child: error
+                ? Text(
+                    errorMessage,
+                    style: TextStyle(color: Colors.red, fontSize: 12),
+                    textAlign: TextAlign.center,
+                  )
+                : Text(''),
           )
         ],
       ),

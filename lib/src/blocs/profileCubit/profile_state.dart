@@ -23,14 +23,14 @@ ProfileState({
   //  this.status = null;
   //}
 
-   final String? userID;
-   final String? userName;
-   final String? email;
-   final String? photoUrl;
-   final String? lastName;
-   final String? addres; 
-   final String? phone;
-   final FormzStatus? status;
+  final String? userID;
+  final String? userName;
+  final String? email;
+  final String? photoUrl;
+  final String? lastName;
+  final String? addres; 
+  final String? phone;
+  final FormzStatus? status;
   
   ProfileState copyWith({
    String? userID,

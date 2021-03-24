@@ -2,89 +2,80 @@ part of 'kinder_cubit.dart';
 
 class KinderState extends Equatable {
   const KinderState({
-    this.age = 1,
-    this.date,
-    this.entryHour,
-    this.departureHour,
-    this.race = 'Labrador',
     this.userDeliver,
-    this.userPickup = '',
-    this.direccion = '',
-    this.isVaccinationUpDate = false,
-    this.isCastrated = false,
-    this.isSociable = false,
-    this.lastDeworming,
-    this.lastProtectionFleas,
+    this.userPickup = const UserName.pure(),
+    required this.date,
+    this.entryHour = const HourCheckIn.pure(),
+    this.departureHour = const HourCheckOut.pure(),
+    this.direccion = const AddrresForm.pure(),
+    this.isDeworming = false,
+    this.lastDeworming = const DateForm.pure(),
+    this.lastProtectionFleas = const DateForm.pure(),
+    this.isProtectionFleas = false,
     this.transporte = false,
-    this.status,
+    this.ispickUpSomeoneElse = false,
+    this.status = FormzStatus.pure,
   });
-  final DateTime? date;
-  final DateTime? entryHour;
-  final DateTime? departureHour;
-  final FormzStatus? status;
-  final String race;
-  final int age;
+  final DateTime date;
+  final HourCheckIn entryHour;
+  final HourCheckOut departureHour;
+  final FormzStatus status;
   final UserProfile? userDeliver;
-  final String userPickup;
-  final DateTime? lastDeworming;
-  final DateTime? lastProtectionFleas;
+  final UserName userPickup;
+  final DateForm lastDeworming;
+  final DateForm lastProtectionFleas;
   final bool transporte;
-  final String direccion;
-  final bool isVaccinationUpDate;
-  final bool isCastrated;
-  final bool isSociable;
+  final AddrresForm direccion;
+  final bool ispickUpSomeoneElse;
+  final bool isDeworming;
+  final bool isProtectionFleas;
 
   KinderState copyWith({
     DateTime? date,
-    DateTime? entryHour,
-    DateTime? departureHour,
-    String? race,
-    int? age,
+    HourCheckIn? entryHour,
+    HourCheckOut? departureHour,
     UserProfile? userDeliver,
-    String? userPickup,
-    DateTime? lastDeworming,
-    DateTime? lastProtectionFleas,
+    UserName? userPickup,
+    DateForm? lastDeworming,
+    DateForm? lastProtectionFleas,
+    AddrresForm? direccion,
     bool? transporte,
-    String? direccion,
-    bool? isVaccinationUpDate,
-    bool? isCastrated,
-    bool? isSociable,
+    bool? isProtectionFleas,
+    bool? ispickUpSomeoneElse,
+    bool? isDeworming,
     FormzStatus? status,
-
   }) {
     return KinderState(
-        date: date ?? this.date,
-        entryHour: entryHour ?? this.entryHour,
-        departureHour: departureHour ?? this.departureHour,
-        race: race ?? this.race,
-        age: age ?? this.age,
-        userDeliver: userDeliver ?? this.userDeliver,
-        userPickup: userPickup ?? this.userPickup,
-        lastDeworming: lastDeworming ?? this.lastDeworming,
-        lastProtectionFleas: lastProtectionFleas ?? this.lastProtectionFleas,
-        transporte: transporte ?? this.transporte,
-        direccion: direccion ?? this.direccion,
-        isCastrated: isCastrated ?? this.isCastrated,
-        isSociable: isSociable ?? this.isSociable,
-        status: status ?? this.status,
-        isVaccinationUpDate: isVaccinationUpDate ?? this.isVaccinationUpDate);
+      date: date ?? this.date,
+      entryHour: entryHour ?? this.entryHour,
+      departureHour: departureHour ?? this.departureHour,
+      userDeliver: userDeliver ?? this.userDeliver,
+      userPickup: userPickup ?? this.userPickup,
+      lastDeworming: lastDeworming ?? this.lastDeworming,
+      lastProtectionFleas: lastProtectionFleas ?? this.lastProtectionFleas,
+      transporte: transporte ?? this.transporte,
+      direccion: direccion ?? this.direccion,
+      status: status ?? this.status,
+      isDeworming: isDeworming ?? this.isDeworming,
+      isProtectionFleas: isProtectionFleas ?? this.isProtectionFleas,
+      ispickUpSomeoneElse: ispickUpSomeoneElse ?? this.ispickUpSomeoneElse,
+    );
   }
 
   @override
   List<Object?> get props => [
         entryHour,
+        date,
         departureHour,
-        race,
-        age,
         userDeliver,
         userPickup,
         lastDeworming,
         lastProtectionFleas,
         transporte,
         direccion,
-        isCastrated,
-        isSociable,
-        isVaccinationUpDate,
+        isProtectionFleas,
+        ispickUpSomeoneElse,
+        isDeworming,
         status
       ];
 }

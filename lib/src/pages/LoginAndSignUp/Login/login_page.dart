@@ -215,12 +215,13 @@ class BodyWidget extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(
                       horizontal: 30.0, vertical: 10),
                   child: MaterialButton(
-                    onPressed: () {
+                    onPressed:  () {
                       context.read<LoginCubit>().logInWithCredentials();
                     },
                     height: 49.0,
                     minWidth: 500.0,
                     color: ColorsApp.primaryColorBlue,
+                    disabledColor: Colors.grey,
                     elevation: 1.0,
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(30.0)),

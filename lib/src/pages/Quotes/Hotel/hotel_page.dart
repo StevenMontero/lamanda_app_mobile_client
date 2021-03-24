@@ -7,7 +7,6 @@ import 'package:lamanda_petshopcr/src/models/userProfile.dart';
 import 'package:lamanda_petshopcr/src/repository/hotel_appointment_repositorydb.dart';
 import 'package:lamanda_petshopcr/src/theme/colors.dart';
 import 'package:lamanda_petshopcr/src/widgets/custom_button.dart';
-import 'package:table_calendar/table_calendar.dart';
 
 class HotelScreen extends StatefulWidget {
   @override

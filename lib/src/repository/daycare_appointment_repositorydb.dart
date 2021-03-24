@@ -13,11 +13,10 @@ class DaycareAppointmentRepository {
   }
 
   Future<DaycareAppointment?> getUserAppointment(String appointmentId) async {
-    DaycareAppointment appointment;
     DocumentSnapshot snapshot;
     snapshot = await _ref.doc(appointmentId).get();
     if (snapshot.exists) {
-      return appointment = DaycareAppointment.fromJson(snapshot.data()!);
+      return DaycareAppointment.fromJson(snapshot.data()!);
     } else {
       return null;
     }

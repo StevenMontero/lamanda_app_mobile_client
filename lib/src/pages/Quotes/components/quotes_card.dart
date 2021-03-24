@@ -30,10 +30,12 @@ class QuotesCard extends StatelessWidget {
               child: Container(
                 width: double.infinity,
                 height: 100,
-                child: RaisedButton(
-                  color: itemBgColor,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15)),
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                   primary:itemBgColor,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15)),
+                  ),
                   onPressed: onPress as void Function()?,
                   child: Align(
                     alignment: Alignment.centerLeft,

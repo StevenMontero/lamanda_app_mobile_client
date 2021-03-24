@@ -20,7 +20,7 @@ class PetRepository {
     DocumentSnapshot snapshot;
     snapshot = await _ref.doc(idPet).get();
     if (snapshot.exists) {
-      return pet = Pet.fromJson(snapshot.data()!);
+      return Pet.fromJson(snapshot.data()!);
     } else {
       return null;
     }
