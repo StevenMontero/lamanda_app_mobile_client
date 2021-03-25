@@ -11,7 +11,7 @@ class InfoformCubit extends Cubit<InfoformState> {
   InfoformCubit() : super(InfoformState());
 
   void descriptionChanged(String des) async {
-    final descriptionAux = TextNoEmpty.dirty(des);
+    final descriptionAux = Text_NoEmpty.dirty(des);
     emit(state.copyWith(
         description: descriptionAux,
         status: caseValidateForm(

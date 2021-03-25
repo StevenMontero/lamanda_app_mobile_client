@@ -12,6 +12,17 @@ ProfileState({
     this.status
   });
 
+  // ProfileState.fromObject(UserProfile user){
+  //  this.userID = user.id;
+  //  this.userName = user.userName;
+  //  this.email= user.email;
+  //  this.photoUrl= user.photoUri;
+  //  this.lastName= user.lastName;
+  //  this.addres= user.address;
+  //  this.phone= user.phone;
+  //  this.status = null;
+  //}
+
   final String? userID;
   final String? userName;
   final String? email;

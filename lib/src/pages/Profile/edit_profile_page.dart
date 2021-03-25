@@ -1,3 +1,4 @@
+//import 'package:authentication_repository/authentication_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lamanda_petshopcr/src/blocs/AuthenticationBloc/authentication_bloc.dart';
@@ -33,6 +34,34 @@ class Body extends StatefulWidget {
 }
 
 class _BodyState extends State<Body> {
+  UserProfile? userData;
+  TextEditingController _controllerUserName = new TextEditingController();
+  TextEditingController _controllerLastName = new TextEditingController();
+  TextEditingController _controllerEmail = new TextEditingController();
+  TextEditingController _controllerPhone = new TextEditingController();
+  TextEditingController _controllerAddres = new TextEditingController();
+  @override
+  void initState() {
+    getInitUserData(BlocProvider.of<AuthenticationBloc>(context).state.user.id);
+    super.initState();
+  }
+
+  void getInitUserData(String id) async {
+    final UserProfile? user = await context.read<ProfileCubit>().getUser(id);
+    setState(() {
+      if (user != null) {
+        _controllerUserName.text = user.userName ?? '';
+        _controllerLastName.text = user.lastName ?? '';
+        _controllerEmail.text = user.email ?? '';
+        _controllerPhone.text = user.phone ?? '';
+        _controllerAddres.text = user.address ?? '';
+
+      }
+
+      userData = user;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

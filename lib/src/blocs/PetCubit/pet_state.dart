@@ -1,46 +1,55 @@
 part of 'pet_cubit.dart';
 
 class PetState extends Equatable {
-  const PetState({
-
-    this.petID,
-    this.userID,
-    this.name,
-    this.breed,
-    this.age,
-    this.fur,
-    this.isVaccinationUpDate = false,
-    this.isCastrated = false,
-    this.isSociable = false,
-    this.photoUrl,
-    this.petList,
-    this.status
-  });
 
   final String? petID;
   final String? userID;
-  final String? name;
-  final String? breed;
-  final int? age;
-  final String? fur; 
+  final TextNoEmpty name;
+  final TextNoEmpty breed;
+  final NumberNoEmpty age;
+  final TextNoEmpty fur;
+  final NumberNoEmpty weigth; 
   final bool isVaccinationUpDate;
   final bool isCastrated;
   final bool isSociable;
   final String? photoUrl;
+  final File? photo;
+  final TextNoEmpty kindPet;
   final List<Pet>? petList;
-  final FormzStatus? status;
-  
+  final FormzStatus status;
+
+  const PetState({
+    this.petID,
+    this.userID,
+    this.name = const TextNoEmpty.pure(),
+    this.breed = const TextNoEmpty.pure(),
+    this.age = const NumberNoEmpty.pure(),
+    this.fur = const TextNoEmpty.pure(),
+    this.weigth = const NumberNoEmpty.pure(),
+    this.isVaccinationUpDate = false,
+    this.isCastrated = false,
+    this.isSociable = false,
+    this.photoUrl,
+    this.photo,
+    this.kindPet = const TextNoEmpty.pure(),
+    this.petList,
+    this.status = FormzStatus.pure,
+  });
+
   PetState copyWith({
     String? petID,
     String? userID,
-    String? name,
-    String? breed,
-    int? age,
-    String? fur, 
+    TextNoEmpty? name,
+    TextNoEmpty? breed,
+    NumberNoEmpty? age,
+    TextNoEmpty? fur, 
+    NumberNoEmpty? weigth,
     bool? isVaccinationUpDate,
     bool? isCastrated,
     bool? isSociable,
     String? photoUrl,
+    File? photo,
+    TextNoEmpty? kindPet,
     List<Pet>? petList,
     FormzStatus? status,
   }) {
@@ -51,10 +60,13 @@ class PetState extends Equatable {
         breed: breed ?? this.breed,
         age: age ?? this.age,
         fur: fur ?? this.fur,
+        weigth: weigth ?? this.weigth,
         isVaccinationUpDate: isVaccinationUpDate ?? this.isVaccinationUpDate,
         isCastrated: isCastrated ?? this.isCastrated,
         isSociable: isSociable ?? this.isSociable,
         photoUrl: photoUrl ?? this.photoUrl,
+        photo: photo ?? this.photo,
+        kindPet: kindPet ?? this.kindPet,
         petList: petList ?? this.petList,
         status: status ?? this.status,
         );
@@ -68,10 +80,13 @@ class PetState extends Equatable {
         breed,
         age,
         fur,
+        weigth,
         isVaccinationUpDate,
         isCastrated,
         isSociable,
         photoUrl,
+        photo,
+        kindPet,
         petList,
         status,  
       ];

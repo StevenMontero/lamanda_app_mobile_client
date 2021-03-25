@@ -2,9 +2,9 @@ import 'package:formz/formz.dart';
 
 enum TextNoEmptyValidationError { invalid }
 
-class TextNoEmpty extends FormzInput<String, TextNoEmptyValidationError> {
-  const TextNoEmpty.pure() : super.pure('');
-  const TextNoEmpty.dirty([String value = '']) : super.dirty(value);
+class Text_NoEmpty extends FormzInput<String, TextNoEmptyValidationError> {
+  const Text_NoEmpty.pure() : super.pure('');
+  const Text_NoEmpty.dirty([String value = '']) : super.dirty(value);
 
   @override
   TextNoEmptyValidationError? validator(String? value) {
