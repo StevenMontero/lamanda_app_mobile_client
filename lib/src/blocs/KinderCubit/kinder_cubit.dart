@@ -2,6 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:formz/formz.dart';
 import 'package:lamanda_petshopcr/src/models/daycare_appointment.dart';
+import 'package:lamanda_petshopcr/src/models/pet.dart';
 import 'package:lamanda_petshopcr/src/models/userProfile.dart';
 import 'package:lamanda_petshopcr/src/repository/daycare_appointment_repositorydb.dart';
 import 'package:lamanda_petshopcr/src/utils/regularExpressions/regular_expressions_models.dart';
@@ -173,6 +174,9 @@ class KinderCubit extends Cubit<KinderState> {
     } catch (error) {
       emit(state.copyWith(status: FormzStatus.submissionFailure));
     }
+  }
+   void petChanged(Pet pet) {
+    emit(state.copyWith(pet: pet));
   }
 
   FormzStatus caseValidateForm(

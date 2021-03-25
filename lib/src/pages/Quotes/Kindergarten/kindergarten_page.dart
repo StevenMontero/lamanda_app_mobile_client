@@ -5,6 +5,7 @@ import 'package:formz/formz.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lamanda_petshopcr/src/blocs/AuthenticationBloc/authentication_bloc.dart';
 import 'package:lamanda_petshopcr/src/blocs/KinderCubit/kinder_cubit.dart';
+import 'package:lamanda_petshopcr/src/models/pet.dart';
 import 'package:lamanda_petshopcr/src/models/userProfile.dart';
 import 'package:lamanda_petshopcr/src/repository/daycare_appointment_repositorydb.dart';
 import 'package:lamanda_petshopcr/src/theme/colors.dart';
@@ -19,11 +20,12 @@ class KindergartenScreen extends StatefulWidget {
 class _KindergartenScreenState extends State<KindergartenScreen> {
   @override
   Widget build(BuildContext context) {
-    final user = BlocProvider.of<AuthenticationBloc>(context).state.user;
+    final _userInfoProfile =
+        context.read<AuthenticationBloc>().state.userProfile;
+    final _userPetList = context.read<AuthenticationBloc>().state.petList;
     return BlocProvider(
         create: (context) => KinderCubit(DaycareAppointmentRepository())
-          ..userDeliverChanged(
-              UserProfile(id: user.id, userName: user.name, email: user.email)),
+          ..userDeliverChanged(_userInfoProfile!),
         child: Scaffold(
           backgroundColor: ColorsApp.primaryColorBlue, //Colors.pink[200],
           appBar: AppBar(
@@ -44,16 +46,17 @@ class _KindergartenScreenState extends State<KindergartenScreen> {
               ),
             ),
           ),
-          body: Body(),
+          body: Body(_userPetList),
         ));
   }
 }
 
 class Body extends StatefulWidget {
-  const Body({
+  const Body(
+    this.userPetList, {
     Key? key,
   }) : super(key: key);
-
+  final List<Pet> userPetList;
   @override
   _BodyState createState() => _BodyState();
 }
@@ -191,23 +194,21 @@ class _BodyState extends State<Body> {
   Widget _petDropList() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 15.5, vertical: 5.0),
-      child: DropdownButtonFormField<String>(
+      child: DropdownButtonFormField<Pet>(
           decoration: InputDecoration(labelText: 'Seleccione su mascota'),
           iconSize: 24,
           elevation: 16,
-          value: 'Nana',
+          value: widget.userPetList[0],
           style: const TextStyle(color: ColorsApp.primaryColorBlue),
-          onChanged: (String? newValue) {},
-          items: [
-            DropdownMenuItem<String>(
-              value: 'Nana',
-              child: Text('Nana'),
+          onChanged: (Pet? newValue) =>
+              context.read<KinderCubit>().petChanged(newValue!),
+          items: List.generate(
+            widget.userPetList.length,
+            (index) => DropdownMenuItem<Pet>(
+              value: widget.userPetList[index],
+              child: Text(widget.userPetList[index].name!),
             ),
-            DropdownMenuItem<String>(
-              value: 'Hola',
-              child: Text('Hola2'),
-            )
-          ]),
+          )),
     );
   }
 

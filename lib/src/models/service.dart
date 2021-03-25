@@ -1,6 +1,6 @@
 class Service {
-  final String name;
-  final double price;
+  String name;
+  double price;
 
   Service({required this.name, required this.price});
 }

@@ -35,7 +35,7 @@ class Pet{
     this.breed = json['breed'];
     this.age = json['age'];
     this.fur = json['fur'];
-    this.weight = json['weight'];
+    this.weight =  json['weight'].toDouble();
     this.isVaccinationUpDate = json['isVaccinationUpDate'];
     this.castrated = json['castrated'];
     this.sociable = json['sociable'];

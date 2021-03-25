@@ -5,6 +5,7 @@ class KinderState extends Equatable {
     this.userDeliver,
     this.userPickup = const UserName.pure(),
     required this.date,
+    this.pet,
     this.entryHour = const HourCheckIn.pure(),
     this.departureHour = const HourCheckOut.pure(),
     this.direccion = const AddrresForm.pure(),
@@ -17,6 +18,7 @@ class KinderState extends Equatable {
     this.status = FormzStatus.pure,
   });
   final DateTime date;
+  final Pet? pet;
   final HourCheckIn entryHour;
   final HourCheckOut departureHour;
   final FormzStatus status;
@@ -32,6 +34,7 @@ class KinderState extends Equatable {
 
   KinderState copyWith({
     DateTime? date,
+    Pet? pet,
     HourCheckIn? entryHour,
     HourCheckOut? departureHour,
     UserProfile? userDeliver,
@@ -48,6 +51,7 @@ class KinderState extends Equatable {
     return KinderState(
       date: date ?? this.date,
       entryHour: entryHour ?? this.entryHour,
+      pet: pet ?? this.pet,
       departureHour: departureHour ?? this.departureHour,
       userDeliver: userDeliver ?? this.userDeliver,
       userPickup: userPickup ?? this.userPickup,
