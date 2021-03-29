@@ -1,12 +1,9 @@
+import '../../theme/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-//import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:lamanda_petshopcr/src/blocs/AuthenticationBloc/authentication_bloc.dart';
-//import 'package:lamanda_petshopcr/src/pages/Profile/add_pet_page.dart';
 import 'package:lamanda_petshopcr/src/theme/colors.dart';
-//import 'package:lamanda_petshopcr/src/widgets/custom_app_bar.dart';
-import '../../theme/colors.dart';
+import 'package:lamanda_petshopcr/src/blocs/AuthenticationBloc/authentication_bloc.dart';
 
 class ProfilePage extends StatefulWidget {
   @override

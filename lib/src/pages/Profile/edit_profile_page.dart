@@ -21,7 +21,7 @@ class _EditProfilePage extends State<EditProfilePage> {
         context.read<AuthenticationBloc>().state.userProfile!;
     return BlocProvider(
         create: (context) => ProfileCubit(UserRepository())
-          ..fillInitialDataUser(_userProfile.id!),
+          ..fillInitialDataUser(_userProfile),
         child: Body(_userProfile));
   }
 }
@@ -292,7 +292,4 @@ class _BodyState extends State<Body> {
     );
   }
 
-  // Widget buildOptionPerfil(user) {
-  //   return
-  // }
 }

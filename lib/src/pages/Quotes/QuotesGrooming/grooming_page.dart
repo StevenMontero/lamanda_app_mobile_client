@@ -108,7 +108,7 @@ class _BodyState extends State<Body> {
                       ? onStepContinue
                       : gromingCubitState.currentStep == 3
                           ? () {
-                              //TODO: llamar a la clase de pagar
+                              
                               print('final');
                             }
                           : null,

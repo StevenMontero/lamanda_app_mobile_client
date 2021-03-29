@@ -8,16 +8,16 @@ class PetList{
 
   PetList();
 
-  PetList.fromJsonList(List<dynamic> jsonList){
-    if(jsonList.any((element) => true)){
-      for (var petObj in jsonList){
-        pet = new Pet.fromJson(petObj);
-        _list!.add(pet);
-      }
-    }else {
-      _list = null;
-    }
-  }
+  //PetList.fromJsonList(List<dynamic> jsonList){
+  //  if(jsonList.any((element) => true)){
+  //    for (var petObj in jsonList){
+  //      pet = new Pet.fromJson(petObj);
+  //      _list!.add(pet);
+  //    }
+  //  }else {
+  //    _list = null;
+  //  }
+  //}
 
   void addPetToList(Pet pet){
     _list!.add(pet);

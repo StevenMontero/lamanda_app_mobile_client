@@ -60,7 +60,6 @@ class StheticAppointmentRepository {
   }
 
   Future<List<DateTime>> getListAppointmetsFree(String dateId) async {
-    //TODO: iMPLEMENTAR REAL TIME
     List<DateTime> _schedule = await _getSchedule('0erT6C3IbEKcLJCRlxyb');
     final estheticAppointmentsList = await getDocumetAppointmentByDate(dateId);
     if (estheticAppointmentsList != null) {

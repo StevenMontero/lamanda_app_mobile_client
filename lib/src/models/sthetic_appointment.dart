@@ -1,7 +1,7 @@
 //import 'package:lamanda_petshopcr/src/models/pet.dart';
 //import 'package:lamanda_petshopcr/src/models/pet_list.dart';
 import 'package:lamanda_petshopcr/src/models/userProfile.dart';
-//TODO: Corregir nombre EstheticAppointment
+
 class StheticAppointment {
   String? appointmentId;
   DateTime? entrytDate;
