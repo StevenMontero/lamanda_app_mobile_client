@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:formz/formz.dart';
+import 'package:lamanda_petshopcr/src/models/pet.dart';
 import 'package:lamanda_petshopcr/src/utils/regularExpressions/address.dart';
 import 'package:lamanda_petshopcr/src/utils/regularExpressions/text_noempty.dart';
 
@@ -36,14 +37,17 @@ class InfoformCubit extends Cubit<InfoformState> {
             listToValidate: [addressAux, state.description])));
   }
 
+  void petChanged(Pet pet) {
+    emit(state.copyWith(pet: pet));
+  }
+
   FormzStatus caseValidateForm(
       {required bool isRequiredTrasnport,
       required List<FormzInput<dynamic, dynamic>> listToValidate}) {
     if (isRequiredTrasnport) {
       return Formz.validate(listToValidate);
     } else {
-      return Formz.validate(
-          [listToValidate[1]]);
+      return Formz.validate([listToValidate[1]]);
     }
   }
 }

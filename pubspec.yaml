@@ -34,7 +34,7 @@ dependencies:
   firebase_storage: ^8.0.0
   equatable: ^2.0.0
   firebase_core: "^1.0.1"
-  flutter_bloc: ^7.0.0-nullsafety.3
+  flutter_bloc: ^7.0.0-nullsafety.3s
   flutter_svg: ^0.21.0-nullsafety.0
   font_awesome_flutter: ^9.0.0-nullsafety
   formz: ^0.4.0-nullsafety.0

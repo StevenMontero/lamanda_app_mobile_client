@@ -3,11 +3,14 @@ import 'package:formz/formz.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:lamanda_petshopcr/src/blocs/AuthenticationBloc/authentication_bloc.dart';
 import 'package:lamanda_petshopcr/src/blocs/GroomingCubit/grooming_cubit.dart';
 import 'package:lamanda_petshopcr/src/blocs/GroomingCubit/infoForm/infoform_cubit.dart';
 import 'package:lamanda_petshopcr/src/blocs/GroomingCubit/scheduleCubit/selectschedule_cubit.dart';
 import 'package:lamanda_petshopcr/src/blocs/GroomingCubit/serviceFormCubit/serviceform_cubit.dart';
+import 'package:lamanda_petshopcr/src/models/pet.dart';
 import 'package:lamanda_petshopcr/src/models/service.dart';
+import 'package:lamanda_petshopcr/src/models/userProfile.dart';
 import 'package:lamanda_petshopcr/src/repository/esthetic_appointment_repositorydb.dart';
 import 'package:lamanda_petshopcr/src/theme/colors.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -20,10 +23,14 @@ class GroomingScreen extends StatefulWidget {
 class _GroomingScreenState extends State<GroomingScreen> {
   @override
   Widget build(BuildContext context) {
+    final _userInfoProfile =
+        context.read<AuthenticationBloc>().state.userProfile;
+    final _userPetList = context.read<AuthenticationBloc>().state.petList;
     return MultiBlocProvider(
       providers: [
         BlocProvider<GroomingCubit>(create: (context) => GroomingCubit()),
-        BlocProvider<InfoformCubit>(create: (context) => InfoformCubit()),
+        BlocProvider<InfoformCubit>(
+            create: (context) => InfoformCubit()..petChanged(_userPetList[0])),
         BlocProvider<SelectscheduleCubit>(
             create: (context) =>
                 SelectscheduleCubit(StheticAppointmentRepository())
@@ -48,14 +55,18 @@ class _GroomingScreenState extends State<GroomingScreen> {
               style: TextStyle(color: Colors.white70),
             ),
           ),
-          body: Body()),
+          body: Body(
+            userData: _userInfoProfile!,
+            petList: _userPetList,
+          )),
     );
   }
 }
 
 class Body extends StatefulWidget {
-  Body() : super();
-
+  Body({required this.userData, required this.petList}) : super();
+  final UserProfile userData;
+  final List<Pet> petList;
   @override
   _BodyState createState() => _BodyState();
 }
@@ -145,7 +156,8 @@ class _BodyState extends State<Body> {
                       Card(
                         child: Column(
                           children: [
-                            buildOptionsServices(serviceFormCubitState),
+                            buildOptionsServices(
+                                serviceFormCubitState, infoFormCubitState),
                             Container(
                                 padding: EdgeInsets.only(top: 10, bottom: 10),
                                 child: Center(
@@ -296,7 +308,7 @@ class _BodyState extends State<Body> {
       builder: (context) {
         final serviceCubitState = context.watch<ServiceformCubit>().state;
         final scheduleCubitState = context.watch<SelectscheduleCubit>().state;
-        //final groomingCubitState = context.watch<GroomingCubit>().state;
+        final infoFormCubitState = context.watch<InfoformCubit>().state;
         return Card(
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(6.0)),
@@ -306,7 +318,10 @@ class _BodyState extends State<Body> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _buildPetInfo(nombre: 'Nana', peso: '10', pelaje: 'largo'),
+                _buildPetInfo(
+                    nombre: infoFormCubitState.pet!.name!,
+                    peso: infoFormCubitState.pet!.weight!.toString(),
+                    pelaje: infoFormCubitState.pet!.fur!),
                 Divider(
                   color: Colors.grey,
                 ),
@@ -550,23 +565,24 @@ class _BodyState extends State<Body> {
   Widget _petDropList() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 15.5, vertical: 5.0),
-      child: DropdownButtonFormField<String>(
+      child: DropdownButtonFormField<Pet>(
           decoration: InputDecoration(labelText: 'Seleccione su mascota'),
           iconSize: 24,
           elevation: 16,
-          value: 'Nana',
+          value: widget.petList[0],
           style: const TextStyle(color: ColorsApp.primaryColorBlue),
-          onChanged: (String? newValue) {},
-          items: [
-            DropdownMenuItem<String>(
-              value: 'Nana',
-              child: Text('Nana'),
+          onChanged: (Pet? newValue) {
+            context.read<InfoformCubit>().petChanged(newValue!);
+            context.read<ServiceformCubit>().updatePriceService(
+                newValue.weight!, newValue.kindPet!, newValue.fur!);
+          },
+          items: List.generate(
+            widget.petList.length,
+            (index) => DropdownMenuItem<Pet>(
+              value: widget.petList[index],
+              child: Text(widget.petList[index].name!),
             ),
-            DropdownMenuItem<String>(
-              value: 'Hola',
-              child: Text('Hola2'),
-            )
-          ]),
+          )),
     );
   }
 
@@ -599,7 +615,10 @@ class _BodyState extends State<Body> {
     );
   }
 
-  Widget buildOptionsServices(ServiceformState state) {
+  Widget buildOptionsServices(
+    ServiceformState state,
+    InfoformState infoFormCubitState,
+  ) {
     return Column(
       children: [
         CheckboxListTile(
@@ -620,7 +639,10 @@ class _BodyState extends State<Body> {
           value: state.isHaircutAndWash,
           onChanged: (value) => context
               .read<ServiceformCubit>()
-              .isHaircutAndWashChanged(value ?? false, 12.0, 'Perro'),
+              .isHaircutAndWashChanged(
+                  value ?? false,
+                  infoFormCubitState.pet!.weight!,
+                  infoFormCubitState.pet!.kindPet!),
         ),
         CheckboxListTile(
           title: Row(
@@ -638,9 +660,11 @@ class _BodyState extends State<Body> {
           ),
           activeColor: ColorsApp.primaryColorOrange,
           value: state.isWash,
-          onChanged: (value) => context
-              .read<ServiceformCubit>()
-              .isWashChanged(value ?? false, 12.0, 'Perro', 'Largo'),
+          onChanged: (value) => context.read<ServiceformCubit>().isWashChanged(
+              value ?? false,
+              infoFormCubitState.pet!.weight!,
+              infoFormCubitState.pet!.kindPet!,
+              infoFormCubitState.pet!.fur!),
         ),
         CheckboxListTile(
           title: Row(

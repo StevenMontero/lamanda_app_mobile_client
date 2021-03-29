@@ -70,6 +70,20 @@ class ServiceformCubit extends Cubit<ServiceformState> {
             : StatusFormService.validForm));
   }
 
+  void updatePriceService(double weight, String kindPet, String kindHair) {
+    final list = List<Service>.from(state.listService);
+    for (var item in list) {
+      if (item.name == 'Corte + Baño') {
+        item.price = PriceCalculator.calculatePriceHairCutAndWashPet(
+            weightPet: weight, kindPet: kindPet);
+      } else if (item.name == 'Baño') {
+        item.price = PriceCalculator.calculateWashPet(
+            weightPet: weight, kindPet: kindPet, kindHair: kindHair);
+      }
+    }
+    emit(state.copyWith(listService: list));
+  }
+
   void isTeethCleaningChanged(bool value) async {
     final List<Service> listAdd;
 
