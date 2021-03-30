@@ -19,8 +19,26 @@ class PetCubit extends Cubit<PetState> {
   List<String> _kindPetList = ['Perro', 'Gato'];
   List<String> _furList = ['Largo', 'Corto'];
 
+  void fillInitialDataPet(Pet pet, List<Pet> petList) async {
+    emit(state.copyWith(
+      petID: pet.petId,
+        userID: pet.userId,
+        name: ValidatorText.dirty(pet.name!),
+        breed: ValidatorText.dirty(pet.breed!),
+        age: NumberNoEmpty.dirty(pet.age.toString()),
+        fur: ValidatorText.dirty(pet.fur!),
+        kindPet: ValidatorText.dirty(pet.kindPet!),
+        weigth: NumberNoEmpty.dirty(pet.weight!.toString()),
+        isVaccinationUpDate: pet.isVaccinationUpDate,
+        isCastrated: pet.castrated,
+        isSociable: pet.sociable,
+        photoUrl: pet.photoUrl,
+        petList: petList,
+      ));
+  }
+
   void nameChanged(String value) {
-    final name = TextNoEmpty.dirty(value);
+    final name = ValidatorText.dirty(value);
     emit(state.copyWith(
       name: name,
       status: Formz.validate(
@@ -29,7 +47,7 @@ class PetCubit extends Cubit<PetState> {
   }
 
   void breedChanged(String value) {
-    final breed = TextNoEmpty.dirty(value);
+    final breed = ValidatorText.dirty(value);
     emit(state.copyWith(
       breed: breed,
       status: Formz.validate(
@@ -47,7 +65,7 @@ class PetCubit extends Cubit<PetState> {
   }
 
   void furChanged(String value) {
-    final fur = TextNoEmpty.dirty(value);
+    final fur = ValidatorText.dirty(value);
     emit(state.copyWith(
       fur: fur,
       status: Formz.validate(
@@ -66,7 +84,7 @@ class PetCubit extends Cubit<PetState> {
   }
 
   void kindPetChanged(String value){
-    final kindPet = TextNoEmpty.dirty(value);
+    final kindPet = ValidatorText.dirty(value);
     emit(state.copyWith(
       kindPet: kindPet,
       status: Formz.validate(
@@ -99,7 +117,7 @@ class PetCubit extends Cubit<PetState> {
   Future<void> addPetForm(String userID) async {
     if (!state.status.isValidated) return;
     emit(state.copyWith(status: FormzStatus.submissionInProgress));
-    
+
     try {
       pet = new Pet(
         userId: userID,
@@ -115,30 +133,34 @@ class PetCubit extends Cubit<PetState> {
         photoUrl: state.photoUrl,
       );
       petRepository.addNewPet(_photo!, pet!);
-      emit(state.copyWith(status: FormzStatus.submissionSuccess));
+      state.petList!.add(pet!);
+      emit(state.copyWith(status: FormzStatus.submissionSuccess, petList: state.petList));
     } catch (error) {
       emit(state.copyWith(status: FormzStatus.submissionFailure));
     }
   }
   //Actualiza los datos de la mascota
-  Future<void> updatePet(Pet oldPet)async{
+  Future<void> updatePet(int index)async{
     emit(state.copyWith(status: FormzStatus.submissionInProgress));
     try {
       pet = new Pet(
-        userId: oldPet.petId,
-        name: oldPet.name,
-        breed: oldPet.breed,
-        age: oldPet.age,
-        fur: oldPet.fur,
-        kindPet: oldPet.kindPet,
-        weight: oldPet.weight,
-        isVaccinationUpDate: oldPet.isVaccinationUpDate, 
-        castrated: oldPet.castrated,
-        sociable: oldPet.sociable,
-        photoUrl: oldPet.photoUrl,
+        petId: state.petID,
+        userId: state.userID,
+        name: state.name.value,
+        breed: state.breed.value,
+        age: int.parse(state.age.value),
+        fur: state.fur.value,
+        kindPet: state.kindPet.value,
+        weight: double.parse(state.weigth.value),
+        isVaccinationUpDate: state.isVaccinationUpDate,
+        castrated: state.isCastrated,
+        sociable: state.isSociable,
+        photoUrl: state.photoUrl,
       );
       petRepository.updatePet(pet!);
-      emit(state.copyWith(status: FormzStatus.submissionSuccess));
+      state.petList!.removeAt(index);
+      state.petList!.add(pet!);
+      emit(state.copyWith(status: FormzStatus.submissionSuccess, petList: state.petList));
     } catch (error) {
       emit(state.copyWith(status: FormzStatus.submissionFailure));
     }

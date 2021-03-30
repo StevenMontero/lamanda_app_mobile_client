@@ -42,6 +42,7 @@ class _PetListState extends State<PetListPage> {
           Expanded(
             child: _showPets(context),
           ),
+          SizedBox(height: 80.0),
         ],
       ),
     );
@@ -63,7 +64,7 @@ class _PetListState extends State<PetListPage> {
             return ListView.builder(
               itemCount: state.petList!.length,
               itemBuilder: (context, i) =>
-                  _cardPet(context, state.petList![i], i),
+                  _cardPet(context, state.petList!, i),
             );
           }
         } else {
@@ -75,7 +76,7 @@ class _PetListState extends State<PetListPage> {
     );
   }
 
-  Widget _cardPet(BuildContext context, Pet pet, int index) {
+  Widget _cardPet(BuildContext context, List<Pet> pets, int index) {
     return Card(
       margin: EdgeInsets.only(left: 30.0, right: 30.0, bottom: 10.0, top: 15),
       elevation: 3.0,
@@ -87,13 +88,13 @@ class _PetListState extends State<PetListPage> {
               Icons.art_track_outlined,
               size: 40,
             ),
-            title: Text(pet.name!, style: TextStyle(fontSize: 20.0)),
+            title: Text(pets[index].name!, style: TextStyle(fontSize: 20.0)),
             subtitle: Text('Datos de mi mascota'),
           ),
           Container(
             alignment: Alignment.center,
             padding: EdgeInsets.only(top: 10.0, bottom: 20.0),
-            child: (pet.photoUrl == null)
+            child: (pets[index].photoUrl == null)
                 ? Image(
                     image: AssetImage('assets/images/no-image.png'),
                     height: 250.0,
@@ -101,7 +102,7 @@ class _PetListState extends State<PetListPage> {
                     fit: BoxFit.cover,
                   )
                 : Image(
-                    image: NetworkImage(pet.photoUrl!),
+                    image: NetworkImage(pets[index].photoUrl!),
                     height: 250.0,
                     width: 350,
                     fit: BoxFit.cover,
@@ -113,7 +114,7 @@ class _PetListState extends State<PetListPage> {
               TextButton(
                 onPressed: () {
                   Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => EditPetPage(index)));
+                      builder: (context) => EditPetPage(pets, index)));
                 },
                 child: Text('Ver y Editar'),
                 style: TextButton.styleFrom(
@@ -124,7 +125,7 @@ class _PetListState extends State<PetListPage> {
                 builder: (context, state) {
                   return TextButton(
                     onPressed: () {
-                      context.read<PetCubit>().deletePet(pet.petId!, index);
+                      context.read<PetCubit>().deletePet(pets[index].petId!, index);
                       ScaffoldMessenger.of(context)
                         ..hideCurrentSnackBar()
                         ..showSnackBar(

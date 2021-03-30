@@ -4,34 +4,34 @@ class PetState extends Equatable {
 
   final String? petID;
   final String? userID;
-  final TextNoEmpty name;
-  final TextNoEmpty breed;
+  final ValidatorText name;
+  final ValidatorText breed;
   final NumberNoEmpty age;
-  final TextNoEmpty fur;
+  final ValidatorText fur;
   final NumberNoEmpty weigth; 
   final bool isVaccinationUpDate;
   final bool isCastrated;
   final bool isSociable;
   final String? photoUrl;
   final File? photo;
-  final TextNoEmpty kindPet;
+  final ValidatorText kindPet;
   final List<Pet>? petList;
   final FormzStatus status;
 
   const PetState({
     this.petID,
     this.userID,
-    this.name = const TextNoEmpty.pure(),
-    this.breed = const TextNoEmpty.pure(),
+    this.name = const ValidatorText.pure(),
+    this.breed = const ValidatorText.pure(),
     this.age = const NumberNoEmpty.pure(),
-    this.fur = const TextNoEmpty.pure(),
+    this.fur = const ValidatorText.pure(),
     this.weigth = const NumberNoEmpty.pure(),
     this.isVaccinationUpDate = false,
     this.isCastrated = false,
     this.isSociable = false,
     this.photoUrl,
     this.photo,
-    this.kindPet = const TextNoEmpty.pure(),
+    this.kindPet = const ValidatorText.pure(),
     this.petList,
     this.status = FormzStatus.pure,
   });
@@ -39,17 +39,17 @@ class PetState extends Equatable {
   PetState copyWith({
     String? petID,
     String? userID,
-    TextNoEmpty? name,
-    TextNoEmpty? breed,
+    ValidatorText? name,
+    ValidatorText? breed,
     NumberNoEmpty? age,
-    TextNoEmpty? fur, 
+    ValidatorText? fur, 
     NumberNoEmpty? weigth,
     bool? isVaccinationUpDate,
     bool? isCastrated,
     bool? isSociable,
     String? photoUrl,
     File? photo,
-    TextNoEmpty? kindPet,
+    ValidatorText? kindPet,
     List<Pet>? petList,
     FormzStatus? status,
   }) {

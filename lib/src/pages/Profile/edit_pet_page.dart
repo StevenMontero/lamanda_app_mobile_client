@@ -2,17 +2,17 @@ import 'package:formz/formz.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:image_picker/image_picker.dart';
+//import 'package:image_picker/image_picker.dart';
 import 'package:lamanda_petshopcr/src/models/pet.dart';
 import 'package:lamanda_petshopcr/src/theme/colors.dart';
 import 'package:lamanda_petshopcr/src/widgets/textfielform.dart';
 import 'package:lamanda_petshopcr/src/blocs/PetCubit/pet_cubit.dart';
 import 'package:lamanda_petshopcr/src/repository/pet_repositorydb.dart';
-import 'package:lamanda_petshopcr/src/blocs/AuthenticationBloc/authentication_bloc.dart';
 
 class EditPetPage extends StatefulWidget {
   final int index;
-  EditPetPage(this.index);
+  final List<Pet> pets;
+  EditPetPage(this.pets, this.index);
   @override
   _EditPetPageState createState() => _EditPetPageState();
 }
@@ -20,29 +20,25 @@ class EditPetPage extends StatefulWidget {
 class _EditPetPageState extends State<EditPetPage> {
   @override
   Widget build(BuildContext context) {
-    Pet _pet = context
-        .read<AuthenticationBloc>()
-        .state
-        .petList
-        .elementAt(this.widget.index);
     return BlocProvider(
-        create: (context) => PetCubit(PetRepository()), child: Body(_pet));
+        create: (context) =>
+            PetCubit(PetRepository())..fillInitialDataPet(widget.pets[widget.index], widget.pets),
+        child: Body(widget.pets[widget.index], widget.index));
   }
 }
 
 class Body extends StatefulWidget {
-  const Body(this.pet) : super();
+  const Body(this.pet, this.index) : super();
   final Pet pet;
+  final int index;
   @override
-  _BodyState createState() => _BodyState(pet);
+  _BodyState createState() => _BodyState(pet, index);
 }
 
 class _BodyState extends State<Body> {
-  _BodyState(this.pet);
+  _BodyState(this.pet, this.index);
   Pet pet;
-  bool _isCastrated = false;
-  bool _isSociable = false;
-  bool _isVacunas = false;
+  int index;
   String? dropdownValue;
   String? dropdownValueFur;
 
@@ -56,9 +52,14 @@ class _BodyState extends State<Body> {
           child: Form(
               child: Column(
             children: <Widget>[
-              _viewPhoto(),
-              SizedBox(height: 20.0),
-              _chooseKindPet(),
+              //_viewPhoto(),
+              Container(
+                child: Text("Datos de mi mascota",
+                    style: new TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: ColorsApp.secondaryColorlightPurple)),
+              ),
               SizedBox(height: 20.0),
               _petName(),
               SizedBox(height: 20.0),
@@ -66,9 +67,11 @@ class _BodyState extends State<Body> {
               SizedBox(height: 20.0),
               _petAge(),
               SizedBox(height: 20.0),
-              _petFur(),
+               _petWeigth(),
               SizedBox(height: 20.0),
-              _petWeigth(),
+              _chooseKindPet(),
+              SizedBox(height: 20.0),
+              _petFur(),
               SizedBox(height: 20.0),
               buildOptionsSwitch(),
               SizedBox(height: 20.0),
@@ -83,12 +86,12 @@ class _BodyState extends State<Body> {
           )),
         ),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.miniEndTop,
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: ColorsApp.primaryColorBlue,
-        child: Icon(Icons.add_a_photo),
-        onPressed: () => _selectImage(context),
-      ),
+      //floatingActionButtonLocation: FloatingActionButtonLocation.miniEndTop,
+      //floatingActionButton: FloatingActionButton(
+      //  backgroundColor: ColorsApp.primaryColorBlue,
+      //  child: Icon(Icons.add_a_photo),
+      //  onPressed: () => _selectImage(context),
+      //),
     );
   }
 
@@ -135,7 +138,7 @@ class _BodyState extends State<Body> {
                 value: dropdownValue,
                 onChanged: (dynamic value) {
                   dropdownValue = value;
-                  pet.kindPet = value;
+                  context.read<PetCubit>().kindPetChanged(value);
                 },
               ),
             ),
@@ -145,32 +148,32 @@ class _BodyState extends State<Body> {
     );
   }
 
-  Widget _viewPhoto() {
-    return BlocBuilder<PetCubit, PetState>(
-      buildWhen: (previous, current) => previous.photoUrl != current.photoUrl,
-      builder: (context, state) {
-        if (pet.photoUrl != null) {
-          return Image(
-            image: NetworkImage(pet.photoUrl!),
-            height: 300.0,
-            fit: BoxFit.cover,
-          );
-        } else if (state.photoUrl != null) {
-          return Image(
-            image: FileImage(state.photo!),
-            height: 300.0,
-            fit: BoxFit.cover,
-          );
-        } else {
-          return Image(
-            image: AssetImage('assets/images/no-image.png'),
-            height: 300.0,
-            fit: BoxFit.cover,
-          );
-        }
-      },
-    );
-  }
+  //Widget _viewPhoto() {
+  //  return BlocBuilder<PetCubit, PetState>(
+  //    buildWhen: (previous, current) => previous.photo != current.photo,
+  //    builder: (context, state) {
+  //      if (pet.photoUrl != null) {
+  //        return Image(
+  //          image: NetworkImage(pet.photoUrl!),
+  //          height: 300.0,
+  //          fit: BoxFit.cover,
+  //        );
+  //      } else if (state.photo != null) {
+  //        return Image(
+  //          image: FileImage(state.photo!),
+  //          height: 300.0,
+  //          fit: BoxFit.cover,
+  //        );
+  //      } else {
+  //        return Image(
+  //          image: AssetImage('assets/images/no-image.png'),
+  //          height: 300.0,
+  //          fit: BoxFit.cover,
+  //        );
+  //      }
+  //    },
+  //  );
+  //}
 
   Widget _petName() {
     return BlocBuilder<PetCubit, PetState>(
@@ -183,7 +186,7 @@ class _BodyState extends State<Body> {
           icon: Icons.edit_outlined,
           lavel: 'Nombre de mi Mascota',
           inputType: TextInputType.text,
-          onChanged: (value) => pet.name = value,
+          onChanged: (value) => context.read<PetCubit>().nameChanged(value),
         );
       },
     );
@@ -200,7 +203,7 @@ class _BodyState extends State<Body> {
           icon: Icons.edit_outlined,
           lavel: 'Raza de mi Mascota',
           inputType: TextInputType.text,
-          onChanged: (value) => pet.breed = value,
+          onChanged: (value) => context.read<PetCubit>().breedChanged(value),
         );
       },
     );
@@ -217,7 +220,7 @@ class _BodyState extends State<Body> {
           icon: Icons.edit_outlined,
           lavel: 'Edad de mi Mascota',
           inputType: TextInputType.number,
-          onChanged: (value) => pet.age = int.parse(value),
+          onChanged: (value) => context.read<PetCubit>().ageChanged(value),
         );
       },
     );
@@ -244,7 +247,7 @@ class _BodyState extends State<Body> {
                 value: dropdownValueFur,
                 onChanged: (dynamic value) {
                   dropdownValueFur = value;
-                  pet.fur = value;
+                  context.read<PetCubit>().furChanged(value);
                 },
               ),
             ),
@@ -259,14 +262,14 @@ class _BodyState extends State<Body> {
       buildWhen: (previous, current) => previous.weigth != current.weigth,
       builder: (context, state) {
         return TextFieldForm(
-          initialValue: pet.weight.toString(),
-          errorOccurred: state.weigth.invalid,
-          errorMessage: 'Formato Incorrecto. Ej: 2.4 o 2',
-          icon: Icons.edit_outlined,
-          lavel: 'Peso de mi Mascota',
-          inputType: TextInputType.number,
-          onChanged: (value) => pet.weight = double.parse(value),
-        );
+            initialValue: pet.weight.toString(),
+            errorOccurred: state.weigth.invalid,
+            errorMessage: 'Formato Incorrecto. Ej: 2.4 o 2',
+            icon: Icons.edit_outlined,
+            lavel: 'Peso de mi Mascota',
+            inputType: TextInputType.number,
+            onChanged: (value) =>
+                context.read<PetCubit>().weigthChanged(value));
       },
     );
   }
@@ -290,12 +293,9 @@ class _BodyState extends State<Body> {
                 return SwitchListTile(
                   title: Text('Vacunas al dia'),
                   activeColor: ColorsApp.secondaryColorlightPurple,
-                  value: pet.isVaccinationUpDate!,
+                  value: state.isVaccinationUpDate,
                   onChanged: (value) {
-                    setState(() {
-                      _isVacunas = value;
-                      pet.isVaccinationUpDate = value;
-                    });
+                    context.read<PetCubit>().isVaccinationUpDateChanged(value);
                   },
                 );
               }),
@@ -303,12 +303,9 @@ class _BodyState extends State<Body> {
                 return SwitchListTile(
                   title: Text('Castrado'),
                   activeColor: ColorsApp.secondaryColorlightPurple,
-                  value: pet.castrated!,
+                  value: state.isCastrated,
                   onChanged: (value) {
-                    setState(() {
-                      _isCastrated = value;
-                      pet.castrated = value;
-                    });
+                    context.read<PetCubit>().isCastratedDateChanged(value);
                   },
                 );
               }),
@@ -316,12 +313,9 @@ class _BodyState extends State<Body> {
                 return SwitchListTile(
                   title: Text('Sociable'),
                   activeColor: ColorsApp.secondaryColorlightPurple,
-                  value: pet.sociable!,
+                  value: state.isSociable,
                   onChanged: (value) {
-                    setState(() {
-                      _isSociable = value;
-                      pet.sociable = value;
-                    });
+                    context.read<PetCubit>().isSociableChanged(value);
                   },
                 );
               })
@@ -349,7 +343,7 @@ class _BodyState extends State<Body> {
                 const SnackBar(content: Text('Debe llenar todos los campos')),
               );
           } else {
-            context.read<PetCubit>().updatePet(pet);
+            context.read<PetCubit>().updatePet(index);
             Navigator.of(context).pop();
           }
         },
@@ -359,33 +353,33 @@ class _BodyState extends State<Body> {
     });
   }
 
-  Future<void> _selectImage(BuildContext _contxt) {
-    return showDialog(
-        context: _contxt,
-        builder: (context) {
-          return AlertDialog(
-            title: Text("Seleccione el medio"),
-            content: SingleChildScrollView(
-                child: ListBody(
-              children: <Widget>[
-                GestureDetector(
-                    child: Text("Galería"),
-                    onTap: () {
-                      _contxt.read<PetCubit>()
-                        ..filePhotoChange(ImageSource.gallery);
-                      Navigator.of(context).pop();
-                    }),
-                Padding(padding: EdgeInsets.all(8.0)),
-                GestureDetector(
-                    child: Text("Cámara"),
-                    onTap: () {
-                      _contxt.read<PetCubit>()
-                        ..filePhotoChange(ImageSource.camera);
-                      Navigator.of(context).pop();
-                    }),
-              ],
-            )),
-          );
-        });
-  }
+  //Future<void> _selectImage(BuildContext _contxt) {
+  //  return showDialog(
+  //      context: _contxt,
+  //      builder: (context) {
+  //        return AlertDialog(
+  //          title: Text("Seleccione el medio"),
+  //          content: SingleChildScrollView(
+  //              child: ListBody(
+  //            children: <Widget>[
+  //              GestureDetector(
+  //                  child: Text("Galería"),
+  //                  onTap: () {
+  //                    _contxt.read<PetCubit>()
+  //                      ..filePhotoChange(ImageSource.gallery);
+  //                    Navigator.of(context).pop();
+  //                  }),
+  //              Padding(padding: EdgeInsets.all(8.0)),
+  //              GestureDetector(
+  //                  child: Text("Cámara"),
+  //                  onTap: () {
+  //                    _contxt.read<PetCubit>()
+  //                      ..filePhotoChange(ImageSource.camera);
+  //                    Navigator.of(context).pop();
+  //                  }),
+  //            ],
+  //          )),
+  //        );
+  //      });
+  //}
 }
