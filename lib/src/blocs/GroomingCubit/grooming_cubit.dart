@@ -1,7 +1,5 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-
-import 'package:lamanda_petshopcr/src/models/pet.dart';
 import 'package:lamanda_petshopcr/src/models/sthetic_appointment.dart';
 import 'package:lamanda_petshopcr/src/models/userProfile.dart';
 

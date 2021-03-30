@@ -3,9 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 //import 'package:lamanda_petshopcr/src/blocs/AuthenticationBloc/authentication_bloc.dart';
 import 'package:lamanda_petshopcr/src/blocs/mainpageCubit/mainpage_cubit.dart';
 import 'package:lamanda_petshopcr/src/widgets/BottomNavBar/bottom_navbar.dart';
-//import 'package:lamanda_petshopcr/src/widgets/custom_app_bar.dart';
-import 'package:lamanda_petshopcr/src/blocs/mainpageCubit/mainpage_cubit.dart';
-import 'package:lamanda_petshopcr/src/widgets/BottomNavBar/bottom_navbar.dart';
+
 
 class MainScreen extends StatelessWidget {
   const MainScreen({Key? key}) : super(key: key);

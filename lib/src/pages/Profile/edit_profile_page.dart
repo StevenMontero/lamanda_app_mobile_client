@@ -265,7 +265,7 @@ class _BodyState extends State<Body> {
               color: ColorsApp.secondaryColorlightPurple,
             ),
             onPressed: () {
-              Navigator.of(context).pop();
+              Navigator.of(context).pushReplacementNamed('home');
             },
           );
         },
@@ -284,7 +284,7 @@ class _BodyState extends State<Body> {
               context
                   .read<ProfileCubit>()
                   .editUserForm(user.id, user.photo ?? '');
-              Navigator.of(context).pop();
+              Navigator.of(context).pushReplacementNamed('home');
             },
           );
         })

@@ -10,6 +10,7 @@ import 'package:lamanda_petshopcr/src/blocs/GroomingCubit/scheduleCubit/selectsc
 import 'package:lamanda_petshopcr/src/blocs/GroomingCubit/serviceFormCubit/serviceform_cubit.dart';
 import 'package:lamanda_petshopcr/src/models/pet.dart';
 import 'package:lamanda_petshopcr/src/models/service.dart';
+import 'package:lamanda_petshopcr/src/models/sthetic_appointment.dart';
 import 'package:lamanda_petshopcr/src/models/userProfile.dart';
 import 'package:lamanda_petshopcr/src/repository/esthetic_appointment_repositorydb.dart';
 import 'package:lamanda_petshopcr/src/theme/colors.dart';
@@ -95,7 +96,8 @@ class _BodyState extends State<Body> {
         final gromingCubitState = context.watch<GroomingCubit>().state;
         final serviceFormCubitState = context.watch<ServiceformCubit>().state;
         final infoFormCubitState = context.watch<InfoformCubit>().state;
-
+        final scheduleFormCubitState =
+            context.watch<SelectscheduleCubit>().state;
         return Stepper(
           physics: ScrollPhysics(),
           type: StepperType.horizontal,
@@ -119,8 +121,20 @@ class _BodyState extends State<Body> {
                       ? onStepContinue
                       : gromingCubitState.currentStep == 3
                           ? () {
-                              //TODO: llamar a la clase de pagar
-                              print('final');
+                              final service = StheticAppointment(
+                                  listService:
+                                      serviceFormCubitState.listService,
+                                  pet: infoFormCubitState.pet,
+                                  address: infoFormCubitState.address.value,
+                                  transfer: infoFormCubitState.transfer,
+                                  entrytDate: scheduleFormCubitState.date,
+                                  entrytHour:
+                                      scheduleFormCubitState.hourRerservation,
+                                  isConfirmed: false,
+                                  priceTotal: serviceFormCubitState.total,
+                                  client: widget.userData);
+                              Navigator.of(context)
+                                  .pushNamed('payment', arguments: service);
                             }
                           : null,
                   color: ColorsApp.primaryColorBlue,

@@ -13,14 +13,6 @@ class StheticAppointmentRepository {
     if (estheticAppointmentsList != null) {
       estheticAppointmentsList.appointments.add(appointment);
       estheticAppointmentsList.reservedTimes.add(appointment.entrytHour!);
-      // _ref
-      //     .doc(dateId)
-      //     .update({
-      //       'reservedTimes': estheticAppointmentsList.reservedTimes,
-      //       'appointments': estheticAppointmentsList.appointments
-      //     })
-      //     .then((value) => print('Appointment Added'))
-      //     .catchError((error) => print('Failed to add Appointment: $error'));
     } else {
       estheticAppointmentsList = new EstheticAppointmentsList(
           date: dateId,

@@ -165,17 +165,17 @@ class _BodyState extends State<Body> {
                       color: ColorsApp.primaryColorBlue,
                       press: state.status == FormzStatus.valid
                           ? () {
-                              final user =
-                                  BlocProvider.of<AuthenticationBloc>(context)
-                                      .state
-                                      .user;
-                              context
-                                  .read<KinderCubit>()
-                                  .addAppointmentDaycareForm(new UserProfile(
-                                      userName: user.name,
-                                      email: user.email,
-                                      id: user.id,
-                                      photoUri: user.photo));
+                              // final user =
+                              //     BlocProvider.of<AuthenticationBloc>(context)
+                              //         .state
+                              //         .user;
+                              // context
+                              //     .read<KinderCubit>()
+                              //     .addAppointmentDaycareForm(new UserProfile(
+                              //         userName: user.name,
+                              //         email: user.email,
+                              //         id: user.id,
+                              //         photoUri: user.photo!));
                               // Navigator.of(context).pop();
                             }
                           : null,

@@ -59,7 +59,7 @@ class QuotesPage extends StatelessWidget {
                 itemTextColor: Colors.white,
                 itemTitle: 'Hotel',
                 onPress: () {
-                  Navigator.of(context).pushNamed('hotel');
+                  Navigator.of(context).pushNamed('payment');
                 },
               )
             ],
