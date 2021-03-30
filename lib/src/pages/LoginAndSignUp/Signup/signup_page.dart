@@ -126,7 +126,7 @@ class BodyWidget extends StatelessWidget {
                                   return TextFromField(
                                     errorOccurred: state.userName.invalid,
                                     errorMessage:
-                                        "No debe ingresar caracteres especiales",
+                                        "No ingresar signos ni números",
                                     icon: Icons.account_circle,
                                     password: false,
                                     lavel:'Nombre de usuario',

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lamanda_petshopcr/src/pages/ContactUs/contactUs.dart';
 import 'package:lamanda_petshopcr/src/pages/mainpage.dart';
 import 'package:lamanda_petshopcr/src/pages/Profile/profile_page.dart';
 import 'package:lamanda_petshopcr/src/pages/Profile/add_pet_page.dart';
@@ -29,5 +30,6 @@ Map<String, WidgetBuilder> getRoutesApp() {
     'petForm': (BuildContext context) => PetFormPage(),
     'petList': (BuildContext context) => PetListPage(),
     //'editPet': (BuildContext context) => EditPetPage(index),
+    'contactInfo': (BuildContext context) => ContactInfo(),
   };
 }

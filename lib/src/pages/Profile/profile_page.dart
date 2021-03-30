@@ -124,7 +124,9 @@ class _ProfilePage extends State<ProfilePage> {
                             height: 0.5,
                           ),
                           MaterialButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                Navigator.of(context).pushNamed('contactInfo');
+                              },
                               color: Colors.white,
                               minWidth: 100,
                               height: 60,

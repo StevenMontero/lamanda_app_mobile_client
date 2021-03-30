@@ -3,6 +3,7 @@ import 'package:formz/formz.dart';
 import 'package:equatable/equatable.dart';
 import 'package:lamanda_petshopcr/src/models/userProfile.dart';
 import 'package:lamanda_petshopcr/src/repository/user_repository.dart';
+import 'package:lamanda_petshopcr/src/utils/regularExpressions/regular_expressions_models.dart';
 
 part 'profile_state.dart';
 
@@ -12,39 +13,63 @@ class ProfileCubit extends Cubit<ProfileState> {
   UserProfile? userProfile;
 
   void fillInitialDataUser(UserProfile user) async {
-    //final user = await userRepository.getUserProfile(id);
     emit(state.copyWith(
-        userName: user.userName,
-        lastName: user.lastName,
-        addres: user.address,
-        email: user.email,
-        phone: user.phone,
+        userName: UserName.dirty(user.userName!),
+        lastName: ValidatorText.dirty(user.lastName!),
+        addres: AddrresForm.dirty(user.address!),
+        email: Email.dirty(user.email!),
+        phone: NumberPhone.dirty(user.phone!),
         photoUrl: user.photoUri,
         userID: user.id));
   }
 
-  void userNameChanged(String username) {
-    emit(state.copyWith(userName: username));
+  void userNameChanged(String value) {
+    final userName = UserName.dirty(value);
+    emit(state.copyWith(
+      userName: userName,
+      status: Formz.validate(
+          [userName, state.lastName, state.addres, state.email, state.phone]),
+    ));
   }
 
-  void emailChanged(String email) {
-    emit(state.copyWith(email: email));
+  void emailChanged(String value) {
+    final email = Email.dirty(value);
+    emit(state.copyWith(
+      email: email,
+      status: Formz.validate(
+          [state.userName, state.lastName, state.addres, email, state.phone]),
+    ));
   }
 
   void photoUrlChanged(String photoUrl) {
     emit(state.copyWith(photoUrl: photoUrl));
   }
 
-  void lastNameChanged(String lastName) {
-    emit(state.copyWith(lastName: lastName));
+  void lastNameChanged(String value) {
+    final lastName = ValidatorText.dirty(value);
+    emit(state.copyWith(
+      lastName: lastName,
+      status: Formz.validate(
+          [state.userName, lastName, state.addres, state.email, state.phone]),
+    ));
   }
 
-  void addresChanged(String addres) {
-    emit(state.copyWith(addres: addres));
+  void addresChanged(String value) {
+    final addres = AddrresForm.dirty(value);
+    emit(state.copyWith(
+      addres: addres,
+      status: Formz.validate(
+          [state.userName, state.lastName, addres, state.email, state.phone]),
+    ));
   }
 
-  void phoneChanged(String phone) {
-    emit(state.copyWith(phone: phone));
+  void phoneChanged(String value) {
+    final phone = NumberPhone.dirty(value);
+    emit(state.copyWith(
+      phone: phone,
+      status: Formz.validate(
+          [state.userName, state.lastName, state.addres, state.email, phone]),
+    ));
   }
 
   Future<void> editUserForm(String userID, String photoUrl) async {
@@ -52,12 +77,12 @@ class ProfileCubit extends Cubit<ProfileState> {
     try {
       userProfile = new UserProfile(
         id: userID,
-        userName: state.userName,
-        email: state.email,
+        userName: state.userName.value,
+        email: state.email.value,
         photoUri: photoUrl,
-        lastName: state.lastName,
-        address: state.addres,
-        phone: state.phone,
+        lastName: state.lastName.value,
+        address: state.addres.value,
+        phone: state.phone.value,
       );
       userRepository.updateUser(userProfile!);
     } catch (error) {

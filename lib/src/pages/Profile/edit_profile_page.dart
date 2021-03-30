@@ -6,6 +6,7 @@ import 'package:lamanda_petshopcr/src/blocs/profileCubit/profile_cubit.dart';
 import 'package:lamanda_petshopcr/src/models/userProfile.dart';
 import 'package:lamanda_petshopcr/src/repository/user_repository.dart';
 import 'package:lamanda_petshopcr/src/theme/colors.dart';
+import 'package:lamanda_petshopcr/src/widgets/textfielform.dart';
 
 class EditProfilePage extends StatefulWidget {
   @override
@@ -20,8 +21,8 @@ class _EditProfilePage extends State<EditProfilePage> {
     UserProfile _userProfile =
         context.read<AuthenticationBloc>().state.userProfile!;
     return BlocProvider(
-        create: (context) => ProfileCubit(UserRepository())
-          ..fillInitialDataUser(_userProfile),
+        create: (context) =>
+            ProfileCubit(UserRepository())..fillInitialDataUser(_userProfile),
         child: Body(_userProfile));
   }
 }
@@ -34,225 +35,151 @@ class Body extends StatefulWidget {
 }
 
 class _BodyState extends State<Body> {
-  UserProfile? userData;
-  TextEditingController _controllerUserName = new TextEditingController();
-  TextEditingController _controllerLastName = new TextEditingController();
-  TextEditingController _controllerEmail = new TextEditingController();
-  TextEditingController _controllerPhone = new TextEditingController();
-  TextEditingController _controllerAddres = new TextEditingController();
-  @override
-  void initState() {
-    getInitUserData(BlocProvider.of<AuthenticationBloc>(context).state.user.id);
-    super.initState();
-  }
-
-  void getInitUserData(String id) async {
-    final UserProfile? user = await context.read<ProfileCubit>().getUser(id);
-    setState(() {
-      if (user != null) {
-        _controllerUserName.text = user.userName ?? '';
-        _controllerLastName.text = user.lastName ?? '';
-        _controllerEmail.text = user.email ?? '';
-        _controllerPhone.text = user.phone ?? '';
-        _controllerAddres.text = user.address ?? '';
-
-      }
-
-      userData = user;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: buildAppbar() as PreferredSizeWidget?,
         body: SingleChildScrollView(
-          child: Column(
-            children: [
-              Container(
-                color: Colors.white,
-              ),
-              Positioned(
-                top: 15,
-                child: Center(
-                  child: CircleAvatar(
-                    radius: 55,
-                    backgroundImage: widget.userProfile.photoUri != null
-                        ? NetworkImage(widget.userProfile.photoUri!)
-                        : null,
-                    child: widget.userProfile.photoUri == null
-                        ? const Icon(Icons.person, size: 20)
-                        : null,
+          child: Container(
+            padding: EdgeInsets.all(25.0),
+            child: Column(
+              children: [
+                Container(
+                  color: Colors.white,
+                ),
+                Positioned(
+                  top: 15,
+                  child: Center(
+                    child: CircleAvatar(
+                      radius: 55,
+                      backgroundImage: widget.userProfile.photoUri != null
+                          ? NetworkImage(widget.userProfile.photoUri!)
+                          : null,
+                      child: widget.userProfile.photoUri == null
+                          ? const Icon(Icons.person, size: 20)
+                          : null,
+                    ),
                   ),
                 ),
-              ),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Container(
-                    child: Text("Datos personales",
-                        style: new TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: ColorsApp.secondaryColorlightPurple)),
-                  ),
-                  Column(children: <Widget>[
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
                     Container(
-                      margin: EdgeInsets.all(15),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                          border: Border.all(
-                              width: 2,
+                      child: Text("Datos personales",
+                          style: new TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
                               color: ColorsApp.secondaryColorlightPurple)),
-                      child: Column(
-                        children: <Widget>[
-                          Padding(
-                            padding: const EdgeInsets.only(left: 20.0),
-                            child: BlocBuilder<ProfileCubit, ProfileState>(
-                              buildWhen: (previous, current) =>
-                                  previous.userName != current.userName,
-                              builder: (context, state) {
-                                return TextFormField(
-                                  initialValue: widget.userProfile.userName,
-                                  decoration: InputDecoration(
-                                      border: InputBorder.none,
-                                      hintText: 'Nombre'),
-                                  onChanged: (value) => context
-                                      .read<ProfileCubit>()
-                                      .userNameChanged(value),
-                                );
-                              },
-                            ),
-                          )
-                        ],
-                      ),
                     ),
-                    Container(
-                      margin: EdgeInsets.all(15),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                          border: Border.all(
-                              width: 2,
-                              color: ColorsApp.secondaryColorlightPurple)),
-                      child: Column(
-                        children: <Widget>[
-                          Padding(
-                            padding: const EdgeInsets.only(left: 20.0),
-                            child: BlocBuilder<ProfileCubit, ProfileState>(
-                              buildWhen: (previous, current) =>
-                                  previous.lastName != current.lastName,
-                              builder: (context, state) {
-                                return TextFormField(
-                                  initialValue: widget.userProfile.lastName,
-                                  decoration: InputDecoration(
-                                      border: InputBorder.none,
-                                      hintText: 'Apellidos'),
-                                  onChanged: (value) => context
-                                      .read<ProfileCubit>()
-                                      .lastNameChanged(value),
-                                );
-                              },
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Container(
-                      margin: EdgeInsets.all(15),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                          border: Border.all(
-                              width: 2,
-                              color: ColorsApp.secondaryColorlightPurple)),
-                      child: Column(
-                        children: <Widget>[
-                          Padding(
-                            padding: const EdgeInsets.only(left: 20.0),
-                            child: BlocBuilder<ProfileCubit, ProfileState>(
-                              buildWhen: (previous, current) =>
-                                  previous.email != current.email,
-                              builder: (context, state) {
-                                return TextFormField(
-                                  initialValue: widget.userProfile.email,
-                                  decoration: InputDecoration(
-                                      border: InputBorder.none,
-                                      hintText: 'Correo Electrónico'),
-                                  onChanged: (value) => context
-                                      .read<ProfileCubit>()
-                                      .emailChanged(value),
-                                );
-                              },
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Container(
-                      margin: EdgeInsets.all(15),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                          border: Border.all(
-                              width: 2,
-                              color: ColorsApp.secondaryColorlightPurple)),
-                      child: Column(
-                        children: <Widget>[
-                          Padding(
-                            padding: const EdgeInsets.only(left: 20.0),
-                            child: BlocBuilder<ProfileCubit, ProfileState>(
-                              buildWhen: (previous, current) =>
-                                  previous.phone != current.phone,
-                              builder: (context, state) {
-                                return TextFormField(
-                                  initialValue: widget.userProfile.phone,
-                                  decoration: InputDecoration(
-                                      border: InputBorder.none,
-                                      hintText: 'Teléfono'),
-                                  onChanged: (value) => context
-                                      .read<ProfileCubit>()
-                                      .phoneChanged(value),
-                                );
-                              },
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Container(
-                      margin: EdgeInsets.all(15),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                          border: Border.all(
-                              width: 2,
-                              color: ColorsApp.secondaryColorlightPurple)),
-                      child: Column(
-                        children: <Widget>[
-                          Padding(
-                            padding: const EdgeInsets.only(left: 20.0),
-                            child: BlocBuilder<ProfileCubit, ProfileState>(
-                              buildWhen: (previous, current) =>
-                                  previous.addres != current.addres,
-                              builder: (context, state) {
-                                return TextFormField(
-                                  initialValue: widget.userProfile.address,
-                                  decoration: InputDecoration(
-                                      border: InputBorder.none,
-                                      hintText: 'Dirección de domicilio'),
-                                  onChanged: (value) => context
-                                      .read<ProfileCubit>()
-                                      .addresChanged(value),
-                                );
-                              },
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ]),
-                ],
-              )
-            ],
+                    Column(children: <Widget>[
+                      SizedBox(height: 20.0),
+                      _userName(),
+                      SizedBox(height: 20.0),
+                      _lastName(),
+                      SizedBox(height: 20.0),
+                      _email(),
+                      SizedBox(height: 20.0),
+                      _phone(),
+                      SizedBox(height: 20.0),
+                      _addres(),
+                      SizedBox(height: 20.0),
+                    ]),
+                  ],
+                )
+              ],
+            ),
           ),
         ));
+  }
+
+  Widget _userName() {
+    return BlocBuilder<ProfileCubit, ProfileState>(
+      buildWhen: (previous, current) => previous.userName != current.userName,
+      builder: (context, state) {
+        return TextFieldForm(
+          initialValue: widget.userProfile.userName,
+          errorOccurred: state.userName.invalid,
+          errorMessage: 'No ingresar signos ni números',
+          icon: Icons.person,
+          lavel: 'Nombre de Usuario',
+          inputType: TextInputType.text,
+          onChanged: (value) =>
+              context.read<ProfileCubit>().userNameChanged(value),
+        );
+      },
+    );
+  }
+
+  Widget _lastName() {
+    return BlocBuilder<ProfileCubit, ProfileState>(
+      buildWhen: (previous, current) => previous.lastName != current.lastName,
+      builder: (context, state) {
+        return TextFieldForm(
+          initialValue: widget.userProfile.lastName,
+          errorOccurred: state.lastName.invalid,
+          errorMessage: 'No ingresar signos ni números',
+          icon: Icons.person,
+          lavel: 'Apellidos',
+          inputType: TextInputType.text,
+          onChanged: (value) =>
+              context.read<ProfileCubit>().lastNameChanged(value),
+        );
+      },
+    );
+  }
+
+  Widget _email() {
+    return BlocBuilder<ProfileCubit, ProfileState>(
+      buildWhen: (previous, current) => previous.email != current.email,
+      builder: (context, state) {
+        return TextFieldForm(
+          initialValue: widget.userProfile.email,
+          errorOccurred: state.email.invalid,
+          errorMessage: 'Correo electrónico no válido',
+          icon: Icons.email,
+          lavel: 'Correo electrónico',
+          inputType: TextInputType.text,
+          onChanged: (value) =>
+              context.read<ProfileCubit>().emailChanged(value),
+        );
+      },
+    );
+  }
+
+  Widget _phone() {
+    return BlocBuilder<ProfileCubit, ProfileState>(
+      buildWhen: (previous, current) => previous.phone != current.phone,
+      builder: (context, state) {
+        return TextFieldForm(
+          initialValue: widget.userProfile.phone,
+          errorOccurred: state.phone.invalid,
+          errorMessage: 'Número no válido',
+          icon: Icons.phone,
+          lavel: 'Número de teléfono',
+          inputType: TextInputType.number,
+          onChanged: (value) =>
+              context.read<ProfileCubit>().phoneChanged(value),
+        );
+      },
+    );
+  }
+
+  Widget _addres() {
+    return BlocBuilder<ProfileCubit, ProfileState>(
+      buildWhen: (previous, current) => previous.addres != current.addres,
+      builder: (context, state) {
+        return TextFieldForm(
+          initialValue: widget.userProfile.address,
+          errorOccurred: state.addres.invalid,
+          errorMessage: 'No ingresar signos ni números',
+          icon: Icons.edit,
+          lavel: 'Dirección de domicilio',
+          inputType: TextInputType.text,
+          onChanged: (value) =>
+              context.read<ProfileCubit>().addresChanged(value),
+        );
+      },
+    );
   }
 
   Widget buildAppbar() {
@@ -279,11 +206,13 @@ class _BodyState extends State<Body> {
             icon: new Icon(Icons.save,
                 color: ColorsApp.secondaryColorlightPurple),
             onPressed: () {
-              final user =
-                  BlocProvider.of<AuthenticationBloc>(context).state.user;
-              context
-                  .read<ProfileCubit>()
-                  .editUserForm(user.id, user.photo ?? '');
+              context.read<ProfileCubit>()
+                  .editUserForm(state.userID!, state.photoUrl!);
+                  ScaffoldMessenger.of(context)
+              ..hideCurrentSnackBar()
+              ..showSnackBar(
+                const SnackBar(content: Text('Datos actualizados correctamente')),
+              );
               Navigator.of(context).pop();
             },
           );
@@ -291,5 +220,4 @@ class _BodyState extends State<Body> {
       ],
     );
   }
-
 }

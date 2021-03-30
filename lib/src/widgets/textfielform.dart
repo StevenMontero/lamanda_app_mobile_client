@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lamanda_petshopcr/src/theme/colors.dart';
 
 class TextFieldForm extends StatelessWidget {
   final String? initialValue;
@@ -27,6 +28,9 @@ class TextFieldForm extends StatelessWidget {
         alignment: AlignmentDirectional.center,
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(14.0),
+            border: Border.all(
+              width: 2,
+              color: ColorsApp.secondaryColorlightPurple),
             color: Colors.white,
             boxShadow: [BoxShadow(blurRadius: 10.0, color: Colors.black12)]),
         padding:
