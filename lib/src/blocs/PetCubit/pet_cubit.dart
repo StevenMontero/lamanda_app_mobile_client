@@ -19,7 +19,7 @@ class PetCubit extends Cubit<PetState> {
   List<String> _kindPetList = ['Perro', 'Gato'];
   List<String> _furList = ['Largo', 'Corto'];
 
-  void fillInitialDataPet(Pet pet, List<Pet> petList) async {
+  void fillInitialDataPet(Pet pet) async {
     emit(state.copyWith(
       petID: pet.petId,
         userID: pet.userId,
@@ -33,7 +33,6 @@ class PetCubit extends Cubit<PetState> {
         isCastrated: pet.castrated,
         isSociable: pet.sociable,
         photoUrl: pet.photoUrl,
-        petList: petList,
       ));
   }
 
@@ -140,7 +139,7 @@ class PetCubit extends Cubit<PetState> {
     }
   }
   //Actualiza los datos de la mascota
-  Future<void> updatePet(int index)async{
+  Future<void> updatePet()async{
     emit(state.copyWith(status: FormzStatus.submissionInProgress));
     try {
       pet = new Pet(
@@ -158,8 +157,6 @@ class PetCubit extends Cubit<PetState> {
         photoUrl: state.photoUrl,
       );
       petRepository.updatePet(pet!);
-      state.petList!.removeAt(index);
-      state.petList!.add(pet!);
       emit(state.copyWith(status: FormzStatus.submissionSuccess, petList: state.petList));
     } catch (error) {
       emit(state.copyWith(status: FormzStatus.submissionFailure));

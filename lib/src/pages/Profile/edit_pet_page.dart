@@ -21,25 +21,24 @@ class EditPetPage extends StatefulWidget {
 class _EditPetPageState extends State<EditPetPage> {
   @override
   Widget build(BuildContext context) {
+    Pet _pet = context.read<AuthenticationBloc>().state.petList[widget.index];
     return BlocProvider(
         create: (context) =>
-            PetCubit(PetRepository())..fillInitialDataPet(widget.pets[widget.index], widget.pets),
-        child: Body(widget.pets[widget.index], widget.index));
+            PetCubit(PetRepository())..fillInitialDataPet(_pet),
+        child: Body(_pet));
   }
 }
 
 class Body extends StatefulWidget {
-  const Body(this.pet, this.index) : super();
+  const Body(this.pet) : super();
   final Pet pet;
-  final int index;
   @override
-  _BodyState createState() => _BodyState(pet, index);
+  _BodyState createState() => _BodyState(pet);
 }
 
 class _BodyState extends State<Body> {
-  _BodyState(this.pet, this.index);
+  _BodyState(this.pet);
   Pet pet;
-  int index;
   String? dropdownValue;
   String? dropdownValueFur;
 
@@ -68,7 +67,7 @@ class _BodyState extends State<Body> {
               SizedBox(height: 20.0),
               _petAge(),
               SizedBox(height: 20.0),
-               _petWeigth(),
+              _petWeigth(),
               SizedBox(height: 20.0),
               _chooseKindPet(),
               SizedBox(height: 20.0),
@@ -181,14 +180,16 @@ class _BodyState extends State<Body> {
       buildWhen: (previous, current) => previous.name != current.name,
       builder: (context, state) {
         return TextFieldForm(
-          initialValue: pet.name,
-          errorOccurred: state.name.invalid,
-          errorMessage: 'Ingresar el nombre de su mascota',
-          icon: Icons.edit_outlined,
-          lavel: 'Nombre de mi Mascota',
-          inputType: TextInputType.text,
-          onChanged: (value) => context.read<PetCubit>().nameChanged(value),
-        );
+            initialValue: pet.name,
+            errorOccurred: state.name.invalid,
+            errorMessage: 'Ingresar el nombre de su mascota',
+            icon: Icons.edit_outlined,
+            lavel: 'Nombre de mi Mascota',
+            inputType: TextInputType.text,
+            onChanged: (value) {
+              pet.name = value;
+              context.read<PetCubit>().nameChanged(value);
+            });
       },
     );
   }
@@ -198,14 +199,16 @@ class _BodyState extends State<Body> {
       buildWhen: (previous, current) => previous.breed != current.breed,
       builder: (context, state) {
         return TextFieldForm(
-          initialValue: pet.breed,
-          errorOccurred: state.breed.invalid,
-          errorMessage: ' Ingresar la raza de su mascota',
-          icon: Icons.edit_outlined,
-          lavel: 'Raza de mi Mascota',
-          inputType: TextInputType.text,
-          onChanged: (value) => context.read<PetCubit>().breedChanged(value),
-        );
+            initialValue: pet.breed,
+            errorOccurred: state.breed.invalid,
+            errorMessage: ' Ingresar la raza de su mascota',
+            icon: Icons.edit_outlined,
+            lavel: 'Raza de mi Mascota',
+            inputType: TextInputType.text,
+            onChanged: (value) {
+              pet.breed = value;
+              context.read<PetCubit>().breedChanged(value);
+            });
       },
     );
   }
@@ -215,14 +218,16 @@ class _BodyState extends State<Body> {
       buildWhen: (previous, current) => previous.age != current.age,
       builder: (context, state) {
         return TextFieldForm(
-          initialValue: pet.age.toString(),
-          errorOccurred: state.age.invalid,
-          errorMessage: 'Ingresar la edad de su mascota. Ej: 7',
-          icon: Icons.edit_outlined,
-          lavel: 'Edad de mi Mascota',
-          inputType: TextInputType.number,
-          onChanged: (value) => context.read<PetCubit>().ageChanged(value),
-        );
+            initialValue: pet.age.toString(),
+            errorOccurred: state.age.invalid,
+            errorMessage: 'Ingresar la edad de su mascota. Ej: 7',
+            icon: Icons.edit_outlined,
+            lavel: 'Edad de mi Mascota',
+            inputType: TextInputType.number,
+            onChanged: (value) {
+              pet.age = int.parse(value);
+              context.read<PetCubit>().ageChanged(value);
+            });
       },
     );
   }
@@ -248,6 +253,7 @@ class _BodyState extends State<Body> {
                 value: dropdownValueFur,
                 onChanged: (dynamic value) {
                   dropdownValueFur = value;
+                  pet.fur = value;
                   context.read<PetCubit>().furChanged(value);
                 },
               ),
@@ -269,8 +275,10 @@ class _BodyState extends State<Body> {
             icon: Icons.edit_outlined,
             lavel: 'Peso de mi Mascota',
             inputType: TextInputType.number,
-            onChanged: (value) =>
-                context.read<PetCubit>().weigthChanged(value));
+            onChanged: (value) {
+              pet.weight = double.parse(value);
+              context.read<PetCubit>().weigthChanged(value);
+            });
       },
     );
   }
@@ -296,6 +304,7 @@ class _BodyState extends State<Body> {
                   activeColor: ColorsApp.secondaryColorlightPurple,
                   value: state.isVaccinationUpDate,
                   onChanged: (value) {
+                    pet.isVaccinationUpDate = value;
                     context.read<PetCubit>().isVaccinationUpDateChanged(value);
                   },
                 );
@@ -306,6 +315,7 @@ class _BodyState extends State<Body> {
                   activeColor: ColorsApp.secondaryColorlightPurple,
                   value: state.isCastrated,
                   onChanged: (value) {
+                    pet.castrated = value;
                     context.read<PetCubit>().isCastratedDateChanged(value);
                   },
                 );
@@ -316,6 +326,7 @@ class _BodyState extends State<Body> {
                   activeColor: ColorsApp.secondaryColorlightPurple,
                   value: state.isSociable,
                   onChanged: (value) {
+                    pet.sociable = value;
                     context.read<PetCubit>().isSociableChanged(value);
                   },
                 );
@@ -344,12 +355,9 @@ class _BodyState extends State<Body> {
                 const SnackBar(content: Text('Debe llenar todos los campos')),
               );
           } else {
-            context.read<PetCubit>().updatePet(index);
-            //context.read<PetCubit>().updatePet(pet);
-            context
-                .read<AuthenticationBloc>()
+            context.read<PetCubit>().updatePet();
+            context.read<AuthenticationBloc>()
                 .add(AuthenticationPetUpdate(pet));
-
             Navigator.of(context).pop();
           }
         },
