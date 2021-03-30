@@ -22,4 +22,19 @@ class AuthenticationUserUpdate extends AuthenticationEvent {
   List<Object> get props => [userProfile];
 }
 
+class AuthenticationPetUpdate extends AuthenticationEvent {
+  final Pet pet;
+  const AuthenticationPetUpdate(this.pet);
+
+  @override
+  List<Object> get props => [pet];
+}
+class AuthenticationAddPetUpdate extends AuthenticationEvent {
+  final Pet pet;
+  const AuthenticationAddPetUpdate(this.pet);
+
+  @override
+  List<Object> get props => [pet];
+}
+
 class AuthenticationLogoutRequested extends AuthenticationEvent {}

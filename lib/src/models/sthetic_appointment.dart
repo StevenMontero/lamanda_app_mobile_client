@@ -1,5 +1,5 @@
-//import 'package:lamanda_petshopcr/src/models/pet.dart';
-//import 'package:lamanda_petshopcr/src/models/pet_list.dart';
+import 'package:lamanda_petshopcr/src/models/pet.dart';
+import 'package:lamanda_petshopcr/src/models/service.dart';
 import 'package:lamanda_petshopcr/src/models/userProfile.dart';
 
 class StheticAppointment {
@@ -7,35 +7,46 @@ class StheticAppointment {
   DateTime? entrytDate;
   DateTime? entrytHour;
   UserProfile? client;
-  //List<Pet> petList;
+  Pet? pet;
   bool? isConfirmed;
   bool? transfer;
   String? address;
-  String? fur;
+  String proofPhotoUrl = '';
+  List<Service>? listService;
+  double priceTotal = 0;
+  String pymentType = '';
 
-  StheticAppointment(
-      {this.appointmentId,
-      this.entrytDate,
-      this.client,
-      //this.petList,
-      this.isConfirmed,
-      this.entrytHour,
-      this.address,
-      this.transfer,
-      this.fur});
+  StheticAppointment({
+    this.appointmentId,
+    this.listService,
+    this.priceTotal = 0,
+    this.proofPhotoUrl = '',
+    this.pymentType = '',
+    this.entrytDate,
+    this.client,
+    this.pet,
+    this.isConfirmed,
+    this.entrytHour,
+    this.address,
+    this.transfer,
+  });
 
   StheticAppointment.fromJson(Map<String, dynamic> json) {
     //PetList getPetList = new PetList.fromJsonList(json['petList']);
 
     this.address = json['direction']; // cambiar a addres
-    this.entrytDate = json['entrytDate'].toDate();
-    this.client = json['entryUser'];
+    this.entrytDate = json['entryDate'].toDate();
+    this.client = UserProfile.fromJson(json['entryUser']);
+    this.pymentType = json['pymentType'];
     this.appointmentId = json['id'];
-    this.entrytHour = json['entrytHour'].toDate();
-    //this.petList = getPetList.getPetList();
+    this.priceTotal = json['priceTotal'];
+    this.entrytHour = json['entryHour'].toDate();
+    this.pet = Pet.fromJson(json['pet'],json['pet']['petID']);
     this.isConfirmed = json['isConfirmed'];
+    this.proofPhotoUrl = json['proofPhotoUrl'];
     this.transfer = json['transfer'];
-    this.fur = json['fur'];
+    this.listService = List<Service>.from(
+        json['listService'].map((service) => Service.fromJson(service)));
   }
 
   Map<String, dynamic> toJson() {
@@ -45,10 +56,13 @@ class StheticAppointment {
       'entryHour': this.entrytHour,
       'entryUser': this.client!.toJson(),
       'id': this.appointmentId,
-      //'petList': this.petList,
+      'pet': this.pet!.toJson(),
       'isConfirmed': this.isConfirmed,
       'transfer': this.transfer,
-      'fur': this.fur
+      'proofPhotoUrl': this.proofPhotoUrl,
+      'pymentType': this.pymentType,
+      'listService': List<dynamic>.from(listService!.map((x) => x.toJson())),
+      'priceTotal': this.priceTotal
     };
   }
 }

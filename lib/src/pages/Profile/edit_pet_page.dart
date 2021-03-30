@@ -2,6 +2,7 @@ import 'package:formz/formz.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lamanda_petshopcr/src/blocs/AuthenticationBloc/authentication_bloc.dart';
 //import 'package:image_picker/image_picker.dart';
 import 'package:lamanda_petshopcr/src/models/pet.dart';
 import 'package:lamanda_petshopcr/src/theme/colors.dart';
@@ -344,6 +345,11 @@ class _BodyState extends State<Body> {
               );
           } else {
             context.read<PetCubit>().updatePet(index);
+            //context.read<PetCubit>().updatePet(pet);
+            context
+                .read<AuthenticationBloc>()
+                .add(AuthenticationPetUpdate(pet));
+
             Navigator.of(context).pop();
           }
         },

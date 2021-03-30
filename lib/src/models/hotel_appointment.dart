@@ -1,85 +1,75 @@
 //import 'package:lamanda_petshopcr/src/models/pet.dart';
 //import 'package:lamanda_petshopcr/src/models/pet_list.dart';
+import 'package:lamanda_petshopcr/src/models/pet.dart';
 import 'package:lamanda_petshopcr/src/models/userProfile.dart';
 
-class HotelAppointment{
-
+class HotelAppointment {
   String? appointmentId;
   DateTime? startDate;
   DateTime? endDate;
-  UserProfile? client; 
+  UserProfile? client;
   String? personPicksUp;
-  //List<Pet> petList;
-  String? race;
-  int? age;
-  bool? vaccine;
   DateTime? lastdeworming;
   DateTime? pestProtection;
-  bool? sociable;
-  bool? castrated;
   String? addres;
   bool? transfer;
   bool? isConfirmed;
+  Pet? pet;
+  String proofPhotoUrl = '';
+  double priceTotal = 0;
+  String pymentType = '';
 
-    HotelAppointment({
-    this.age,
+  HotelAppointment({
     this.endDate,
     this.personPicksUp,
     this.addres,
     this.startDate,
+    this.priceTotal = 0,
+    this.proofPhotoUrl = '',
+    this.pet,
     this.client,
     this.appointmentId,
-    this.castrated,
     this.isConfirmed,
-    this.sociable,
-    this.vaccine,
     this.lastdeworming,
     this.pestProtection,
-    this.race,
     this.transfer,
+    this.pymentType = '',
     //this.petList,
   });
 
-  HotelAppointment.fromJson(Map<String, dynamic> json){
-    
-      //PetList getPetList = new PetList.fromJsonList(json['petList']);
-      this.age = json['age'];
-      this.endDate = json['departureDate'];
-      this.personPicksUp = json['departureUser'];
-      this.addres = json['direction'];
-      this.startDate = json['entryDate'];
-      this.client = json['entryUser'];
-      this.appointmentId =json['id'];
-      this.castrated =json['isCastrated'];
-      this.isConfirmed = json['isConfirmed'];
-      this.sociable = json['isSociable'];
-      this.vaccine =json['isVaccinationUpDate'];
-      this.lastdeworming = json['lastDeworing'];
-      this.pestProtection =json['lastProtectionFleas'];
-      this.race =json['race'];
-      this.transfer = json['transfer'];
-      //this.petList = getPetList.getPetList();
+  HotelAppointment.fromJson(Map<String, dynamic> json) {
+    this.endDate = json['departureDate'];
+    this.personPicksUp = json['departureUser'];
+    this.addres = json['direction'];
+    this.startDate = json['entryDate'];
+    this.client = json['entryUser'];
+    this.appointmentId = json['id'];
+    this.isConfirmed = json['isConfirmed'];
+    this.lastdeworming = json['lastDeworing'];
+    this.pestProtection = json['lastProtectionFleas'];
+    this.transfer = json['transfer'];
+    this.pet = Pet.fromJson(json['pet'],json['pet']['petID']);
+    this.priceTotal = json['priceTotal'];
+    this.proofPhotoUrl = json['proofPhotoUrl'];
+    this.pymentType = json['pymentType'];
   }
-  
-  Map<String, dynamic> toJson(){
+
+  Map<String, dynamic> toJson() {
     return {
-      'age': this.age,
       'departureDate': this.endDate,
       'departureUser': this.personPicksUp,
       'direction': this.addres,
       'entryDate': this.startDate,
       'entryUser': this.client!.toJson(),
       'id': this.appointmentId,
-      'isCastrated':this.castrated,
       'isConfirmed': this.isConfirmed,
-      'isSociable': this.sociable,
-      'isVaccinationUpDate': this.vaccine,
       'lastDeworing': this.lastdeworming,
       'lastProtectionFleas': this.pestProtection,
-      'race': this.race,
       'transfer': this.transfer,
-      //'petList': this.petList,
+      'priceTotal': this.priceTotal,
+      'proofPhotoUrl': this.proofPhotoUrl,
+      'pymentType': this.pymentType,
+      'pet': this.pet!.toJson(),
     };
   }
-
 }

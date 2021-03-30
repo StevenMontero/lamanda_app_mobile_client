@@ -35,6 +35,7 @@ class Body extends StatefulWidget {
 }
 
 class _BodyState extends State<Body> {
+  UserProfile? userData;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -192,7 +193,7 @@ class _BodyState extends State<Body> {
               color: ColorsApp.secondaryColorlightPurple,
             ),
             onPressed: () {
-              Navigator.of(context).pop();
+              Navigator.of(context).pushReplacementNamed('home');
             },
           );
         },
@@ -205,15 +206,28 @@ class _BodyState extends State<Body> {
           return IconButton(
             icon: new Icon(Icons.save,
                 color: ColorsApp.secondaryColorlightPurple),
-            onPressed: () {
-              context.read<ProfileCubit>()
-                  .editUserForm(state.userID!, state.photoUrl!);
-                  ScaffoldMessenger.of(context)
+            onPressed: () {                             
+              context.read<ProfileCubit>().editUserForm(
+                  widget.userProfile.id!, widget.userProfile.photoUri ?? '');
+              ScaffoldMessenger.of(context)
               ..hideCurrentSnackBar()
               ..showSnackBar(
                 const SnackBar(content: Text('Datos actualizados correctamente')),
               );
-              Navigator.of(context).pop();
+              final userProfile = new UserProfile(
+                id: widget.userProfile.id,
+                userName: state.userName.value,
+                email: state.email.value,
+                photoUri: widget.userProfile.photoUri,
+                lastName: state.lastName.value,
+                address: state.addres.value,
+                phone: state.phone.value,
+              );
+              context
+                  .read<AuthenticationBloc>()
+                  .add(AuthenticationUserUpdate(userProfile));
+
+              Navigator.of(context).pushReplacementNamed('home');
             },
           );
         })

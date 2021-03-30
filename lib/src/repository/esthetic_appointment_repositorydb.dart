@@ -1,37 +1,45 @@
+import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:lamanda_petshopcr/src/models/sthetic_appoiments_list.dart';
 import 'package:lamanda_petshopcr/src/models/sthetic_appointment.dart';
+import 'package:path/path.dart' as path;
 
 class StheticAppointmentRepository {
   final CollectionReference _ref =
       FirebaseFirestore.instance.collection('stheticAppointment');
   final CollectionReference _refSchedule =
       FirebaseFirestore.instance.collection('schedule');
+  Reference storageRef = FirebaseStorage.instance.ref();
+  void addNewAppointment(StheticAppointment appointment, String dateId,
+      {File? proof}) async {
+    try {
+      if (appointment.pymentType == 'Sinpe' && proof != null) {
+        String? filepath = path.basename(proof.path);
+        await storageRef.child('proofPayment/' + '$filepath').putFile(proof);
+        appointment.proofPhotoUrl = await FirebaseStorage.instance
+            .ref('proofPayment/' + '$filepath')
+            .getDownloadURL();
+      }
 
-  void addNewAppointment(StheticAppointment appointment, String dateId) async {
-    var estheticAppointmentsList = await getDocumetAppointmentByDate(dateId);
-    if (estheticAppointmentsList != null) {
-      estheticAppointmentsList.appointments.add(appointment);
-      estheticAppointmentsList.reservedTimes.add(appointment.entrytHour!);
-      // _ref
-      //     .doc(dateId)
-      //     .update({
-      //       'reservedTimes': estheticAppointmentsList.reservedTimes,
-      //       'appointments': estheticAppointmentsList.appointments
-      //     })
-      //     .then((value) => print('Appointment Added'))
-      //     .catchError((error) => print('Failed to add Appointment: $error'));
-    } else {
-      estheticAppointmentsList = new EstheticAppointmentsList(
-          date: dateId,
-          appointments: <StheticAppointment>[appointment],
-          reservedTimes: <DateTime>[appointment.entrytHour!]);
+      var estheticAppointmentsList = await getDocumetAppointmentByDate(dateId);
+      if (estheticAppointmentsList != null) {
+        estheticAppointmentsList.appointments.add(appointment);
+        estheticAppointmentsList.reservedTimes.add(appointment.entrytHour!);
+      } else {
+        estheticAppointmentsList = new EstheticAppointmentsList(
+            date: dateId,
+            appointments: <StheticAppointment>[appointment],
+            reservedTimes: <DateTime>[appointment.entrytHour!]);
+      }
+      _ref
+          .doc(dateId)
+          .set(estheticAppointmentsList.toJson())
+          .then((value) => print('Appointment Added'))
+          .catchError((error) => print('Failed to add Appointment: $error'));
+    } on FirebaseException catch (e) {
+      print('Error subir foto :' + e.toString());
     }
-    _ref
-        .doc(dateId)
-        .set(estheticAppointmentsList.toJson())
-        .then((value) => print('Appointment Added'))
-        .catchError((error) => print('Failed to add Appointment: $error'));
   }
 
   Future<EstheticAppointmentsList?> getDocumetAppointmentByDate(
@@ -84,5 +92,4 @@ class StheticAppointmentRepository {
 
     return stheticAppointmentList;
   }
-
 }

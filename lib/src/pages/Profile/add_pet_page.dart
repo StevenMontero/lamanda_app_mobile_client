@@ -4,12 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:lamanda_petshopcr/src/models/pet.dart';
 import 'package:lamanda_petshopcr/src/theme/colors.dart';
 import 'package:lamanda_petshopcr/src/widgets/textfielform.dart';
 import 'package:lamanda_petshopcr/src/blocs/PetCubit/pet_cubit.dart';
 import 'package:lamanda_petshopcr/src/repository/pet_repositorydb.dart';
 import 'package:lamanda_petshopcr/src/blocs/AuthenticationBloc/authentication_bloc.dart';
-
 
 class PetFormPage extends StatefulWidget {
   @override
@@ -120,7 +120,7 @@ class _BodyState extends State<Body> {
             child: ButtonTheme(
               alignedDropdown: true,
               child: DropdownButtonFormField(
-                decoration: InputDecoration( border: OutlineInputBorder()),
+                decoration: InputDecoration(border: OutlineInputBorder()),
                 hint: Text('Tipo de mascota'),
                 icon: Icon(Icons.arrow_drop_down_circle_outlined),
                 iconSize: 25,
@@ -217,14 +217,13 @@ class _BodyState extends State<Body> {
     return BlocBuilder<PetCubit, PetState>(
       builder: (context, state) {
         return Container(
-          
           padding: EdgeInsets.only(left: 2),
           alignment: Alignment.bottomLeft,
           child: DropdownButtonHideUnderline(
             child: ButtonTheme(
               alignedDropdown: true,
               child: DropdownButtonFormField(
-                decoration: InputDecoration( border: OutlineInputBorder()),
+                decoration: InputDecoration(border: OutlineInputBorder()),
                 hint: Text('Pelaje de su mascota'),
                 icon: Icon(Icons.arrow_drop_down_circle_outlined),
                 iconSize: 25,
@@ -335,21 +334,38 @@ class _BodyState extends State<Body> {
         onPressed: () {
           final user = BlocProvider.of<AuthenticationBloc>(context).state.user;
           if (!state.status.isValidated) {
-                ScaffoldMessenger.of(context)
-                  ..hideCurrentSnackBar()
-                  ..showSnackBar(
-                    const SnackBar(content: Text('Debe llenar todos los campos')),
-                  );
-              }else if (state.photo == null){
-                ScaffoldMessenger.of(context)
-                  ..hideCurrentSnackBar()
-                  ..showSnackBar(
-                    const SnackBar(content: Text('Debe agregar foto de su mascota')),
-                  );
-              }else {
-                context.read<PetCubit>().addPetForm(user.id);
-                Navigator.of(context).pop();
-              }
+            ScaffoldMessenger.of(context)
+              ..hideCurrentSnackBar()
+              ..showSnackBar(
+                const SnackBar(content: Text('Debe llenar todos los campos')),
+              );
+          } else if (state.photo == null) {
+            ScaffoldMessenger.of(context)
+              ..hideCurrentSnackBar()
+              ..showSnackBar(
+                const SnackBar(
+                    content: Text('Debe agregar foto de su mascota')),
+              );
+          } else {
+            context.read<PetCubit>().addPetForm(user.id);
+            final pet = new Pet(
+              userId: user.id,
+              name: state.name.value,
+              breed: state.breed.value,
+              age: int.parse(state.age.value),
+              fur: state.fur.value,
+              kindPet: state.kindPet.value,
+              weight: double.parse(state.weigth.value),
+              isVaccinationUpDate: state.isVaccinationUpDate,
+              castrated: state.isCastrated,
+              sociable: state.isSociable,
+              photoUrl: state.photoUrl,
+            );
+            context
+                .read<AuthenticationBloc>()
+                .add(AuthenticationAddPetUpdate(pet));
+            Navigator.of(context).pop();
+          }
         },
         icon: Icon(Icons.save),
         label: Text('Guardar'),
