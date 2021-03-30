@@ -6,7 +6,7 @@ class VeterinaryAppointmenList {
   List<VeterinaryAppointment> appointments = [];
   List<DateTime> reservedTimes = [];
   VeterinaryAppointmenList(
-      {required this.date, required this.appointments, required reservedTimes});
+      {required this.date, required this.appointments, required this.reservedTimes});
 
   VeterinaryAppointmenList.fromJson(Map<String, dynamic> json) {
     this.date = json['date'];

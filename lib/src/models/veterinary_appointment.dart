@@ -31,8 +31,8 @@ class VeterinaryAppointment {
 
   VeterinaryAppointment.fromJson(Map<String, dynamic> json) {
     this.appointmentId = json['id'];
-    this.date = json['entryDate'];
-    this.hour = json['entryHour'];
+    this.date = json['entryDate'].toDate();
+    this.hour = json['entryHour'].toDate();
     this.pymentType = json['pymentType'];
     this.pet = Pet.fromJson(json['pet'],json['pet']['petID']);
     this.client = UserProfile.fromJson(json['entryUser']);

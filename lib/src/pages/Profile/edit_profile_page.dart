@@ -20,8 +20,8 @@ class _EditProfilePage extends State<EditProfilePage> {
     UserProfile _userProfile =
         context.read<AuthenticationBloc>().state.userProfile!;
     return BlocProvider(
-        create: (context) => ProfileCubit(UserRepository())
-          ..fillInitialDataUser(_userProfile),
+        create: (context) =>
+            ProfileCubit(UserRepository())..fillInitialDataUser(_userProfile),
         child: Body(_userProfile));
   }
 }
@@ -35,33 +35,6 @@ class Body extends StatefulWidget {
 
 class _BodyState extends State<Body> {
   UserProfile? userData;
-  TextEditingController _controllerUserName = new TextEditingController();
-  TextEditingController _controllerLastName = new TextEditingController();
-  TextEditingController _controllerEmail = new TextEditingController();
-  TextEditingController _controllerPhone = new TextEditingController();
-  TextEditingController _controllerAddres = new TextEditingController();
-  @override
-  void initState() {
-    getInitUserData(BlocProvider.of<AuthenticationBloc>(context).state.user.id);
-    super.initState();
-  }
-
-  void getInitUserData(String id) async {
-    final UserProfile? user = await context.read<ProfileCubit>().getUser(id);
-    setState(() {
-      if (user != null) {
-        _controllerUserName.text = user.userName ?? '';
-        _controllerLastName.text = user.lastName ?? '';
-        _controllerEmail.text = user.email ?? '';
-        _controllerPhone.text = user.phone ?? '';
-        _controllerAddres.text = user.address ?? '';
-
-      }
-
-      userData = user;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -279,11 +252,21 @@ class _BodyState extends State<Body> {
             icon: new Icon(Icons.save,
                 color: ColorsApp.secondaryColorlightPurple),
             onPressed: () {
-              final user =
-                  BlocProvider.of<AuthenticationBloc>(context).state.user;
+              context.read<ProfileCubit>().editUserForm(
+                  widget.userProfile.id!, widget.userProfile.photoUri ?? '');
+              final userProfile = new UserProfile(
+                id: widget.userProfile.id,
+                userName: state.userName,
+                email: state.email,
+                photoUri: widget.userProfile.photoUri,
+                lastName: state.lastName,
+                address: state.addres,
+                phone: state.phone,
+              );
               context
-                  .read<ProfileCubit>()
-                  .editUserForm(user.id, user.photo ?? '');
+                  .read<AuthenticationBloc>()
+                  .add(AuthenticationUserUpdate(userProfile));
+
               Navigator.of(context).pushReplacementNamed('home');
             },
           );
@@ -291,5 +274,4 @@ class _BodyState extends State<Body> {
       ],
     );
   }
-
 }

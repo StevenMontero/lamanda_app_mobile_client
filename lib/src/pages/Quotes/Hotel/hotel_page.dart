@@ -4,6 +4,8 @@ import 'package:intl/intl.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lamanda_petshopcr/src/blocs/AuthenticationBloc/authentication_bloc.dart';
 import 'package:lamanda_petshopcr/src/blocs/HotelCubit/hotel_cubit.dart';
+import 'package:lamanda_petshopcr/src/blocs/PymentCubit/payment_cubit.dart';
+import 'package:lamanda_petshopcr/src/models/hotel_appointment.dart';
 import 'package:lamanda_petshopcr/src/models/pet.dart';
 import 'package:lamanda_petshopcr/src/repository/hotel_appointment_repositorydb.dart';
 import 'package:lamanda_petshopcr/src/theme/colors.dart';
@@ -22,7 +24,8 @@ class _HotelScreenState extends State<HotelScreen> {
     final _userPetList = context.read<AuthenticationBloc>().state.petList;
     return BlocProvider(
         create: (context) => HotelCubit(HotelAppointmentRepository())
-          ..userDeliverChanged(_userInfoProfile!),
+          ..userDeliverChanged(_userInfoProfile!)
+          ..petChanged(_userPetList[0]),
         child: Scaffold(
           backgroundColor: ColorsApp.backgroundColor,
           appBar: AppBar(
@@ -94,18 +97,9 @@ class _BodyState extends State<Body> {
                   color: ColorsApp.primaryColorBlue,
                   press: state.status == FormzStatus.valid
                       ? () {
-                          // final user =
-                          //     BlocProvider.of<AuthenticationBloc>(context)
-                          //         .state
-                          //         .user;
-                          // context
-                          //     .read<HotelCubit>()
-                          //     .addAppointmentDaycareForm(new UserProfile(
-                          //         userName: user.name,
-                          //         email: user.email,
-                          //         id: user.id,
-                          //         photoUri: user.photo));
-                          // Navigator.of(context).pop();
+                          final appoimentHotel =
+                              context.read<HotelCubit>().getHotelAppoiment;
+                          _showDialog(context, appoimentHotel);
                         }
                       : null,
                   text: 'Reservar',
@@ -249,14 +243,34 @@ class _BodyState extends State<Body> {
       case 'fleas':
         context.read<HotelCubit>().lastProtectionFleasChanged(picked);
         break;
-      case 'entry':
-        context.read<HotelCubit>().entryDateChanged(picked);
-        break;
-      case 'out':
-        context.read<HotelCubit>().departureDateChanged(picked);
-        break;
       default:
     }
+  }
+
+  void _presentDateEntry() async {
+    final refDate = DateTime.now();
+    var showDatePicker2 = showDatePicker(
+        locale: const Locale("es", "ES"),
+        context: context,
+        initialDate: refDate,
+        firstDate: refDate,
+        lastDate: DateTime(refDate.year + 10, refDate.month, refDate.day));
+    final picked = await showDatePicker2;
+
+    context.read<HotelCubit>().entryDateChanged(picked);
+  }
+
+  void _presentDateOut() async {
+    final refDate = DateTime.now();
+    var showDatePicker2 = showDatePicker(
+        locale: const Locale("es", "ES"),
+        context: context,
+        initialDate: DateTime(refDate.year, refDate.month, refDate.day + 1),
+        firstDate: DateTime(refDate.year, refDate.month, refDate.day + 1),
+        lastDate: DateTime(refDate.year + 10, refDate.month, refDate.day));
+    final picked = await showDatePicker2;
+
+    context.read<HotelCubit>().departureDateChanged(picked);
   }
 
   Widget buildOptionsLsit() {
@@ -363,7 +377,7 @@ class _BodyState extends State<Body> {
               onTap: disable
                   ? null
                   : () {
-                      _presentDatePicker(type);
+                      type == 'entry' ? _presentDateEntry() : _presentDateOut();
                     },
               child: Padding(
                 padding:
@@ -427,4 +441,114 @@ class _BodyState extends State<Body> {
       ),
     );
   }
+}
+
+// Custom Text Header for Dialog after user succes payment
+var _txtCustomHead = TextStyle(
+  color: Colors.black54,
+  fontSize: 23.0,
+  fontWeight: FontWeight.w600,
+  fontFamily: "Gotik",
+);
+
+/// Custom Text Description for Dialog after user succes payment
+var _txtCustomSub = TextStyle(
+  color: Colors.black38,
+  fontSize: 15.0,
+  fontWeight: FontWeight.w500,
+  fontFamily: "Gotik",
+);
+
+/// Card Popup if success payment
+_showDialog(BuildContext ctx, HotelAppointment appointment) {
+  showDialog(
+    context: ctx,
+    barrierDismissible: true,
+    builder: (contex) => SimpleDialog(
+      children: <Widget>[
+        Container(
+          padding: EdgeInsets.only(top: 30.0, right: 60.0, left: 60.0),
+          color: Colors.white,
+          child: Image.asset(
+            "assets/images/invoice.png",
+            height: 110.0,
+            color: Colors.lightGreen,
+          ),
+        ),
+        Center(
+            child: Padding(
+          padding: const EdgeInsets.only(top: 16.0),
+          child: Text(
+            '¡Resumen!',
+            style: _txtCustomHead,
+          ),
+        )),
+        Center(
+            child: Padding(
+          padding: const EdgeInsets.only(
+              top: 30.0, bottom: 40.0, right: 16, left: 16),
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Total de dias',
+                    textAlign: TextAlign.center,
+                    style: _txtCustomSub,
+                  ),
+                  Text(
+                    '${appointment.endDate!.day - appointment.startDate!.day}',
+                    textAlign: TextAlign.center,
+                    style: _txtCustomSub,
+                  ),
+                ],
+              ),
+              Divider(),
+              SizedBox(
+                height: 5.0,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Total a pagar',
+                    textAlign: TextAlign.center,
+                    style: _txtCustomSub,
+                  ),
+                  Text(
+                    '${appointment.priceTotal}',
+                    textAlign: TextAlign.center,
+                    style: _txtCustomSub,
+                  ),
+                ],
+              ),
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16.0, vertical: 5.0),
+                child: Text(
+                  '*El precio varía según el peso de la mascota',
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ],
+          ),
+        )),
+        Padding(
+          padding: const EdgeInsets.only(bottom: 16.0, right: 8.0),
+          child: Container(
+            alignment: Alignment.bottomRight,
+            child: MaterialButton(
+                color: ColorsApp.primaryColorBlue,
+                textColor: Colors.white,
+                onPressed: () {
+                  Navigator.of(ctx).pushReplacementNamed('payment');
+                  ctx.read<PaymentCubit>().serviceChanged(appointment);
+                },
+                child: Text('Pagar')),
+          ),
+        )
+      ],
+    ),
+  );
 }

@@ -5,6 +5,7 @@ import 'package:lamanda_petshopcr/src/models/daycare_appointment.dart';
 import 'package:lamanda_petshopcr/src/models/pet.dart';
 import 'package:lamanda_petshopcr/src/models/userProfile.dart';
 import 'package:lamanda_petshopcr/src/repository/daycare_appointment_repositorydb.dart';
+import 'package:lamanda_petshopcr/src/utils/Calculators/price_calculator.dart';
 import 'package:lamanda_petshopcr/src/utils/regularExpressions/regular_expressions_models.dart';
 
 part 'kinder_state.dart';
@@ -175,8 +176,28 @@ class KinderCubit extends Cubit<KinderState> {
       emit(state.copyWith(status: FormzStatus.submissionFailure));
     }
   }
-   void petChanged(Pet pet) {
+
+  void petChanged(Pet pet) {
     emit(state.copyWith(pet: pet));
+  }
+
+  DaycareAppointment get getAppoimentDayCare {
+    return new DaycareAppointment(
+      priceTotal: PriceCalculator.calculatePriceDayCare(
+          hours: state.departureHour.value![1]!.hour -
+              state.entryHour.value![1]!.hour),
+      date: state.date,
+      entryHour: state.entryHour.value![1],
+      departureHour: state.departureHour.value![1],
+      userDeliver: state.userDeliver,
+      userPickup: state.userPickup.value,
+      direccion: state.direccion.value,
+      lastDeworming: state.lastDeworming.value,
+      lastProtectionFleas: state.lastProtectionFleas.value,
+      transfer: state.transporte,
+      isConfirmed: false,
+      pet: state.pet
+    );
   }
 
   FormzStatus caseValidateForm(

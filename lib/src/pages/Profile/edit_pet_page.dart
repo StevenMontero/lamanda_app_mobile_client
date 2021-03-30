@@ -350,6 +350,10 @@ class _BodyState extends State<Body> {
               );
           } else {
             context.read<PetCubit>().updatePet(pet);
+            context
+                .read<AuthenticationBloc>()
+                .add(AuthenticationPetUpdate(pet));
+
             Navigator.of(context).pop();
           }
         },

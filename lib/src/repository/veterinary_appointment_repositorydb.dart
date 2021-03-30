@@ -1,32 +1,49 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:lamanda_petshopcr/src/models/veterinary_appoiment_list.dart';
 import 'package:lamanda_petshopcr/src/models/veterinary_appointment.dart';
+import 'package:path/path.dart' as path;
 
 class VeterinaryAppointmentRepository {
   final CollectionReference _ref =
       FirebaseFirestore.instance.collection('veterinaryAppointment');
   final CollectionReference _refSchedule =
       FirebaseFirestore.instance.collection('schedule');
-
- void addNewAppointment(VeterinaryAppointment appointment, String dateId) async {
-    var veterinaryAppointmentsList = await getDocumetAppointmentByDate(dateId);
-    if (veterinaryAppointmentsList != null) {
-      veterinaryAppointmentsList.appointments.add(appointment);
-      veterinaryAppointmentsList.reservedTimes.add(appointment.hour!);
-    } else {
-      veterinaryAppointmentsList = new VeterinaryAppointmenList(
-          date: dateId,
-          appointments: <VeterinaryAppointment>[appointment],
-          reservedTimes: <DateTime>[appointment.hour!]);
+  Reference storageRef = FirebaseStorage.instance.ref();
+  void addNewAppointment(VeterinaryAppointment appointment, String dateId,
+      {File? proof}) async {
+    try {
+      if (appointment.pymentType == 'Sinpe' && proof != null) {
+        String? filepath = path.basename(proof.path);
+        await storageRef.child('proofPayment/' + '$filepath').putFile(proof);
+        appointment.proofPhotoUrl = await FirebaseStorage.instance
+            .ref('proofPayment/' + '$filepath')
+            .getDownloadURL();
+      }
+      var veterinaryAppointmentsList =
+          await getDocumetAppointmentByDate(dateId);
+      if (veterinaryAppointmentsList != null) {
+        veterinaryAppointmentsList.appointments.add(appointment);
+        veterinaryAppointmentsList.reservedTimes.add(appointment.hour!);
+      } else {
+        veterinaryAppointmentsList = new VeterinaryAppointmenList(
+            date: dateId,
+            appointments: <VeterinaryAppointment>[appointment],
+            reservedTimes: <DateTime>[appointment.hour!]);
+      }
+      _ref
+          .doc(dateId)
+          .set(veterinaryAppointmentsList.toJson())
+          .then((value) => print('Appointment Added'))
+          .catchError((error) => print('Failed to add Appointment: $error'));
+    } on FirebaseException catch (e) {
+      print('Error subir foto :' + e.toString());
     }
-    _ref
-        .doc(dateId)
-        .set(veterinaryAppointmentsList.toJson())
-        .then((value) => print('Appointment Added'))
-        .catchError((error) => print('Failed to add Appointment: $error'));
   }
 
-   Future<VeterinaryAppointmenList?> getDocumetAppointmentByDate(
+  Future<VeterinaryAppointmenList?> getDocumetAppointmentByDate(
       String appointmentId) async {
     DocumentSnapshot snapshot;
     snapshot = await _ref.doc(appointmentId).get();
@@ -65,10 +82,11 @@ class VeterinaryAppointmentRepository {
     }
   }
 
- Future<List<DateTime>> getListAppointmetsFree(String dateId) async {
+  Future<List<DateTime>> getListAppointmetsFree(String dateId) async {
     //TODO: iMPLEMENTAR REAL TIME
     List<DateTime> _schedule = await _getSchedule('0erT6C3IbEKcLJCRlxyb');
-    final veterinaryAppointmentsList = await getDocumetAppointmentByDate(dateId);
+    final veterinaryAppointmentsList =
+        await getDocumetAppointmentByDate(dateId);
     if (veterinaryAppointmentsList != null) {
       final result = veterinaryAppointmentsList.reservedTimes;
       result.forEach((element) {

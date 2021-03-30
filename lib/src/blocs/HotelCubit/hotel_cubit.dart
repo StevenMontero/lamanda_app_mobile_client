@@ -5,6 +5,7 @@ import 'package:lamanda_petshopcr/src/models/hotel_appointment.dart';
 import 'package:lamanda_petshopcr/src/models/pet.dart';
 import 'package:lamanda_petshopcr/src/models/userProfile.dart';
 import 'package:lamanda_petshopcr/src/repository/hotel_appointment_repositorydb.dart';
+import 'package:lamanda_petshopcr/src/utils/Calculators/price_calculator.dart';
 import 'package:lamanda_petshopcr/src/utils/regularExpressions/regular_expressions_models.dart';
 
 part 'hotel_state.dart';
@@ -159,6 +160,24 @@ class HotelCubit extends Cubit<HotelState> {
     // } catch (error) {
     //   emit(state.copyWith(status: FormzStatus.submissionFailure));
     // }
+  }
+
+  HotelAppointment get getHotelAppoiment {
+    return new HotelAppointment(
+        endDate: state.departureDate.value,
+        personPicksUp: state.userPickup.value,
+        addres: state.direccion.value,
+        startDate: state.entryDate.value,
+        client: state.userDeliver,
+        isConfirmed: false,
+        lastdeworming: state.lastDeworming.value,
+        pestProtection: state.lastProtectionFleas.value,
+        transfer: state.transporte,
+        pet: state.pet,
+        priceTotal: PriceCalculator.calculatePriceHotelDay(
+            weightPet: state.pet!.weight!,
+            kindPet: state.pet!.kindPet!,
+            days: state.departureDate.value!.day - state.entryDate.value!.day));
   }
 
   FormzStatus caseValidateForm(

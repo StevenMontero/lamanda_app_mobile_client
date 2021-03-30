@@ -1,15 +1,31 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:lamanda_petshopcr/src/models/hotel_appointment.dart';
+import 'package:path/path.dart' as path;
 
 class HotelAppointmentRepository {
   final CollectionReference _ref =
       FirebaseFirestore.instance.collection('hotelAppointment');
-
-  Future<void> addNewAppointment(HotelAppointment appointment) {
-    return _ref
-        .add(appointment.toJson())
-        .then((value) => print('Appointment Added'))
-        .catchError((error) => print('Failed to add Appointment: $error'));
+  Reference storageRef = FirebaseStorage.instance.ref();
+  Future<void> addNewAppointment(HotelAppointment appointment,
+      {File? proof}) async {
+    try {
+      if (appointment.pymentType == 'Sinpe' && proof != null) {
+        String? filepath = path.basename(proof.path);
+        await storageRef.child('proofPayment/' + '$filepath').putFile(proof);
+        appointment.proofPhotoUrl = await FirebaseStorage.instance
+            .ref('proofPayment/' + '$filepath')
+            .getDownloadURL();
+      }
+      return _ref
+          .add(appointment.toJson())
+          .then((value) => print('Appointment Added'))
+          .catchError((error) => print('Failed to add Appointment: $error'));
+    } on FirebaseException catch (e) {
+      print('Error subir foto :' + e.toString());
+    }
   }
 
   Future<HotelAppointment?> getUserAppointment(String appointmentId) async {

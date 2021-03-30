@@ -3,9 +3,11 @@ import 'package:formz/formz.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lamanda_petshopcr/src/blocs/AuthenticationBloc/authentication_bloc.dart';
+import 'package:lamanda_petshopcr/src/blocs/PymentCubit/payment_cubit.dart';
 import 'package:lamanda_petshopcr/src/blocs/VeterinaryCubit/cubitsVeterinary.dart';
 import 'package:lamanda_petshopcr/src/models/pet.dart';
 import 'package:lamanda_petshopcr/src/models/userProfile.dart';
+import 'package:lamanda_petshopcr/src/models/veterinary_appointment.dart';
 import 'package:lamanda_petshopcr/src/repository/veterinary_appointment_repositorydb.dart';
 import 'package:lamanda_petshopcr/src/theme/colors.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -113,8 +115,21 @@ class _BodyState extends State<Body> {
                       ? onStepContinue
                       : veterinaryCubitState.currentStep == 2
                           ? () {
-                              //TODO: llamar a la clase de pagar
-                              print('final');
+                              final appoiment = new VeterinaryAppointment(
+                                date: scheduleCubitState.date,
+                                hour: scheduleCubitState.hourRerservation,
+                                client: widget.userData,
+                                isConfirmed: false,
+                                pet: infoFormCubitState.pet,
+                                priceTotal: infoFormCubitState.service.price,
+                                transfer: infoFormCubitState.transfer,
+                                direction: infoFormCubitState.address.value,
+                                symptoms: infoFormCubitState.description.value,
+                              );
+                              context
+                                  .read<PaymentCubit>()
+                                  .serviceChanged(appoiment);
+                              Navigator.of(context).pushNamed('payment');
                             }
                           : null,
                   color: ColorsApp.primaryColorBlue,
@@ -189,7 +204,7 @@ class _BodyState extends State<Body> {
                 previous.description != current.description,
             builder: (context, state) {
               TextEditingController(text: state.description.value);
-              return buildTextField( 
+              return buildTextField(
                   label: '¿Qué malestar presenta la mascota?',
                   hintText: 'Síntomas, dolores … Etc.',
                   maxLines: 4,

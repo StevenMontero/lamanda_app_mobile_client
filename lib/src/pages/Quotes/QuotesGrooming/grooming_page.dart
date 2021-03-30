@@ -8,6 +8,7 @@ import 'package:lamanda_petshopcr/src/blocs/GroomingCubit/grooming_cubit.dart';
 import 'package:lamanda_petshopcr/src/blocs/GroomingCubit/infoForm/infoform_cubit.dart';
 import 'package:lamanda_petshopcr/src/blocs/GroomingCubit/scheduleCubit/selectschedule_cubit.dart';
 import 'package:lamanda_petshopcr/src/blocs/GroomingCubit/serviceFormCubit/serviceform_cubit.dart';
+import 'package:lamanda_petshopcr/src/blocs/PymentCubit/payment_cubit.dart';
 import 'package:lamanda_petshopcr/src/models/pet.dart';
 import 'package:lamanda_petshopcr/src/models/service.dart';
 import 'package:lamanda_petshopcr/src/models/sthetic_appointment.dart';
@@ -133,8 +134,10 @@ class _BodyState extends State<Body> {
                                   isConfirmed: false,
                                   priceTotal: serviceFormCubitState.total,
                                   client: widget.userData);
-                              Navigator.of(context)
-                                  .pushNamed('payment', arguments: service);
+                              context
+                                  .read<PaymentCubit>()
+                                  .serviceChanged(service);
+                              Navigator.of(context).pushNamed('payment');
                             }
                           : null,
                   color: ColorsApp.primaryColorBlue,

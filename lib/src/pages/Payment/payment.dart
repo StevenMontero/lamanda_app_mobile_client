@@ -8,28 +8,25 @@ class PaymentPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final service = ModalRoute.of(context)!.settings.arguments;
-    return BlocProvider(
-        create: (context) => PaymentCubit()..serviceChanged(service),
-        child: Scaffold(
-          appBar: AppBar(
-            leading: IconButton(
-                icon: Icon(
-                  Icons.arrow_back,
-                  color: Colors.white70,
-                  size: 25.0,
-                ),
-                onPressed: () => Navigator.of(context).pop()),
-            centerTitle: true,
-            elevation: 0,
-            backgroundColor: ColorsApp.primaryColorDark,
-            title: Text(
-              "Pago",
-              style: TextStyle(color: Colors.white70),
+    return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(
+            icon: Icon(
+              Icons.arrow_back,
+              color: Colors.white70,
+              size: 25.0,
             ),
-          ),
-          body: Body(),
-        ));
+            onPressed: () => Navigator.of(context).pop()),
+        centerTitle: true,
+        elevation: 0,
+        backgroundColor: ColorsApp.primaryColorDark,
+        title: Text(
+          "Pago",
+          style: TextStyle(color: Colors.white70),
+        ),
+      ),
+      body: Body(),
+    );
   }
 }
 
@@ -68,6 +65,7 @@ class Body extends StatelessWidget {
                   trailing: Icon(Icons.keyboard_arrow_right,
                       color: ColorsApp.primaryColorBlue),
                   onTap: () {
+                    context.read<PaymentCubit>().pymetnTypeChanged('Efectivo');
                     context.read<PaymentCubit>().summitReservation();
                     _showDialog(context);
                   }),
@@ -82,6 +80,7 @@ class Body extends StatelessWidget {
                   trailing: Icon(Icons.keyboard_arrow_right,
                       color: ColorsApp.primaryColorBlue),
                   onTap: () {
+                    context.read<PaymentCubit>().pymetnTypeChanged('Sinpe');
                     Navigator.of(context).pushNamed('proofSinpe');
                   })
             ],
@@ -142,7 +141,7 @@ _showDialog(BuildContext ctx) {
           ),
         )),
         Padding(
-          padding: const EdgeInsets.only(bottom: 16.0,right: 8.0),
+          padding: const EdgeInsets.only(bottom: 16.0, right: 8.0),
           child: Container(
             alignment: Alignment.bottomRight,
             child: MaterialButton(

@@ -5,8 +5,9 @@ import 'package:formz/formz.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lamanda_petshopcr/src/blocs/AuthenticationBloc/authentication_bloc.dart';
 import 'package:lamanda_petshopcr/src/blocs/KinderCubit/kinder_cubit.dart';
+import 'package:lamanda_petshopcr/src/blocs/PymentCubit/payment_cubit.dart';
+import 'package:lamanda_petshopcr/src/models/daycare_appointment.dart';
 import 'package:lamanda_petshopcr/src/models/pet.dart';
-import 'package:lamanda_petshopcr/src/models/userProfile.dart';
 import 'package:lamanda_petshopcr/src/repository/daycare_appointment_repositorydb.dart';
 import 'package:lamanda_petshopcr/src/theme/colors.dart';
 import 'package:lamanda_petshopcr/src/widgets/custom_button.dart';
@@ -25,7 +26,8 @@ class _KindergartenScreenState extends State<KindergartenScreen> {
     final _userPetList = context.read<AuthenticationBloc>().state.petList;
     return BlocProvider(
         create: (context) => KinderCubit(DaycareAppointmentRepository())
-          ..userDeliverChanged(_userInfoProfile!),
+          ..userDeliverChanged(_userInfoProfile!)
+          ..petChanged(_userPetList[0]),
         child: Scaffold(
           backgroundColor: ColorsApp.primaryColorBlue, //Colors.pink[200],
           appBar: AppBar(
@@ -165,18 +167,10 @@ class _BodyState extends State<Body> {
                       color: ColorsApp.primaryColorBlue,
                       press: state.status == FormzStatus.valid
                           ? () {
-                              // final user =
-                              //     BlocProvider.of<AuthenticationBloc>(context)
-                              //         .state
-                              //         .user;
-                              // context
-                              //     .read<KinderCubit>()
-                              //     .addAppointmentDaycareForm(new UserProfile(
-                              //         userName: user.name,
-                              //         email: user.email,
-                              //         id: user.id,
-                              //         photoUri: user.photo!));
-                              // Navigator.of(context).pop();
+                              final appoimentDayCare = context
+                                  .read<KinderCubit>()
+                                  .getAppoimentDayCare;
+                              _showDialog(context, appoimentDayCare);
                             }
                           : null,
                       text: 'Reservar',
@@ -517,4 +511,115 @@ class _BodyState extends State<Body> {
       ),
     );
   }
+}
+
+// Custom Text Header for Dialog after user succes payment
+var _txtCustomHead = TextStyle(
+  color: Colors.black54,
+  fontSize: 23.0,
+  fontWeight: FontWeight.w600,
+  fontFamily: "Gotik",
+);
+
+/// Custom Text Description for Dialog after user succes payment
+var _txtCustomSub = TextStyle(
+  color: Colors.black38,
+  fontSize: 15.0,
+  fontWeight: FontWeight.w500,
+  fontFamily: "Gotik",
+);
+
+/// Card Popup if success payment
+_showDialog(BuildContext ctx, DaycareAppointment appointment) {
+  showDialog(
+    context: ctx,
+    barrierDismissible: true,
+    builder: (contex) => SimpleDialog(
+      children: <Widget>[
+        Container(
+          padding: EdgeInsets.only(top: 30.0, right: 60.0, left: 60.0),
+          color: Colors.white,
+          child: Image.asset(
+            "assets/images/invoice.png",
+            height: 110.0,
+            color: Colors.lightGreen,
+          ),
+        ),
+        Center(
+            child: Padding(
+          padding: const EdgeInsets.only(top: 16.0),
+          child: Text(
+            '¡Resumen!',
+            style: _txtCustomHead,
+          ),
+        )),
+        Center(
+            child: Padding(
+          padding: const EdgeInsets.only(
+              top: 30.0, bottom: 40.0, right: 16, left: 16),
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Total de horas',
+                    textAlign: TextAlign.center,
+                    style: _txtCustomSub,
+                  ),
+                  Text(
+                    '${appointment.departureHour!.hour - appointment.entryHour!.hour}',
+                    textAlign: TextAlign.center,
+                    style: _txtCustomSub,
+                  ),
+                ],
+              ),
+              Divider(),
+              SizedBox(
+                height: 5.0,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Total a pagar',
+                    textAlign: TextAlign.center,
+                    style: _txtCustomSub,
+                  ),
+                  Text(
+                    '${appointment.priceTotal}',
+                    textAlign: TextAlign.center,
+                    style: _txtCustomSub,
+                  ),
+                ],
+              ),
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16.0, vertical: 5.0),
+                child: Text(
+                  '*Precio por hora CRC 1500',
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ],
+          ),
+        )),
+        Padding(
+          padding: const EdgeInsets.only(bottom: 16.0, right: 8.0),
+          child: Container(
+            alignment: Alignment.bottomRight,
+            child: MaterialButton(
+                color: ColorsApp.primaryColorBlue,
+                textColor: Colors.white,
+                onPressed: () {
+                  Navigator.of(ctx)
+                      .pushReplacementNamed('payment', arguments: appointment);
+                  ctx.read<PaymentCubit>().serviceChanged(appointment);
+                },
+                child: Text('Pagar')),
+          ),
+        )
+      ],
+    ),
+  );
 }

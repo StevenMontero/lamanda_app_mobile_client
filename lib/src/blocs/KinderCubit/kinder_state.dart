@@ -80,6 +80,7 @@ class KinderState extends Equatable {
         isProtectionFleas,
         ispickUpSomeoneElse,
         isDeworming,
-        status
+        status,
+        pet
       ];
 }
