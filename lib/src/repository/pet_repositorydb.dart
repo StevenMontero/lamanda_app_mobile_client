@@ -8,22 +8,29 @@ class PetRepository {
   final CollectionReference _ref = FirebaseFirestore.instance.collection('pet');
   Reference storageRef = FirebaseStorage.instance.ref();
   Pet? pet;
-  
- // Future<void> addNewPet(Pet pet ) {
- //   return _ref
- //       .add(pet.toJson())
- //       .then((value) => print('Pet Added'))
- //       .catchError((error) => print('Failed to add pet: $error'));
- // }
 
-  Future<Pet?> getPet(String idPet) async {
-    DocumentSnapshot snapshot;
-    snapshot = await _ref.doc(idPet).get();
-    if (snapshot.exists) {
-      return Pet.fromJson(snapshot.data()!);
-    } else {
-      return null;
+  Future<void> addNewPet(File? file, Pet pet) async {
+    String? filepath = p.basename(file!.path);
+    try {
+      await storageRef.child('pets/' + '$filepath').putFile(file);
+      pet.photoUrl = await FirebaseStorage.instance
+          .ref('pets/' + '$filepath')
+          .getDownloadURL();
+      await _ref
+          .add(pet.toJson())
+          .then((value) => print('Pet Added'))
+          .catchError((error) => print('Failed to add pet: $error'));
+    } on FirebaseException catch (e) {
+      print('Error subir foto :' + e.toString());
     }
+  }
+
+  Future<void> deletePet(String petID) async {
+    return _ref
+        .doc(petID)
+        .delete()
+        .then((value) => print('Pet Delete'))
+        .catchError((error) => print('Faile to delete Pet'));
   }
 
   Future<void> updatePet(Pet pet) {
@@ -34,27 +41,24 @@ class PetRepository {
         .catchError((error) => print('Failure Update'));
   }
 
+  Future<Pet?> getPet(String idPet) async {
+    DocumentSnapshot snapshot;
+    snapshot = await _ref.doc(idPet).get();
+    if (snapshot.exists) {
+      return Pet.fromJson(snapshot.data()!, snapshot.id);
+    } else {
+      return null;
+    }
+  }
+
   Future<List<Pet>> getpetList(String id) async {
     List<Pet> pets = [];
     QuerySnapshot snapshot = await _ref.get();
     final result = snapshot.docs.where(
         (DocumentSnapshot document) => document.data()!['userID'].contains(id));
     result.forEach((element) {
-      pets.add(Pet.fromJson(element.data()!));
+      pets.add(Pet.fromJson(element.data()!, element.id));
     });
     return pets;
-  }
-
-  Future<void> addNewPet(File? file, Pet pet) async {
-    String? filepath = p.basename(file!.path);
-    try {
-      await storageRef.child('pets/' + '$filepath').putFile(file); 
-      pet.photoUrl = await FirebaseStorage.instance.ref('pets/' + '$filepath').getDownloadURL();
-      await _ref.add(pet.toJson())
-        .then((value) => print('Pet Added'))
-        .catchError((error) => print('Failed to add pet: $error'));
-    } on FirebaseException catch (e) {
-      print('Error subir foto :' + e.toString());
-    }
   }
 }

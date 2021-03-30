@@ -28,8 +28,8 @@ class Pet{
     this.kindPet
   });
 
-   Pet.fromJson(Map<String, dynamic> json){
-    this.petId = json['petID'];
+   Pet.fromJson(Map<String, dynamic> json, String petID){
+    this.petId = petID;
     this.userId = json['userID'];
     this.name = json['petName'];
     this.breed = json['breed'];

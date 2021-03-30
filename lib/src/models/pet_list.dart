@@ -8,7 +8,7 @@ class PetList {
   PetList.fromJsonList(List<dynamic> jsonList) {
     if (jsonList.any((element) => true)) {
       for (var petObj in jsonList) {
-        _list!.add(Pet.fromJson(petObj));
+        _list!.add(Pet.fromJson(petObj, petObj.petId));
       }
     } else {
       _list = null;

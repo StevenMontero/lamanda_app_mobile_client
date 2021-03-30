@@ -41,7 +41,7 @@ class StheticAppointment {
     this.appointmentId = json['id'];
     this.priceTotal = json['priceTotal'];
     this.entrytHour = json['entryHour'].toDate();
-    this.pet = Pet.fromJson(json['pet']);
+    this.pet = Pet.fromJson(json['pet'],json['pet']['petID']);
     this.isConfirmed = json['isConfirmed'];
     this.proofPhotoUrl = json['proofPhotoUrl'];
     this.transfer = json['transfer'];

@@ -34,7 +34,7 @@ class VeterinaryAppointment {
     this.date = json['entryDate'];
     this.hour = json['entryHour'];
     this.pymentType = json['pymentType'];
-    this.pet = Pet.fromJson(json['pet']);
+    this.pet = Pet.fromJson(json['pet'],json['pet']['petID']);
     this.client = UserProfile.fromJson(json['entryUser']);
     this.transfer = json['transfer'];
     this.direction = json['direction'];

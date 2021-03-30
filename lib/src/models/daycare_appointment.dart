@@ -41,7 +41,7 @@ class DaycareAppointment {
     this.appointmentId = json['id'];
     this.date = json['date'];
     this.pymentType = json['pymentType'];
-    this.pet = Pet.fromJson(json['pet']);
+    this.pet = Pet.fromJson(json['pet'],json['pet']['petID']);
     this.entryHour = json['entryHour'];
     this.proofPhotoUrl = json['proofPhotoUrl'];
     this.departureHour = json['departureHour'];

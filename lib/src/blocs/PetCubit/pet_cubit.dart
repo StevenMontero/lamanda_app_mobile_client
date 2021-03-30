@@ -120,6 +120,41 @@ class PetCubit extends Cubit<PetState> {
       emit(state.copyWith(status: FormzStatus.submissionFailure));
     }
   }
+  //Actualiza los datos de la mascota
+  Future<void> updatePet(Pet oldPet)async{
+    emit(state.copyWith(status: FormzStatus.submissionInProgress));
+    try {
+      pet = new Pet(
+        userId: oldPet.petId,
+        name: oldPet.name,
+        breed: oldPet.breed,
+        age: oldPet.age,
+        fur: oldPet.fur,
+        kindPet: oldPet.kindPet,
+        weight: oldPet.weight,
+        isVaccinationUpDate: oldPet.isVaccinationUpDate, 
+        castrated: oldPet.castrated,
+        sociable: oldPet.sociable,
+        photoUrl: oldPet.photoUrl,
+      );
+      petRepository.updatePet(pet!);
+      emit(state.copyWith(status: FormzStatus.submissionSuccess));
+    } catch (error) {
+      emit(state.copyWith(status: FormzStatus.submissionFailure));
+    }
+
+  }
+  //Elimina la mascota seleccionada
+  Future<void> deletePet(String petID, int index) async {
+    emit(state.copyWith(status: FormzStatus.submissionInProgress));
+    try {
+      petRepository.deletePet(petID);
+      state.petList!.removeAt(index);
+      emit(state.copyWith(status: FormzStatus.submissionSuccess, petList: state.petList!));
+    } catch (error) {
+      emit(state.copyWith(status: FormzStatus.submissionFailure));
+    }
+  }
 
   Future<Pet?> getMyPet(String idPet) async {
     pet = await petRepository.getPet(idPet);
