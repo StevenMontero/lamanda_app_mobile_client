@@ -171,7 +171,8 @@ class _BodyState extends State<Body> {
           icon: Icons.edit_outlined,
           lavel: 'Nombre de mi Mascota',
           inputType: TextInputType.text,
-          onChanged: (value) => context.read<PetCubit>().nameChanged(value),
+          onChanged: (value) {
+          context.read<PetCubit>().nameChanged(value);},
         );
       },
     );
@@ -321,6 +322,7 @@ class _BodyState extends State<Body> {
   }
 
   Widget _submitButton() {
+    String petID;
     return BlocBuilder<PetCubit, PetState>(builder: (context, state) {
       return ElevatedButton.icon(
         style: ElevatedButton.styleFrom(
@@ -333,6 +335,7 @@ class _BodyState extends State<Body> {
             )),
         onPressed: () {
           final user = BlocProvider.of<AuthenticationBloc>(context).state.user;
+          petID = user.id + state.name.value!;
           if (!state.status.isValidated) {
             ScaffoldMessenger.of(context)
               ..hideCurrentSnackBar()
@@ -347,8 +350,10 @@ class _BodyState extends State<Body> {
                     content: Text('Debe agregar foto de su mascota')),
               );
           } else {
+            context.read<PetCubit>().petIDChanged(petID);
             context.read<PetCubit>().addPetForm(user.id);
             final pet = new Pet(
+              petId: petID,
               userId: user.id,
               name: state.name.value,
               breed: state.breed.value,

@@ -48,7 +48,7 @@ class HotelAppointment {
     this.lastdeworming = json['lastDeworing'];
     this.pestProtection = json['lastProtectionFleas'];
     this.transfer = json['transfer'];
-    this.pet = Pet.fromJson(json['pet'],json['pet']['petID']);
+    this.pet = Pet.fromJson(json['pet']);
     this.priceTotal = json['priceTotal'];
     this.proofPhotoUrl = json['proofPhotoUrl'];
     this.pymentType = json['pymentType'];

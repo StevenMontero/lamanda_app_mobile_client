@@ -47,6 +47,8 @@ class AuthenticationBloc
       yield _mapAuthenticationPetUpdateToState(event);
     } else if (event is AuthenticationAddPetUpdate) {
       yield _mapAuthenticationAddPetToState(event);
+    } else if (event is AuthenticationPetDelete) {
+      yield _mapAuthenticationPetDeleteToState(event);
     } else if (event is AuthenticationLogoutRequested) {
       unawaited(_authenticationRepository.logOut());
     }
@@ -89,6 +91,15 @@ class AuthenticationBloc
   ) {
     final listPet = List<Pet>.from(state.petList);
     listPet.add(event.pet);
+    return AuthenticationState.authenticated(
+        user: state.user, petList: listPet, userProfile: state.userProfile!);
+  }
+
+  AuthenticationState _mapAuthenticationPetDeleteToState(
+    AuthenticationPetDelete event,
+  ) {
+    final listPet = List<Pet>.from(state.petList);
+    listPet.removeWhere((element) => element.petId == event.pet.petId);
     return AuthenticationState.authenticated(
         user: state.user, petList: listPet, userProfile: state.userProfile!);
   }

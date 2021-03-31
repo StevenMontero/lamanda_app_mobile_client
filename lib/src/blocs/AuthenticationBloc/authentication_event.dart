@@ -29,9 +29,18 @@ class AuthenticationPetUpdate extends AuthenticationEvent {
   @override
   List<Object> get props => [pet];
 }
+
 class AuthenticationAddPetUpdate extends AuthenticationEvent {
   final Pet pet;
   const AuthenticationAddPetUpdate(this.pet);
+
+  @override
+  List<Object> get props => [pet];
+}
+
+class AuthenticationPetDelete extends AuthenticationEvent {
+  final Pet pet;
+  const AuthenticationPetDelete(this.pet);
 
   @override
   List<Object> get props => [pet];

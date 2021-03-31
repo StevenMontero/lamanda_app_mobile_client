@@ -1,11 +1,12 @@
+import '../../theme/colors.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:lamanda_petshopcr/src/blocs/AuthenticationBloc/authentication_bloc.dart';
-import 'package:lamanda_petshopcr/src/blocs/PetCubit/pet_cubit.dart';
 import 'package:lamanda_petshopcr/src/models/pet.dart';
+import 'package:lamanda_petshopcr/src/blocs/PetCubit/pet_cubit.dart';
 import 'package:lamanda_petshopcr/src/pages/Profile/edit_pet_page.dart';
-import '../../theme/colors.dart';
+import 'package:lamanda_petshopcr/src/repository/pet_repositorydb.dart';
+import 'package:lamanda_petshopcr/src/blocs/AuthenticationBloc/authentication_bloc.dart';
 
 class PetListPage extends StatefulWidget {
   @override
@@ -15,15 +16,21 @@ class PetListPage extends StatefulWidget {
 class _PetListState extends State<PetListPage> {
   @override
   Widget build(BuildContext context) {
-    List<Pet> _pets = context.read<AuthenticationBloc>().state.petList; // Se jala la lista de mascotas
-    return Scaffold(
-        appBar: _titlePage(context) as PreferredSizeWidget?,
-        body: _body(context, _pets),
-        floatingActionButton: FloatingActionButton(
-          child: Icon(Icons.add, size: 40.0),
-          backgroundColor: ColorsApp.secondaryColorlightPurple,
-          onPressed: () => Navigator.pushNamed(context, 'petForm'),
-        ));
+    List<Pet> _pets = context
+        .read<AuthenticationBloc>()
+        .state
+        .petList; // Se jala la lista de mascotas
+    return BlocProvider(
+      create: (context) => PetCubit(PetRepository()),
+      child: Scaffold(
+          appBar: _titlePage(context) as PreferredSizeWidget?,
+          body: _body(context, _pets),
+          floatingActionButton: FloatingActionButton(
+            child: Icon(Icons.add, size: 40.0),
+            backgroundColor: ColorsApp.secondaryColorlightPurple,
+            onPressed: () => Navigator.pushNamed(context, 'petForm'),
+          )),
+    );
   }
 
   Widget _body(BuildContext context, List<Pet> pets) {
@@ -42,7 +49,7 @@ class _PetListState extends State<PetListPage> {
 
   Widget _showPets(BuildContext context, List<Pet>? pets) {
     if (pets != null) {
-      if (pets == []) {
+      if (pets.length == 0) {
         return Center(
           child: Text(
             'Presione el boton \'+\' para agregar una mascota',
@@ -107,18 +114,19 @@ class _PetListState extends State<PetListPage> {
                     primary: Colors.white,
                     backgroundColor: ColorsApp.secondaryColorlightPurple),
               ),
-              BlocBuilder<PetCubit, PetState>( // eliminar en el bloc autenticate
+              BlocBuilder<PetCubit, PetState>(
                 builder: (context, state) {
                   return TextButton(
                     onPressed: () {
-                      context
-                          .read<PetCubit>()
-                          .deletePet(pets[index].petId!, index);
+                      context.read<PetCubit>().deletePet(pets[index].petId!);
+                      context.read<AuthenticationBloc>()
+                          .add(AuthenticationPetDelete(pets[index]));
                       ScaffoldMessenger.of(context)
                         ..hideCurrentSnackBar()
                         ..showSnackBar(
                           const SnackBar(content: Text('Eliminación Exitosa')),
                         );
+                        Navigator.of(context).pop();
                     },
                     child: Text('Borrar'),
                     style: TextButton.styleFrom(

@@ -103,6 +103,10 @@ class PetCubit extends Cubit<PetState> {
     emit(state.copyWith(isSociable: value));
   }
 
+  void petIDChanged(String value) {
+    emit(state.copyWith(petID: value));
+  }
+
   void filePhotoChange(ImageSource source) async {
     final pickedFile = await picker.getImage(source: source, imageQuality: 70);
     if (pickedFile != null) {
@@ -119,6 +123,7 @@ class PetCubit extends Cubit<PetState> {
 
     try {
       pet = new Pet(
+        petId: state.petID,
         userId: userID,
         name: state.name.value,
         breed: state.breed.value,
@@ -131,9 +136,8 @@ class PetCubit extends Cubit<PetState> {
         sociable: state.isSociable,
         photoUrl: state.photoUrl,
       );
-      petRepository.addNewPet(_photo!, pet!);
-      state.petList!.add(pet!);
       emit(state.copyWith(status: FormzStatus.submissionSuccess, petList: state.petList));
+      await petRepository.addNewPet(_photo!, pet!);
     } catch (error) {
       emit(state.copyWith(status: FormzStatus.submissionFailure));
     }
@@ -164,11 +168,11 @@ class PetCubit extends Cubit<PetState> {
 
   }
   //Elimina la mascota seleccionada
-  Future<void> deletePet(String petID, int index) async {
+  Future<void> deletePet(String petID) async {
     emit(state.copyWith(status: FormzStatus.submissionInProgress));
     try {
       petRepository.deletePet(petID);
-      state.petList!.removeAt(index);
+      //state.petList!.removeAt(index);
       emit(state.copyWith(status: FormzStatus.submissionSuccess, petList: state.petList!));
     } catch (error) {
       emit(state.copyWith(status: FormzStatus.submissionFailure));
