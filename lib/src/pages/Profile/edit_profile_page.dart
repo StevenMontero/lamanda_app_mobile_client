@@ -226,7 +226,7 @@ class _BodyState extends State<Body> {
               context
                   .read<AuthenticationBloc>()
                   .add(AuthenticationUserUpdate(userProfile));
-              Navigator.of(context).pushReplacementNamed('profile');
+              Navigator.of(context).pop();
             },
           );
         })

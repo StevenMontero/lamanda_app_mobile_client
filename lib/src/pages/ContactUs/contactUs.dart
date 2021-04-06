@@ -237,7 +237,7 @@ class _ContactInfoState extends State<ContactInfo> {
               backgroundImage: AssetImage('assets/images/Steven.jpeg'),
             ),
             title: Text('Steven Gerardo Montero Muñoz'),
-            subtitle: Text('stevenmontero247@gmail.com'),
+            subtitle: Text('steven.monteromunoz@ucrso.info'),
           )
         ],
       ),

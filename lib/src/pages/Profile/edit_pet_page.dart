@@ -358,7 +358,12 @@ class _BodyState extends State<Body> {
             context.read<PetCubit>().updatePet();
             context.read<AuthenticationBloc>()
                 .add(AuthenticationPetUpdate(pet));
-            Navigator.of(context).pushReplacementNamed('profile');
+                ScaffoldMessenger.of(context)
+              ..hideCurrentSnackBar()
+              ..showSnackBar(
+                const SnackBar(content: Text('Actualización éxitosa')),
+              );
+            Navigator.of(context).pushNamed('profile');
           }
         },
         icon: Icon(Icons.save),

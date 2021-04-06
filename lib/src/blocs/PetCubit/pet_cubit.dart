@@ -2,8 +2,10 @@ import 'dart:io';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:lamanda_petshopcr/src/blocs/AuthenticationBloc/authentication_bloc.dart';
 import 'package:lamanda_petshopcr/src/models/pet.dart';
 import 'package:lamanda_petshopcr/src/repository/pet_repositorydb.dart';
 import 'package:lamanda_petshopcr/src/utils/regularExpressions/regular_expressions_models.dart';
@@ -117,7 +119,11 @@ class PetCubit extends Cubit<PetState> {
     emit(state.copyWith(photoUrl: _photo!.path, photo: _photo));
   }
 
-  Future<void> addPetForm(String userID) async {
+  void photoUrlChange(String value){
+    emit(state.copyWith(photoUrl: value));
+  }
+
+  void addPetForm(String userID, BuildContext context) async {
     if (!state.status.isValidated) return;
     emit(state.copyWith(status: FormzStatus.submissionInProgress));
 
@@ -136,8 +142,9 @@ class PetCubit extends Cubit<PetState> {
         sociable: state.isSociable,
         photoUrl: state.photoUrl,
       );
+      pet = await petRepository.addNewPet(_photo!, pet!);
+      BlocProvider.of<AuthenticationBloc>(context).add(AuthenticationAddPetUpdate(pet!));
       emit(state.copyWith(status: FormzStatus.submissionSuccess));
-      await petRepository.addNewPet(_photo!, pet!);
     } catch (error) {
       emit(state.copyWith(status: FormzStatus.submissionFailure));
     }

@@ -351,31 +351,30 @@ class _BodyState extends State<Body> {
               );
           } else {
             context.read<PetCubit>().petIDChanged(petID);
-            context.read<PetCubit>().addPetForm(user.id);
-            final pet = new Pet(
-              petId: petID,
-              userId: user.id,
-              name: state.name.value,
-              breed: state.breed.value,
-              age: int.parse(state.age.value),
-              fur: state.fur.value,
-              kindPet: state.kindPet.value,
-              weight: double.parse(state.weigth.value),
-              isVaccinationUpDate: state.isVaccinationUpDate,
-              castrated: state.isCastrated,
-              sociable: state.isSociable,
-              photoUrl: state.photoUrl,
-            );
-            context
-                .read<AuthenticationBloc>()
-                .add(AuthenticationAddPetUpdate(pet));
+            context.read<PetCubit>().addPetForm(user.id, context);
+          //final pet = new Pet(
+          //  petId: petID,
+          //  userId: user.id,
+          //  name: state.name.value,
+          //  breed: state.breed.value,
+          //  age: int.parse(state.age.value),
+          //  fur: state.fur.value,
+          //  kindPet: state.kindPet.value,
+          //  weight: double.parse(state.weigth.value),
+          //  isVaccinationUpDate: state.isVaccinationUpDate,
+          //  castrated: state.isCastrated,
+          //  sociable: state.isSociable,
+          //  photoUrl: state.photoUrl,
+          //);
+          //  context
+          //      .read<AuthenticationBloc>()
+          //      .add(AuthenticationAddPetUpdate(pet));
             ScaffoldMessenger.of(context)
               ..hideCurrentSnackBar()
               ..showSnackBar(
                 const SnackBar(
-                    content: Text('Mascota agregada éxitosamente')),
-              );
-            Navigator.of(context).pushReplacementNamed('profile');
+                    content: Text('Mascota agregada éxitosamente')),);
+            Navigator.of(context).pushNamed('profile');
           }
         },
         icon: Icon(Icons.save),

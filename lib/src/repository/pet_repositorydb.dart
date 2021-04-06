@@ -9,7 +9,7 @@ class PetRepository {
   Reference storageRef = FirebaseStorage.instance.ref();
   Pet? pet;
 
-  Future<String> addNewPet(File? file, Pet pet) async {
+  Future<Pet> addNewPet(File? file, Pet pet) async {
     String? filepath = p.basename(file!.path);
     try {
       await storageRef.child('pets/' + '$filepath').putFile(file);
@@ -22,7 +22,7 @@ class PetRepository {
     } on FirebaseException catch (e) {
       print('Error subir foto :' + e.toString());
     }
-    return pet.photoUrl!;
+    return pet;
   }
 
   Future<void> deletePet(String petID) async {
