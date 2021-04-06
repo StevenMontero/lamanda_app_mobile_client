@@ -568,7 +568,11 @@ _showDialog(BuildContext ctx, DaycareAppointment appointment) {
                     style: _txtCustomSub,
                   ),
                   Text(
-                    '${appointment.departureHour!.hour - appointment.entryHour!.hour}',
+                    appointment.departureHour!.hour -
+                                appointment.entryHour!.hour >
+                            0
+                        ? '${appointment.departureHour!.hour - appointment.entryHour!.hour}'
+                        : '1',
                     textAlign: TextAlign.center,
                     style: _txtCustomSub,
                   ),
