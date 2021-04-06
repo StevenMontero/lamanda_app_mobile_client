@@ -52,17 +52,17 @@ class _BodyState extends State<Body> {
             children: <Widget>[
               _viewPhoto(),
               SizedBox(height: 20.0),
-              _chooseKindPet(),
-              SizedBox(height: 20.0),
               _petName(),
               SizedBox(height: 20.0),
               _petBreed(),
               SizedBox(height: 20.0),
+              _petWeigth(),
+              SizedBox(height: 20.0),
               _petAge(),
               SizedBox(height: 20.0),
               _petFur(),
-              SizedBox(height: 20.0),
-              _petWeigth(),
+              SizedBox(height: 20.0),      
+              _chooseKindPet(),
               SizedBox(height: 20.0),
               buildOptionsSwitch(),
               SizedBox(height: 20.0),
@@ -335,7 +335,7 @@ class _BodyState extends State<Body> {
             )),
         onPressed: () {
           final user = BlocProvider.of<AuthenticationBloc>(context).state.user;
-          petID = user.id + state.name.value!;
+          petID = user.id + state.name.value! + DateTime.now().toString();
           if (!state.status.isValidated) {
             ScaffoldMessenger.of(context)
               ..hideCurrentSnackBar()
@@ -369,7 +369,13 @@ class _BodyState extends State<Body> {
             context
                 .read<AuthenticationBloc>()
                 .add(AuthenticationAddPetUpdate(pet));
-            Navigator.of(context).pop();
+            ScaffoldMessenger.of(context)
+              ..hideCurrentSnackBar()
+              ..showSnackBar(
+                const SnackBar(
+                    content: Text('Mascota agregada éxitosamente')),
+              );
+            Navigator.of(context).pushReplacementNamed('profile');
           }
         },
         icon: Icon(Icons.save),

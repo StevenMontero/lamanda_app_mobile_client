@@ -126,7 +126,7 @@ class _PetListState extends State<PetListPage> {
                         ..showSnackBar(
                           const SnackBar(content: Text('Eliminación Exitosa')),
                         );
-                        Navigator.of(context).pop();
+                        Navigator.of(context).pushReplacementNamed('profile');
                     },
                     child: Text('Borrar'),
                     style: TextButton.styleFrom(

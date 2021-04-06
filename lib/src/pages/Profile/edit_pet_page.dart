@@ -358,7 +358,7 @@ class _BodyState extends State<Body> {
             context.read<PetCubit>().updatePet();
             context.read<AuthenticationBloc>()
                 .add(AuthenticationPetUpdate(pet));
-            Navigator.of(context).pop();
+            Navigator.of(context).pushReplacementNamed('profile');
           }
         },
         icon: Icon(Icons.save),

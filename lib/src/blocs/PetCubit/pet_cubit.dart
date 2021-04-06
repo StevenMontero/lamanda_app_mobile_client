@@ -136,7 +136,7 @@ class PetCubit extends Cubit<PetState> {
         sociable: state.isSociable,
         photoUrl: state.photoUrl,
       );
-      emit(state.copyWith(status: FormzStatus.submissionSuccess, petList: state.petList));
+      emit(state.copyWith(status: FormzStatus.submissionSuccess));
       await petRepository.addNewPet(_photo!, pet!);
     } catch (error) {
       emit(state.copyWith(status: FormzStatus.submissionFailure));
@@ -172,7 +172,6 @@ class PetCubit extends Cubit<PetState> {
     emit(state.copyWith(status: FormzStatus.submissionInProgress));
     try {
       petRepository.deletePet(petID);
-      //state.petList!.removeAt(index);
       emit(state.copyWith(status: FormzStatus.submissionSuccess, petList: state.petList!));
     } catch (error) {
       emit(state.copyWith(status: FormzStatus.submissionFailure));

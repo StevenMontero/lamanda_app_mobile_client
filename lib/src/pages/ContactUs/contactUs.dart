@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 
 class ContactInfo extends StatefulWidget {
   @override
@@ -7,6 +9,9 @@ class ContactInfo extends StatefulWidget {
 }
 
 class _ContactInfoState extends State<ContactInfo> {
+  final String phone = '+50687783087';
+  final String email = 'mailto:esteticayspacaninoconsentido@gmail.com' 
+  +'?subject=${Uri.encodeFull('Consulta')}&body=${Uri.encodeFull('')}';
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,12 +31,12 @@ class _ContactInfoState extends State<ContactInfo> {
               SizedBox(height: 26),
               Text(
                 'Desarrolladores',
-                style: TextStyle(fontSize: 22),
+                style: TextStyle(fontSize: 22, color: Colors.black),
                 textAlign: TextAlign.left,
               ),
-              SizedBox(height: 26),
+              SizedBox(height: 10),
               _developer1(),
-              SizedBox(height: 26),
+              SizedBox(height: 5),
               _developer2(),
               SizedBox(height: 26),
             ],
@@ -66,7 +71,7 @@ class _ContactInfoState extends State<ContactInfo> {
   Widget _infoVet() {
     return Row(
       children: <Widget>[
-        Image.asset('assets/images/no-image.png',
+        Image.asset('assets/images/local.jpg',
             height: 200, width: 150, fit: BoxFit.cover),
         SizedBox(
           width: 20,
@@ -80,7 +85,7 @@ class _ContactInfoState extends State<ContactInfo> {
               children: <Widget>[
                 Text(
                   "Veterinaria La Manada",
-                  style: TextStyle(fontSize: 30),
+                  style: TextStyle(fontSize: 30, color: Colors.black),
                 ),
                 Text(
                   "Especialistas en mascotas",
@@ -91,13 +96,19 @@ class _ContactInfoState extends State<ContactInfo> {
                 ),
                 Row(
                   children: <Widget>[
-                    IconTile(
-                      backColor: Color(0xffFFECDD),
-                      imgAssetPath: "assets/icons/email.png",
+                    IconButton(
+                      icon: Icon(Icons.phone),
+                      iconSize: 24,
+                      onPressed: () async {
+                        await FlutterPhoneDirectCaller.callNumber(phone);
+                      },
                     ),
-                    IconTile(
-                      backColor: Color(0xffFEF2F0),
-                      imgAssetPath: "assets/icons/call.png",
+                    IconButton(
+                      icon: Icon(Icons.mail_outlined),
+                      iconSize: 24,
+                      onPressed: () async {
+                        await launch(email);
+                      },
                     ),
                   ],
                 )
@@ -113,8 +124,8 @@ class _ContactInfoState extends State<ContactInfo> {
         children: <Widget>[
           Text(
             'Sobre Nosotros',
-            style: TextStyle(fontSize: 22),
-            textAlign: TextAlign.left,
+            style: TextStyle(fontSize: 22, color: Colors.black),
+            textAlign: TextAlign.start,
           ),
           SizedBox(height: 16),
           Text(
@@ -144,7 +155,7 @@ class _ContactInfoState extends State<ContactInfo> {
                     Text(
                       "Dirección",
                       style: TextStyle(
-                          color: Colors.black87.withOpacity(0.7), fontSize: 20),
+                          color: Colors.black, fontSize: 20),
                     ),
                     SizedBox(
                       height: 3,
@@ -152,7 +163,7 @@ class _ContactInfoState extends State<ContactInfo> {
                     Container(
                         width: MediaQuery.of(context).size.width - 268,
                         child: Text(
-                          "House # 2, Road # 5, Green Road Dhanmondi, Dhaka, Bangladesh",
+                          "Nuevo Centro Comercial PLaza San Ramón, antiguas Palmeras",
                           style: TextStyle(color: Colors.grey),
                         ))
                   ],
@@ -164,7 +175,7 @@ class _ContactInfoState extends State<ContactInfo> {
             ),
             Row(
               children: <Widget>[
-                Icon(Icons.schedule),
+                Icon(Icons.schedule_outlined),
                 SizedBox(
                   width: 15,
                 ),
@@ -174,7 +185,7 @@ class _ContactInfoState extends State<ContactInfo> {
                     Text(
                       "Horario",
                       style: TextStyle(
-                          color: Colors.black87.withOpacity(0.7), fontSize: 20),
+                          color: Colors.black, fontSize: 20),
                     ),
                     SizedBox(
                       height: 3,
@@ -182,7 +193,7 @@ class _ContactInfoState extends State<ContactInfo> {
                     Container(
                         width: MediaQuery.of(context).size.width - 268,
                         child: Text(
-                          '''Monday - Friday Open till 7 Pm''',
+                          'Lunes - Viernes de 10 a 5:30 Pm',
                           style: TextStyle(color: Colors.grey),
                         ))
                   ],
@@ -198,105 +209,37 @@ class _ContactInfoState extends State<ContactInfo> {
   }
 
   Widget _developer1() {
-    return Container(
-        child: Stack(
-      children: [
-        SizedBox(height: 16),
-        Container(
-          margin: const EdgeInsets.only(left: 46.0),
-          height: 124.0,
-          decoration: new BoxDecoration(
-              shape: BoxShape.rectangle,
-              color: Colors.grey,
-              borderRadius: new BorderRadius.circular(8.0),
-              boxShadow: <BoxShadow>[
-                new BoxShadow(
-                    color: Colors.black12,
-                    offset: new Offset(0.0, 10.0),
-                    blurRadius: 10.0)
-              ]),
-          child: Text(
-            'Jose Daniel Murillo Portuguez' + ' jose.murillo@ucrso.info',
-            textAlign: TextAlign.end,
-            style: TextStyle(fontSize: 18, color: Colors.white),
-          ),
-        ),
-        developerImageDaniel,
-      ],
-    ));
+    return Card(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          const ListTile(
+            leading: CircleAvatar(
+              radius: 30,
+              backgroundImage: AssetImage('assets/images/Daniel.jpeg'),
+            ),
+            title: Text('Jose Daniel Murillo Portuguez'),
+            subtitle: Text('jose.murillo@ucrso.info'),
+          )
+        ],
+      ),
+    );
   }
 
   Widget _developer2() {
-    return Container(
-        child: Stack(
-      children: [
-        SizedBox(height: 16),
-        Container(
-          margin: const EdgeInsets.only(left: 46.0),
-          height: 124.0,
-          decoration: new BoxDecoration(
-              shape: BoxShape.rectangle,
-              color: Colors.grey,
-              borderRadius: new BorderRadius.circular(8.0),
-              boxShadow: <BoxShadow>[
-                new BoxShadow(
-                    color: Colors.black12,
-                    offset: new Offset(0.0, 10.0),
-                    blurRadius: 10.0)
-              ]),
-          child: Text(
-            'Steven Gerardo Montero Muñoz' + ' stevenmontero247@gmail.com',
-            textAlign: TextAlign.end,
-            style: TextStyle(fontSize: 18, color: Colors.white),
-          ),
-        ),
-        developerImageSteven,
-      ],
-    ));
-  }
-
-  final developerImageDaniel = new Container(
-    height: 92.0,
-    width: 92.0,
-    margin: new EdgeInsets.symmetric(vertical: 16.0),
-    alignment: FractionalOffset.centerLeft,
-    child: CircleAvatar(
-      radius: 55,
-      backgroundImage: AssetImage('assets/images/Daniel.jpeg'),
-    ),
-  );
-
-  final developerImageSteven = new Container(
-    height: 92.0,
-    width: 92.0,
-    margin: new EdgeInsets.symmetric(vertical: 16.0),
-    alignment: FractionalOffset.centerLeft,
-    child: CircleAvatar(
-      radius: 55,
-      backgroundImage: AssetImage('assets/images/Steven.jpeg'),
-    ),
-  );
-}
-
-class IconTile extends StatelessWidget {
-  final String? imgAssetPath;
-  final Color? backColor;
-
-  IconTile({this.imgAssetPath, this.backColor});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.only(right: 16),
-      child: Container(
-        height: 40,
-        width: 40,
-        decoration: BoxDecoration(
-            color: backColor, borderRadius: BorderRadius.circular(15)),
-        child: Image.asset(
-          imgAssetPath!,
-          width: 20,
-        ),
+    return Card(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          const ListTile(
+            leading: CircleAvatar(
+              radius: 30,
+              backgroundImage: AssetImage('assets/images/Steven.jpeg'),
+            ),
+            title: Text('Steven Gerardo Montero Muñoz'),
+            subtitle: Text('stevenmontero247@gmail.com'),
+          )
+        ],
       ),
     );
   }
