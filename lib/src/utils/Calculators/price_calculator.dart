@@ -97,11 +97,11 @@ class PriceCalculator {
         break;
       default:
     }
-    return _price * days;
+    return days > 0 ? _price * days : 10000.0;
   }
 
   static double calculatePriceDayCare({required int hours}) {
     if (hours == 7) return 6000.0;
-    return hours * 1500;
+    return hours > 0 ? hours * 1500 : 1500;
   }
 }

@@ -498,8 +498,9 @@ _showDialog(BuildContext ctx, HotelAppointment appointment) {
                     style: _txtCustomSub,
                   ),
                   Text(
-                    '${appointment.endDate!.day - appointment.startDate!.day}',
-                    textAlign: TextAlign.center,
+                    appointment.endDate!.day - appointment.startDate!.day > 0
+                        ? '${appointment.endDate!.day - appointment.startDate!.day}'
+                        : '1',
                     style: _txtCustomSub,
                   ),
                 ],
