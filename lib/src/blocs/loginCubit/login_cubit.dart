@@ -11,8 +11,7 @@ part 'login_state.dart';
 
 class LoginCubit extends Cubit<LoginState> {
   final AuthenticationRepository _authenticationRepository;
-  LoginCubit(this._authenticationRepository)
-      : super(const LoginState());
+  LoginCubit(this._authenticationRepository) : super(const LoginState());
 
   final UserRepository _userRepository = new UserRepository();
   FirebaseAuth auth = FirebaseAuth.instance;
@@ -24,13 +23,13 @@ class LoginCubit extends Cubit<LoginState> {
     ));
   }
 
-   void passwordChanged(String value) {
-     final password = Password.dirty(value);
-     emit(state.copyWith(
-       password: password,
-       status: Formz.validate([state.email, password]),
-     ));
-   }
+  void passwordChanged(String value) {
+    final password = Password.dirty(value);
+    emit(state.copyWith(
+      password: password,
+      status: Formz.validate([state.email, password]),
+    ));
+  }
 
   Future<void> logInWithCredentials() async {
     if (!state.status.isValidated) return;
@@ -40,7 +39,6 @@ class LoginCubit extends Cubit<LoginState> {
         email: state.email.value,
         password: state.password.value,
       );
-     
     } on Exception {
       emit(state.copyWith(status: FormzStatus.submissionFailure));
     }
@@ -50,13 +48,14 @@ class LoginCubit extends Cubit<LoginState> {
     emit(state.copyWith(status: FormzStatus.submissionInProgress));
     try {
       await _authenticationRepository.logInWithGoogle();
-      emit(state.copyWith(status: FormzStatus.submissionSuccess));
-      
+
       _userRepository.addNewUser(new UserProfile(
           userName: auth.currentUser!.displayName,
           email: auth.currentUser!.email,
           photoUri: auth.currentUser!.photoURL,
           id: auth.currentUser!.uid));
+      await Future.delayed(Duration(milliseconds: 2000));
+      emit(state.copyWith(status: FormzStatus.submissionSuccess));
     } on Exception {
       emit(state.copyWith(status: FormzStatus.submissionFailure));
     } on NoSuchMethodError {

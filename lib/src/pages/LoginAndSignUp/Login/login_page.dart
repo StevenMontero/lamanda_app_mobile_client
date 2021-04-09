@@ -214,25 +214,33 @@ class BodyWidget extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.symmetric(
                       horizontal: 30.0, vertical: 10),
-                  child: MaterialButton(
-                    onPressed:  () {
-                      context.read<LoginCubit>().logInWithCredentials();
+                  child: BlocBuilder<LoginCubit, LoginState>(
+                    builder: (context, state) {
+                      return state.status == FormzStatus.submissionInProgress
+                          ? Center(child: CircularProgressIndicator())
+                          : MaterialButton(
+                              onPressed: () {
+                                context
+                                    .read<LoginCubit>()
+                                    .logInWithCredentials();
+                              },
+                              height: 49.0,
+                              minWidth: 500.0,
+                              color: ColorsApp.primaryColorBlue,
+                              disabledColor: Colors.grey,
+                              elevation: 1.0,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(30.0)),
+                              child: Text(
+                                'Iniciar sesión',
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    letterSpacing: 0.2,
+                                    fontSize: 18.0,
+                                    fontWeight: FontWeight.w800),
+                              ),
+                            );
                     },
-                    height: 49.0,
-                    minWidth: 500.0,
-                    color: ColorsApp.primaryColorBlue,
-                    disabledColor: Colors.grey,
-                    elevation: 1.0,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30.0)),
-                    child: Text(
-                      'Iniciar sesión',
-                      style: TextStyle(
-                          color: Colors.white,
-                          letterSpacing: 0.2,
-                          fontSize: 18.0,
-                          fontWeight: FontWeight.w800),
-                    ),
                   ),
                 ),
                 SizedBox(
