@@ -82,6 +82,7 @@ class _BodyState extends State<Body> {
       buildWhen: (previous, current) => previous.date != current.date,
       builder: (context, state) {
         return TableCalendar(
+          daysOfWeekHeight: 40,
           locale: 'es_Es',
           headerStyle: HeaderStyle(
               titleCentered: true,
