@@ -356,14 +356,15 @@ class _BodyState extends State<Body> {
               );
           } else {
             context.read<PetCubit>().updatePet();
-            context.read<AuthenticationBloc>()
+            context
+                .read<AuthenticationBloc>()
                 .add(AuthenticationPetUpdate(pet));
-                ScaffoldMessenger.of(context)
+            ScaffoldMessenger.of(context)
               ..hideCurrentSnackBar()
               ..showSnackBar(
                 const SnackBar(content: Text('Actualización éxitosa')),
               );
-            Navigator.of(context).pushNamed('profile');
+            Navigator.of(context).pop();
           }
         },
         icon: Icon(Icons.save),

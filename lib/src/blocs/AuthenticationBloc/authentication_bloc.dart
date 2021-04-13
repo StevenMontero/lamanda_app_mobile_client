@@ -34,10 +34,13 @@ class AuthenticationBloc
       var _userProfile = UserProfile();
       var _petList = <Pet>[];
       if (event.user.id != '') {
-        await Future.delayed(Duration(milliseconds:1800));
         _userProfile =
             await _userProfileRepository.getUserProfile(event.user.id) ??
-                UserProfile();
+                UserProfile(
+                    userName: event.user.name,
+                    email: event.user.email,
+                    photoUri: event.user.photo,
+                    id: event.user.id);
         _petList = await _petRepository.getpetList(event.user.id);
       }
       yield _mapAuthenticationUserChangedToState(event, _userProfile, _petList);

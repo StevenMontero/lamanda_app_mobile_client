@@ -92,7 +92,7 @@ class ProofPaymentSinpePage extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.only(top: 10.0),
                   child: Text(
-                    '*Enviar el pago al número 8800-0000',
+                    '*Enviar el pago al número 8778-3087 \n Valido para Costa Rica',
                     style: TextStyle(
                       fontWeight: FontWeight.w600,
                       fontSize: 14.0,

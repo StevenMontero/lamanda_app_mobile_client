@@ -60,7 +60,7 @@ class _BodyState extends State<Body> {
               _petAge(),
               SizedBox(height: 20.0),
               _petFur(),
-              SizedBox(height: 20.0),      
+              SizedBox(height: 20.0),
               _chooseKindPet(),
               SizedBox(height: 20.0),
               buildOptionsSwitch(),
@@ -171,7 +171,8 @@ class _BodyState extends State<Body> {
           lavel: 'Nombre de mi Mascota',
           inputType: TextInputType.text,
           onChanged: (value) {
-          context.read<PetCubit>().nameChanged(value);},
+            context.read<PetCubit>().nameChanged(value);
+          },
         );
       },
     );
@@ -351,29 +352,11 @@ class _BodyState extends State<Body> {
           } else {
             context.read<PetCubit>().petIDChanged(petID);
             context.read<PetCubit>().addPetForm(user.id, context);
-          //final pet = new Pet(
-          //  petId: petID,
-          //  userId: user.id,
-          //  name: state.name.value,
-          //  breed: state.breed.value,
-          //  age: int.parse(state.age.value),
-          //  fur: state.fur.value,
-          //  kindPet: state.kindPet.value,
-          //  weight: double.parse(state.weigth.value),
-          //  isVaccinationUpDate: state.isVaccinationUpDate,
-          //  castrated: state.isCastrated,
-          //  sociable: state.isSociable,
-          //  photoUrl: state.photoUrl,
-          //);
-          //  context
-          //      .read<AuthenticationBloc>()
-          //      .add(AuthenticationAddPetUpdate(pet));
             ScaffoldMessenger.of(context)
               ..hideCurrentSnackBar()
               ..showSnackBar(
-                const SnackBar(
-                    content: Text('Mascota agregada éxitosamente')),);
-            Navigator.of(context).pushNamed('profile');
+                const SnackBar(content: Text('Mascota agregada éxitosamente')),
+              );
           }
         },
         icon: Icon(Icons.save),

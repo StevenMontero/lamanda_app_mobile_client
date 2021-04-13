@@ -48,8 +48,8 @@ class _BodyState extends State<Body> {
                 Container(
                   color: Colors.white,
                 ),
-                Positioned(
-                  top: 15,
+                Padding(
+                  padding: EdgeInsetsDirectional.only(top: 10),
                   child: Center(
                     child: CircleAvatar(
                       radius: 55,
@@ -226,7 +226,6 @@ class _BodyState extends State<Body> {
               context
                   .read<AuthenticationBloc>()
                   .add(AuthenticationUserUpdate(userProfile));
-              Navigator.of(context).pop();
             },
           );
         })

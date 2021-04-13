@@ -54,7 +54,6 @@ class LoginCubit extends Cubit<LoginState> {
           email: auth.currentUser!.email,
           photoUri: auth.currentUser!.photoURL,
           id: auth.currentUser!.uid));
-      await Future.delayed(Duration(milliseconds: 2000));
       emit(state.copyWith(status: FormzStatus.submissionSuccess));
     } on Exception {
       emit(state.copyWith(status: FormzStatus.submissionFailure));
