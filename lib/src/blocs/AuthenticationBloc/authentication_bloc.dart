@@ -34,7 +34,7 @@ class AuthenticationBloc
       var _userProfile = UserProfile();
       var _petList = <Pet>[];
       if (event.user.id != '') {
-        await Future.delayed(Duration(milliseconds:1200));
+        await Future.delayed(Duration(milliseconds:1800));
         _userProfile =
             await _userProfileRepository.getUserProfile(event.user.id) ??
                 UserProfile();

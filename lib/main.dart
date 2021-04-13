@@ -90,7 +90,7 @@ class _AppViewState extends State<AppView> {
               case AuthenticationStatus.authenticated:
                 state.userProfile!.isAnyDataEmpty
                     ? _navigator?.pushReplacementNamed('editProfile')
-                    : _navigator?.pushReplacementNamed('homepage');
+                    : _navigator?.pushReplacementNamed('home');
                 break;
               case AuthenticationStatus.unauthenticated:
                 _navigator?.pushReplacementNamed('choseLogOSig');
