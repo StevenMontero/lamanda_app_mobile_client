@@ -8,7 +8,6 @@ import 'package:lamanda_petshopcr/src/blocs/KinderCubit/kinder_cubit.dart';
 import 'package:lamanda_petshopcr/src/blocs/PymentCubit/payment_cubit.dart';
 import 'package:lamanda_petshopcr/src/models/daycare_appointment.dart';
 import 'package:lamanda_petshopcr/src/models/pet.dart';
-import 'package:lamanda_petshopcr/src/repository/daycare_appointment_repositorydb.dart';
 import 'package:lamanda_petshopcr/src/theme/colors.dart';
 import 'package:lamanda_petshopcr/src/widgets/custom_button.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -25,7 +24,7 @@ class _KindergartenScreenState extends State<KindergartenScreen> {
         context.read<AuthenticationBloc>().state.userProfile;
     final _userPetList = context.read<AuthenticationBloc>().state.petList;
     return BlocProvider(
-        create: (context) => KinderCubit(DaycareAppointmentRepository())
+        create: (context) => KinderCubit()
           ..userDeliverChanged(_userInfoProfile!)
           ..petChanged(_userPetList[0]),
         child: Scaffold(

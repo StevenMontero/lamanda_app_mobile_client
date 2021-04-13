@@ -3,20 +3,20 @@ part of 'infoformvet_cubit.dart';
 class InfoformVetState extends Equatable {
   const InfoformVetState(
       {this.transfer = false,
-      this.description = const Text_NoEmpty.pure(),
+      this.description = const TextNotEmpty.pure(),
       this.status = FormzStatus.pure,
       this.pet,
       required this.service,
       this.address = const AddrresForm.pure()});
   final bool transfer;
-  final Text_NoEmpty description;
+  final TextNotEmpty description;
   final FormzStatus status;
   final AddrresForm address;
   final Pet? pet;
   final Service service;
 
   InfoformVetState copyWith(
-      {Text_NoEmpty? description,
+      {TextNotEmpty? description,
       bool? transfer,
       AddrresForm? address,
       FormzStatus? status,

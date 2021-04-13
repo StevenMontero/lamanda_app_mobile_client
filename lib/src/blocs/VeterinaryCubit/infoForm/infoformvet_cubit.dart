@@ -17,7 +17,7 @@ class InfoformVetCubit extends Cubit<InfoformVetState> {
                 price: PriceCalculator.veterinaryConsultation)));
 
   void descriptionChanged(String des) async {
-    final descriptionAux = Text_NoEmpty.dirty(des);
+    final descriptionAux = TextNotEmpty.dirty(des);
     emit(state.copyWith(
         description: descriptionAux,
         status: caseValidateForm(

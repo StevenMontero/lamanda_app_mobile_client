@@ -1,13 +1,10 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:lamanda_petshopcr/src/models/userProfile.dart';
-import 'package:lamanda_petshopcr/src/repository/veterinary_appointment_repositorydb.dart';
 part 'veterinary_state.dart';
 
 class VeterinaryCubit extends Cubit<VeterinaryFormState> {
-  VeterinaryCubit(this._appointmentRepository)
+  VeterinaryCubit()
       : super(VeterinaryFormState(currentStep: 0));
-  final VeterinaryAppointmentRepository _appointmentRepository;
 
   void nextStep() async {
     emit(state.copyWith(
@@ -36,20 +33,4 @@ class VeterinaryCubit extends Cubit<VeterinaryFormState> {
     }
   }
 
-  Future<void> addAppointmentVeterinaryForm(UserProfile user) async {
-    //   try {
-    //     final stheticAppointment = new VeterinaryAppointment(
-    //         date: state.date,
-    //         hour: state.hourRerservation,
-    //         client: user,
-    //         isConfirmed: false,
-    //         transfer: state.transporte,
-    //         direction: state.transporte ? state.direccion : '',
-    //         symptoms: state.description,
-    //         race: state.race);
-    //     _appointmentRepository.addNewAppointment(stheticAppointment);
-    //   } catch (error) {
-    //     emit(state.copyWith(status: FormzStatus.submissionFailure));
-    //   }
-  }
 }

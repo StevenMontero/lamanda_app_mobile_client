@@ -27,7 +27,7 @@ class _NurseyScreenState extends State<NurseyScreen> {
       providers: [
         BlocProvider<VeterinaryCubit>(
             create: (context) =>
-                VeterinaryCubit(VeterinaryAppointmentRepository())),
+                VeterinaryCubit()),
         BlocProvider<InfoformVetCubit>(
             create: (context) =>
                 InfoformVetCubit()..petChanged(_userPetList[0])),

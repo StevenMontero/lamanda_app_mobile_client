@@ -4,21 +4,17 @@ import 'package:formz/formz.dart';
 import 'package:lamanda_petshopcr/src/models/daycare_appointment.dart';
 import 'package:lamanda_petshopcr/src/models/pet.dart';
 import 'package:lamanda_petshopcr/src/models/userProfile.dart';
-import 'package:lamanda_petshopcr/src/repository/daycare_appointment_repositorydb.dart';
 import 'package:lamanda_petshopcr/src/utils/Calculators/price_calculator.dart';
 import 'package:lamanda_petshopcr/src/utils/regularExpressions/regular_expressions_models.dart';
 
 part 'kinder_state.dart';
 
 class KinderCubit extends Cubit<KinderState> {
-  KinderCubit(this.daycareAppointmentRepository)
+  KinderCubit()
       : super(KinderState(date: DateTime.now()));
 // entryHour: DateTime.now(),
 //             departureHour: DateTime(DateTime.now().year, DateTime.now().month,
 //                 DateTime.now().day, (DateTime.now().hour + 1),DateTime.now().minute))
-  final DaycareAppointmentRepository daycareAppointmentRepository;
-  late DaycareAppointment daycareAppointment;
-
   void entryHourChanged(DateTime date) {
     HourCheckOut? departureHour;
     if (state.departureHour.value != null &&
@@ -146,35 +142,6 @@ class KinderCubit extends Cubit<KinderState> {
 
   void dateInCalendarChanged(DateTime date) {
     emit(state.copyWith(date: date));
-  }
-
-  Future<void> addAppointmentDaycareForm(UserProfile user) async {
-    if (state.status.isValidated) {
-      print('Hola');
-    }
-    // emit(state.copyWith(status: FormzStatus.submissionSuccess));
-    try {
-      // daycareAppointment = new DaycareAppointment(
-      //   age: state.age,
-      //   date: state.date,
-      //   entryHour: state.entryHour,
-      //   departureHour: state.departureHour,
-      //   race: state.race,
-      //   userDeliver: state.userDeliver,
-      //   userPickup: state.userPickup,
-      //   direccion: state.direccion,
-      //   isVaccinationUpDate: state.isVaccinationUpDate,
-      //   isCastrated: state.isCastrated,
-      //   isSociable: state.isSociable,
-      //   lastDeworming: state.lastDeworming,
-      //   lastProtectionFleas: state.lastProtectionFleas,
-      //   transfer: state.transporte,
-      //   isConfirmed: false,
-      // );
-      // daycareAppointmentRepository.addNewAppointment(daycareAppointment);
-    } catch (error) {
-      emit(state.copyWith(status: FormzStatus.submissionFailure));
-    }
   }
 
   void petChanged(Pet pet) {

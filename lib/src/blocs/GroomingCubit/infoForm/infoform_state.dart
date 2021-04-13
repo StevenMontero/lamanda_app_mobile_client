@@ -3,18 +3,18 @@ part of 'infoform_cubit.dart';
 class InfoformState extends Equatable {
   const InfoformState(
       {this.transfer = false,
-      this.description = const Text_NoEmpty.pure() ,
+      this.description = const TextNotEmpty.pure() ,
       this.status =  FormzStatus.pure,
       this.pet,
       this.address = const AddrresForm.pure()});
   final bool transfer;
-  final Text_NoEmpty description;
+  final TextNotEmpty description;
   final FormzStatus status;
   final AddrresForm address;
   final Pet? pet;
 
   InfoformState copyWith({
-    Text_NoEmpty? description,
+    TextNotEmpty? description,
     bool? transfer,
     AddrresForm? address,
     FormzStatus? status,

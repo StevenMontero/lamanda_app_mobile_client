@@ -4,17 +4,14 @@ import 'package:formz/formz.dart';
 import 'package:lamanda_petshopcr/src/models/hotel_appointment.dart';
 import 'package:lamanda_petshopcr/src/models/pet.dart';
 import 'package:lamanda_petshopcr/src/models/userProfile.dart';
-import 'package:lamanda_petshopcr/src/repository/hotel_appointment_repositorydb.dart';
 import 'package:lamanda_petshopcr/src/utils/Calculators/price_calculator.dart';
 import 'package:lamanda_petshopcr/src/utils/regularExpressions/regular_expressions_models.dart';
 
 part 'hotel_state.dart';
 
 class HotelCubit extends Cubit<HotelState> {
-  HotelCubit(this.hotelAppointmentRepository) : super(HotelState());
-  final HotelAppointmentRepository hotelAppointmentRepository;
-  late HotelAppointment hotelAppointment;
-
+  HotelCubit() : super(HotelState());
+  
   void entryDateChanged(DateTime? date) {
     final entryDateAux = DateForm.dirty(date);
     emit(state.copyWith(
@@ -137,30 +134,6 @@ class HotelCubit extends Cubit<HotelState> {
             ])));
   }
 
-  Future<void> addAppointmentHotelForm(UserProfile user) async {
-    // emit(state.copyWith(status: FormzStatus.submissionSuccess));
-    // try {
-    //   hotelAppointment = new HotelAppointment(
-    //     age: state.age,
-    //     endDate: state.departureDate,
-    //     personPicksUp: state.userPickup,
-    //     addres: state.direccion,
-    //     startDate: state.entryDate,
-    //     client: user,
-    //     castrated: state.isCastrated,
-    //     isConfirmed: false,
-    //     sociable: state.isSociable,
-    //     vaccine: state.isVaccinationUpDate,
-    //     lastdeworming: state.lastDeworming,
-    //     pestProtection: state.lastProtectionFleas,
-    //     race: state.race,
-    //     transfer: state.transporte,
-    //   );
-    //   hotelAppointmentRepository.addNewAppointment(hotelAppointment);
-    // } catch (error) {
-    //   emit(state.copyWith(status: FormzStatus.submissionFailure));
-    // }
-  }
 
   HotelAppointment get getHotelAppoiment {
     return new HotelAppointment(

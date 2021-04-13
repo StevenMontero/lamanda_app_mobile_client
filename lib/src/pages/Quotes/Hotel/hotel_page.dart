@@ -7,7 +7,6 @@ import 'package:lamanda_petshopcr/src/blocs/HotelCubit/hotel_cubit.dart';
 import 'package:lamanda_petshopcr/src/blocs/PymentCubit/payment_cubit.dart';
 import 'package:lamanda_petshopcr/src/models/hotel_appointment.dart';
 import 'package:lamanda_petshopcr/src/models/pet.dart';
-import 'package:lamanda_petshopcr/src/repository/hotel_appointment_repositorydb.dart';
 import 'package:lamanda_petshopcr/src/theme/colors.dart';
 import 'package:lamanda_petshopcr/src/widgets/custom_button.dart';
 
@@ -23,7 +22,7 @@ class _HotelScreenState extends State<HotelScreen> {
         context.read<AuthenticationBloc>().state.userProfile;
     final _userPetList = context.read<AuthenticationBloc>().state.petList;
     return BlocProvider(
-        create: (context) => HotelCubit(HotelAppointmentRepository())
+        create: (context) => HotelCubit()
           ..userDeliverChanged(_userInfoProfile!)
           ..petChanged(_userPetList[0]),
         child: Scaffold(
