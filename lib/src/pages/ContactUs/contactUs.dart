@@ -71,7 +71,7 @@ class _ContactInfoState extends State<ContactInfo> {
   Widget _infoVet() {
     return Row(
       children: <Widget>[
-        Image.asset('assets/images/local.jpg',
+        Image.asset('assets/images/local(2).jpeg',
             height: 200, width: 150, fit: BoxFit.cover),
         SizedBox(
           width: 20,
