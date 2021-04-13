@@ -24,7 +24,7 @@ class SignUpCubit extends Cubit<SignUpState> {
     emit(state.copyWith(
       email: email,
       status:
-          Formz.validate([email, state.password, state.userName, state.phone]),
+          Formz.validate([email, state.password]),
     ));
   }
 
@@ -33,29 +33,11 @@ class SignUpCubit extends Cubit<SignUpState> {
     emit(state.copyWith(
       password: password,
       status:
-          Formz.validate([state.email, password, state.userName, state.phone]),
+          Formz.validate([state.email, password]),
     ));
   }
 
   //valida el campo de texto del nombre de usuario.
-  void userNameChanged(String value) {
-    final userName = UserName.dirty(value);
-    emit(state.copyWith(
-      userName: userName,
-      status:
-          Formz.validate([state.email, state.password, userName, state.phone]),
-    ));
-  }
-
-  //validad el campo de texto del telefono
-  void phoneChanged(String value) {
-    final phone = NumberPhone.dirty(value);
-    emit(state.copyWith(
-      phone: phone,
-      status:
-          Formz.validate([state.email, state.password, state.userName, phone]),
-    ));
-  }
 
   Future<void> signUpFormSubmitted() async {
     if (!state.status.isValidated) return;
@@ -66,10 +48,9 @@ class SignUpCubit extends Cubit<SignUpState> {
         email: state.email.value,
         password: state.password.value,
       );
+
       repository.addNewUser(new UserProfile(
-          userName: state.userName.value,
           email: auth.currentUser!.email,
-          phone: state.phone.value,
           id: auth.currentUser!.uid));
 
       emit(state.copyWith(status: FormzStatus.submissionSuccess));

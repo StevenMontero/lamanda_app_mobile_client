@@ -148,33 +148,6 @@ class _BodyState extends State<Body> {
     );
   }
 
-  //Widget _viewPhoto() {
-  //  return BlocBuilder<PetCubit, PetState>(
-  //    buildWhen: (previous, current) => previous.photo != current.photo,
-  //    builder: (context, state) {
-  //      if (pet.photoUrl != null) {
-  //        return Image(
-  //          image: NetworkImage(pet.photoUrl!),
-  //          height: 300.0,
-  //          fit: BoxFit.cover,
-  //        );
-  //      } else if (state.photo != null) {
-  //        return Image(
-  //          image: FileImage(state.photo!),
-  //          height: 300.0,
-  //          fit: BoxFit.cover,
-  //        );
-  //      } else {
-  //        return Image(
-  //          image: AssetImage('assets/images/no-image.png'),
-  //          height: 300.0,
-  //          fit: BoxFit.cover,
-  //        );
-  //      }
-  //    },
-  //  );
-  //}
-
   Widget _petName() {
     return BlocBuilder<PetCubit, PetState>(
       buildWhen: (previous, current) => previous.name != current.name,

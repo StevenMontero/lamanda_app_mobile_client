@@ -119,50 +119,6 @@ class BodyWidget extends StatelessWidget {
                                   padding:
                                       EdgeInsets.symmetric(vertical: 20.0)),
 
-                              BlocBuilder<SignUpCubit, SignUpState>(
-                                buildWhen: (previous, current) =>
-                                    previous.userName != current.userName,
-                                builder: (context, state) {
-                                  return TextFromField(
-                                    errorOccurred: state.userName.invalid,
-                                    errorMessage:
-                                        "No ingresar signos ni números",
-                                    icon: Icons.account_circle,
-                                    password: false,
-                                    lavel:'Nombre de usuario',
-                                    inputType: TextInputType.text,
-                                    onChanged: (value) => context
-                                        .read<SignUpCubit>()
-                                        .userNameChanged(value),
-                                  );
-                                },
-                              ),
-
-                              /// TextFromField Number Phone
-                              Padding(
-                                  padding: EdgeInsets.symmetric(vertical: 5.0)),
-
-                              BlocBuilder<SignUpCubit, SignUpState>(
-                                buildWhen: (previous, current) =>
-                                    previous.phone != current.phone,
-                                builder: (context, state) {
-                                  return TextFromField(
-                                    errorOccurred: state.phone.invalid,
-                                    errorMessage:
-                                        'Número de telefono no valido',
-                                    icon: Icons.phone_iphone,
-                                    password: false,
-                                    lavel: 'Número telefónico',
-                                    inputType: TextInputType.number,
-                                    onChanged: (value) => context
-                                        .read<SignUpCubit>()
-                                        .phoneChanged(value),
-                                  );
-                                },
-                              ),
-                              Padding(
-                                  padding: EdgeInsets.symmetric(vertical: 5.0)),
-
                               /// TextFromField Email
                               BlocBuilder<SignUpCubit, SignUpState>(
                                 buildWhen: (previous, current) =>

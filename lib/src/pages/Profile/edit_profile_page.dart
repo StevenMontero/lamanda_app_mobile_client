@@ -53,11 +53,11 @@ class _BodyState extends State<Body> {
                   child: Center(
                     child: CircleAvatar(
                       radius: 55,
-                      backgroundImage: widget.userProfile.photoUri != null
+                      backgroundImage: widget.userProfile.photoUri!.isNotEmpty
                           ? NetworkImage(widget.userProfile.photoUri!)
                           : null,
-                      child: widget.userProfile.photoUri == null
-                          ? const Icon(Icons.person, size: 20)
+                      child: widget.userProfile.photoUri!.isEmpty
+                          ? const Icon(Icons.person, size: 50)
                           : null,
                     ),
                   ),
@@ -206,14 +206,15 @@ class _BodyState extends State<Body> {
           return IconButton(
             icon: new Icon(Icons.save,
                 color: ColorsApp.secondaryColorlightPurple),
-            onPressed: () {                             
+            onPressed: () {
               context.read<ProfileCubit>().editUserForm(
                   widget.userProfile.id!, widget.userProfile.photoUri ?? '');
               ScaffoldMessenger.of(context)
-              ..hideCurrentSnackBar()
-              ..showSnackBar(
-                const SnackBar(content: Text('Datos actualizados correctamente')),
-              );
+                ..hideCurrentSnackBar()
+                ..showSnackBar(
+                  const SnackBar(
+                      content: Text('Datos actualizados correctamente')),
+                );
               final userProfile = new UserProfile(
                 id: widget.userProfile.id,
                 userName: state.userName.value,

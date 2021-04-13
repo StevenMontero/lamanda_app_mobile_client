@@ -37,69 +37,6 @@ class _ProfilePage extends State<ProfilePage> {
                           Divider(
                             height: 0.5,
                           ),
-                          //MaterialButton(
-                          //    onPressed: () {},
-                          //    color: Colors.white,
-                          //    minWidth: 100,
-                          //    height: 60,
-                          //    child: Row(
-                          //      children: [
-                          //        Image.asset(
-                          //          "assets/icons/creditAcount.png",
-                          //          width: 40,
-                          //          height: 40,
-                          //        ),
-                          //        Padding(
-                          //          padding: const EdgeInsets.only(left: 20.0),
-                          //          child: Text("Métodos de pago"),
-                          //        ),
-                          //      ],
-                          //    )),
-                          //Divider(
-                          //  height: 0.5,
-                          //),
-                          //MaterialButton(
-                          //    onPressed: () {},
-                          //    color: Colors.white,
-                          //    minWidth: 100,
-                          //    height: 60,
-                          //    child: Row(
-                          //      children: [
-                          //        Image.asset(
-                          //          "assets/icons/truck.png",
-                          //          width: 40,
-                          //          height: 40,
-                          //        ),
-                          //        Padding(
-                          //          padding: const EdgeInsets.only(left: 20.0),
-                          //          child: Text("Órdenes"),
-                          //        ),
-                          //      ],
-                          //    )),
-                          //Divider(
-                          //  height: 0.5,
-                          //),
-                          //MaterialButton(
-                          //    onPressed: () {},
-                          //    color: Colors.white,
-                          //    minWidth: 100,
-                          //    height: 60,
-                          //    child: Row(
-                          //      children: [
-                          //        Image.asset(
-                          //          "assets/icons/setting.png",
-                          //          width: 40,
-                          //          height: 40,
-                          //        ),
-                          //        Padding(
-                          //          padding: const EdgeInsets.only(left: 20.0),
-                          //          child: Text("Configuraciones"),
-                          //        ),
-                          //      ],
-                          //    )),
-                          Divider(
-                            height: 0.5,
-                          ),
                           MaterialButton(
                               onPressed: () {
                                 Navigator.of(context).pushNamed('petList');
@@ -192,9 +129,9 @@ class _ProfilePage extends State<ProfilePage> {
                 child: CircleAvatar(
                   radius: 55,
                   backgroundImage:
-                      user.photo != null ? NetworkImage(user.photo) : null,
-                  child: user.photo == null
-                      ? const Icon(Icons.person_outline, size: 20)
+                      user.photo.isNotEmpty ? NetworkImage(user.photo) : null,
+                  child: user.photo.isEmpty
+                      ? const Icon(Icons.person, size: 50)
                       : null,
                 ),
               ),
@@ -204,16 +141,18 @@ class _ProfilePage extends State<ProfilePage> {
               ),
               Container(
                 decoration: BoxDecoration(
-                  color: ColorsApp.secondaryColorlightPurple,
-                  borderRadius: BorderRadius.circular(10.0)
-                ),
+                    color: ColorsApp.secondaryColorlightPurple,
+                    borderRadius: BorderRadius.circular(10.0)),
                 child: InkWell(
                   onTap: () {
                     Navigator.of(context).pushNamed('editProfile');
                   },
                   child: Padding(
                     padding: const EdgeInsets.all(3.0),
-                    child: Text('Editar Perfil', style: TextStyle(color: Colors.white),),
+                    child: Text(
+                      'Editar Perfil',
+                      style: TextStyle(color: Colors.white),
+                    ),
                   ),
                 ),
               )
