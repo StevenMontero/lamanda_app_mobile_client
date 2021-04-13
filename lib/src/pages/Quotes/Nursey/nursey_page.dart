@@ -455,7 +455,7 @@ class _BodyState extends State<Body> {
         builder: (context, state) {
       return state.status != FormzStatus.submissionInProgress
           ? Wrap(
-              alignment: WrapAlignment.spaceBetween,
+              alignment: WrapAlignment.center,
               spacing: 15.0,
               children: List<Widget>.generate(
                 state.schedule.length,
