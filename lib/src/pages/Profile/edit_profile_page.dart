@@ -1,5 +1,6 @@
 //import 'package:authentication_repository/authentication_repository.dart';
 import 'package:flutter/material.dart';
+import 'package:formz/formz.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lamanda_petshopcr/src/blocs/AuthenticationBloc/authentication_bloc.dart';
 import 'package:lamanda_petshopcr/src/blocs/profileCubit/profile_cubit.dart';
@@ -207,26 +208,35 @@ class _BodyState extends State<Body> {
             icon: new Icon(Icons.save,
                 color: ColorsApp.secondaryColorlightPurple),
             onPressed: () {
-              context.read<ProfileCubit>().editUserForm(
-                  widget.userProfile.id!, widget.userProfile.photoUri ?? '');
-              ScaffoldMessenger.of(context)
-                ..hideCurrentSnackBar()
-                ..showSnackBar(
-                  const SnackBar(
-                      content: Text('Datos actualizados correctamente')),
+              if (!state.status!.isValidated) {
+                ScaffoldMessenger.of(context)
+                  ..hideCurrentSnackBar()
+                  ..showSnackBar(
+                    const SnackBar(
+                        content: Text('Debe llenar todos los campos')),
+                  );
+              } else {
+                context.read<ProfileCubit>().editUserForm(
+                    widget.userProfile.id!, widget.userProfile.photoUri ?? '');
+                ScaffoldMessenger.of(context)
+                  ..hideCurrentSnackBar()
+                  ..showSnackBar(
+                    const SnackBar(
+                        content: Text('Datos actualizados correctamente')),
+                  );
+                final userProfile = new UserProfile(
+                  id: widget.userProfile.id,
+                  userName: state.userName.value,
+                  email: state.email.value,
+                  photoUri: widget.userProfile.photoUri,
+                  lastName: state.lastName.value,
+                  address: state.addres.value,
+                  phone: state.phone.value,
                 );
-              final userProfile = new UserProfile(
-                id: widget.userProfile.id,
-                userName: state.userName.value,
-                email: state.email.value,
-                photoUri: widget.userProfile.photoUri,
-                lastName: state.lastName.value,
-                address: state.addres.value,
-                phone: state.phone.value,
-              );
-              context
-                  .read<AuthenticationBloc>()
-                  .add(AuthenticationUserUpdate(userProfile));
+                context
+                    .read<AuthenticationBloc>()
+                    .add(AuthenticationUserUpdate(userProfile));
+              }
             },
           );
         })
