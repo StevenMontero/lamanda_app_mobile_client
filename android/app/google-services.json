@@ -159,6 +159,91 @@
           ]
         }
       }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:354564504086:android:2d4836c05bad8b86da1337",
+        "android_client_info": {
+          "package_name": "com.manada.lamanda_petshopcr"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "354564504086-6ar3jh9ur4ecsjpmst83g241jbg9uso3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.manada.lamanda_petshopcr",
+            "certificate_hash": "357f3c884aeecdb1bec2b105dc7aa872483b4bd2"
+          }
+        },
+        {
+          "client_id": "354564504086-8sq8e4mj07eb5557m3b6aqkiq7pq16oq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.manada.lamanda_petshopcr",
+            "certificate_hash": "245466ae57d9161c78714596d1ea7f97368d3ac4"
+          }
+        },
+        {
+          "client_id": "354564504086-anvn6inp8l1vsflevn7srnev9ifkv0vt.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.manada.lamanda_petshopcr",
+            "certificate_hash": "1ce8ee5820d210defd241c00553b8ed7e133f72f"
+          }
+        },
+        {
+          "client_id": "354564504086-liajvpsg4bl5v05vm7gg5p3ml690220c.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.manada.lamanda_petshopcr",
+            "certificate_hash": "1dec4ada2788088d37e70684371223fb23e3b1fe"
+          }
+        },
+        {
+          "client_id": "354564504086-lrccv25j97fmd8t52icl6utbk63d2phr.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.manada.lamanda_petshopcr",
+            "certificate_hash": "88818982324b3c69ea3ed27411e27179132b84e6"
+          }
+        },
+        {
+          "client_id": "354564504086-p9k37opa22mehev0n7620v9l5njtvbn8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.manada.lamanda_petshopcr",
+            "certificate_hash": "d15a965fdc69801bf8fe5580fba78e4e020d9907"
+          }
+        },
+        {
+          "client_id": "354564504086-t8joapv4ifm1742k4bm80edjk9mk5s82.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.manada.lamanda_petshopcr",
+            "certificate_hash": "8b4e2d0839b7a3b33b35c96c3084eee1d4eeb499"
+          }
+        },
+        {
+          "client_id": "354564504086-lkpu5aq13v1h0c7jg5meueo2fn7gbhi8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDoTmjGvtYcOhJJK3eAzSjif9GaM2llDYQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "354564504086-lkpu5aq13v1h0c7jg5meueo2fn7gbhi8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
     }
   ],
   "configuration_version": "1"
