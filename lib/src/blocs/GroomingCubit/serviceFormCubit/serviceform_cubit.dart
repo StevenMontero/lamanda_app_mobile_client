@@ -57,10 +57,10 @@ class ServiceformCubit extends Cubit<ServiceformState> {
       final _price = PriceCalculator.calculatePriceHairCutAndWashPet(
           weightPet: weight, kindPet: kindPet);
       listAdd = List.from(state.listService)
-        ..add(Service(name: 'Corte + Baño', price: _price));
+        ..add(Service(name: 'Paquete completo', price: _price));
     } else {
       listAdd = List.from(state.listService)
-        ..removeWhere((element) => element.name == 'Corte + Baño');
+        ..removeWhere((element) => element.name == 'Paquete completo');
     }
     emit(state.copyWith(
         isHaircutAndWash: value,
@@ -73,7 +73,7 @@ class ServiceformCubit extends Cubit<ServiceformState> {
   void updatePriceService(double weight, String kindPet, String kindHair) {
     final list = List<Service>.from(state.listService);
     for (var item in list) {
-      if (item.name == 'Corte + Baño') {
+      if (item.name == 'Paquete completo') {
         item.price = PriceCalculator.calculatePriceHairCutAndWashPet(
             weightPet: weight, kindPet: kindPet);
       } else if (item.name == 'Baño') {

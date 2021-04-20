@@ -639,6 +639,7 @@ class _BodyState extends State<Body> {
     return Column(
       children: [
         CheckboxListTile(
+          subtitle: Text('Corte + Baño + uñas'),
           title: Row(
             children: [
               Padding(
@@ -649,7 +650,7 @@ class _BodyState extends State<Body> {
                   color: ColorsApp.primaryColorBlue,
                 ),
               ),
-              Text('Corte + Baño'),
+              Text('Paquete completo'),
             ],
           ),
           activeColor: ColorsApp.primaryColorOrange,
